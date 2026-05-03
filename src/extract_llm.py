@@ -1,4 +1,4 @@
-"""Layer 3 — Candidate 1.
+"""Layer 3 - Candidate 1.
 
 Self-consistent LLM extraction over the transcript. The chain runs
 NUM_LLM_VOTES times in parallel, and we collapse the results with a

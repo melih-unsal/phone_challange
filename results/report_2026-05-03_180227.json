@@ -2551,7 +2551,7 @@
                     "mode": "skipped_unanimous"
                 }
             },
-            "reasoning": "For first_name, the evidence is split between Armet/Ahmed/Armed, but the email local-part and the audio both point to Ahmed; per name↔email consistency and Egyptian/Arabic orthography, I use Ahmed. Last_name is unanimous as Hassan. For email, the targeted re-listen is structurally valid and strongest for that field, so I take ahmid.hassan@gmail.com. For phone_number, all whole-record candidates agree and it is already in valid international format, so I keep +4915166123456.",
+            "reasoning": "For first_name, the evidence is split between Armet/Ahmed/Armed, but the email local-part and the audio both point to Ahmed; per name<->email consistency and Egyptian/Arabic orthography, I use Ahmed. Last_name is unanimous as Hassan. For email, the targeted re-listen is structurally valid and strongest for that field, so I take ahmid.hassan@gmail.com. For phone_number, all whole-record candidates agree and it is already in valid international format, so I keep +4915166123456.",
             "agreement": {
                 "first_name": {
                     "n_candidates": 3,

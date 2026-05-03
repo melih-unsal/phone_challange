@@ -1,14 +1,14 @@
 """End-to-end pipeline orchestrator.
 
 Architecture:
-  Layer 1   — Audio transcription                       (src/transcription.py)
-  Layer 2   — Country / linguistic-origin detection     (src/country.py)
-  Layer 3   — Candidate 1: self-consistent LLM          (src/extract_llm.py)
-  Layer 4   — Candidate 2: audio LLM, whole-record      (src/extract_voxtral.py)
-  Layer 4.5 — Targeted re-listen for email + phone      (src/targeted_extract.py)
-  Layer 5   — Reconciler (transcript + cand1 + cand2 + targeted)
+  Layer 1   - Audio transcription                       (src/transcription.py)
+  Layer 2   - Country / linguistic-origin detection     (src/country.py)
+  Layer 3   - Candidate 1: self-consistent LLM          (src/extract_llm.py)
+  Layer 4   - Candidate 2: audio LLM, whole-record      (src/extract_voxtral.py)
+  Layer 4.5 - Targeted re-listen for email + phone      (src/targeted_extract.py)
+  Layer 5   - Reconciler (transcript + cand1 + cand2 + targeted)
                                                         (src/reconcile.py)
-  Layer 6   — Schema validation + normalisation         (src/schema.py)
+  Layer 6   - Schema validation + normalisation         (src/schema.py)
 
 Audio backends are model-agnostic. Pick them in src/config.py:
     TRANSCRIPTION_MODEL = "voxtral:mistralai/Voxtral-Mini-3B-2507"
@@ -18,14 +18,14 @@ Audio backends are model-agnostic. Pick them in src/config.py:
 Each run writes a timestamped structured report to RESULTS_DIR/.
 """
 
-# faulthandler MUST go before anything that loads torch/CUDA — it installs
+# faulthandler MUST go before anything that loads torch/CUDA - it installs
 # a SIGSEGV / SIGABRT handler that prints a Python + C stack trace, which
 # is the only way to diagnose native crashes in transformers / soundfile / cuda.
 import faulthandler
 faulthandler.enable()
 
 # Prevent transformers' tokenizer thread pool from clashing with httpx /
-# requests inside the elevenlabs SDK — a known cause of intermittent
+# requests inside the elevenlabs SDK - a known cause of intermittent
 # segfaults when an HTTP call follows a HF-tokenizer-touched code path.
 import os
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
@@ -176,7 +176,7 @@ def run() -> Path:
         except Exception as e:
             print(f"WARNING: could not build transcriber {spec!r}: {e}")
     if not transcribers:
-        raise RuntimeError("No transcribers could be built — check TRANSCRIPTION_MODELS.")
+        raise RuntimeError("No transcribers could be built - check TRANSCRIPTION_MODELS.")
 
     # Layer 4 / 4.5 are best-effort: if the audio-instructor backend can't load
     # (broken cuda driver, missing API key, etc.) we keep going with only
@@ -188,7 +188,7 @@ def run() -> Path:
         print("         Layer 4 (candidate 2) and Layer 4.5 (targeted re-listen) will be skipped.")
         instructor = None
 
-    # Layer 1b — dedicated timestamper. Only built when no transcriber
+    # Layer 1b - dedicated timestamper. Only built when no transcriber
     # provides word timestamps AND TIMESTAMP_MODEL is set.
     timestamper = None
     if TIMESTAMP_MODEL:
@@ -242,7 +242,7 @@ def run() -> Path:
         path = os.path.join(RECORDINGS_DIR, filename)
         per_call_timings: dict[str, float] = {}
 
-        # Layer 1 — transcribe with EVERY configured STT model.
+        # Layer 1 - transcribe with EVERY configured STT model.
         t0 = time.perf_counter()
         transcriptions: list[Transcription] = []
         for tr in transcribers:
@@ -255,7 +255,7 @@ def run() -> Path:
             continue
         per_call_timings["transcription_s"] = round(time.perf_counter() - t0, 2)
 
-        # Layer 1b — fill in word timestamps if no transcriber provided them
+        # Layer 1b - fill in word timestamps if no transcriber provided them
         # (Voxtral doesn't, ElevenLabs Scribe does). Used by Layer 4.5 cropping.
         words = next((t.words for t in transcriptions if t.words), None)
         if words is None and timestamper is not None:
@@ -270,12 +270,12 @@ def run() -> Path:
         # Pick the first transcript as the "primary" for Layer 2 country detection.
         primary_text = transcriptions[0].text
 
-        # Layer 2 — country / linguistic origin
+        # Layer 2 - country / linguistic origin
         t0 = time.perf_counter()
         country_info = detect_country(country_chain, primary_text)
         per_call_timings["country_s"] = round(time.perf_counter() - t0, 2)
 
-        # Layer 3 — candidate per transcript (independent extraction × N each)
+        # Layer 3 - candidate per transcript (independent extraction × N each)
         t0 = time.perf_counter()
         candidates_1: list[dict] = []
         for trans in transcriptions:
@@ -291,7 +291,7 @@ def run() -> Path:
             })
         per_call_timings["candidate_1_s"] = round(time.perf_counter() - t0, 2)
 
-        # Layer 4 — candidate 2 (audio LLM whole-record). Skipped if the
+        # Layer 4 - candidate 2 (audio LLM whole-record). Skipped if the
         # instructor failed to build at startup.
         t0 = time.perf_counter()
         if instructor is not None:
@@ -300,7 +300,7 @@ def run() -> Path:
             cand2 = {k: "" for k in KEYS}
         per_call_timings["candidate_2_s"] = round(time.perf_counter() - t0, 2)
 
-        # Layer 4.5 — segment-targeted re-listen. Only run on fields where
+        # Layer 4.5 - segment-targeted re-listen. Only run on fields where
         # any whole-record candidate disagrees with another. Most records
         # end up unanimous → skip the layer (and Whisper) entirely.
         t0 = time.perf_counter()
@@ -319,7 +319,7 @@ def run() -> Path:
             targeted = None
         per_call_timings["targeted_s"] = round(time.perf_counter() - t0, 2)
 
-        # Layer 5 — reconciler (deterministic safety nets applied inside)
+        # Layer 5 - reconciler (deterministic safety nets applied inside)
         t0 = time.perf_counter()
         final = reconcile(
             reconcile_chain, transcriptions, country_info,
@@ -327,7 +327,7 @@ def run() -> Path:
         )
         per_call_timings["reconcile_s"] = round(time.perf_counter() - t0, 2)
 
-        # Layer 6 — schema validation + normalisation
+        # Layer 6 - schema validation + normalisation
         validated = validate_caller_info(final)
         info = validated.info
 

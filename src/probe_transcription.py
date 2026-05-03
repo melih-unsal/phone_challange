@@ -28,7 +28,7 @@ def main(audio_path: str) -> None:
     print("building transcriber...")
     t0 = time.perf_counter()
     transcriber = build_transcriber(TRANSCRIPTION_MODEL)
-    print(f"  built in {time.perf_counter() - t0:.2f}s — {transcriber.name}")
+    print(f"  built in {time.perf_counter() - t0:.2f}s - {transcriber.name}")
 
     print("transcribing...")
     t0 = time.perf_counter()

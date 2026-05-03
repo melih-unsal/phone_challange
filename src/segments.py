@@ -14,7 +14,7 @@ non-overlapping. They are deliberately conservative:
   themselves "indicators".
 
 When the transcriber doesn't expose word timestamps (Voxtral), the caller
-can pass `words=None` and these functions return `[]` — Layer 4.5 falls
+can pass `words=None` and these functions return `[]` - Layer 4.5 falls
 back to whole-audio prompts.
 """
 
@@ -102,7 +102,7 @@ def _merge_runs(
     """Walk a boolean flag array and emit time spans for runs of True values.
 
     `max_gap` lets a few non-indicator words slip into a run without breaking it
-    (e.g. "j … punkt … meyer … ät … gmail" — the names between "punkt"/"ät"
+    (e.g. "j … punkt … meyer … ät … gmail" - the names between "punkt"/"ät"
     aren't indicators, but they're inside the segment).
     `min_run_indicators` filters out tiny coincidental matches.
     `pad_words` widens the span by N words on each side for context.
@@ -189,7 +189,7 @@ def merge_or_fallback(
     """Collapse multiple segments into one (start of first → end of last) so the
     audio-LLM gets a single contiguous crop rather than a stitch of pieces.
 
-    Returns None when no segments were found — caller falls back to full audio.
+    Returns None when no segments were found - caller falls back to full audio.
     """
     if not spans:
         return None

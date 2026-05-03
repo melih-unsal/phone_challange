@@ -1,4 +1,4 @@
-"""Layer 4.5 — Segment-targeted re-listening for email + phone.
+"""Layer 4.5 - Segment-targeted re-listening for email + phone.
 
 The audio LLM is re-prompted with two field-focused prompts. When the
 transcriber exposed word timestamps (e.g. ElevenLabs Scribe), we use
@@ -7,7 +7,7 @@ transcriber exposed word timestamps (e.g. ElevenLabs Scribe), we use
 the part of the call that matters for the field.
 
 When timestamps aren't available (Voxtral transcription), we fall back to
-prompting the whole audio with the same field-focused prompt — still better
+prompting the whole audio with the same field-focused prompt - still better
 than the whole-record prompt, but without the rewind benefit.
 
 Self-consistency: each prompt is run NUM_TARGETED_VOTES times and majority-voted.
@@ -80,7 +80,7 @@ def targeted_extract(
 ) -> dict:
     """Returns a dict with email + phone re-listen values plus per-field meta.
 
-    `instructor` may be None — in that case we return empty values so the
+    `instructor` may be None - in that case we return empty values so the
     reconciler interprets the targeted re-listen as unavailable.
     `words` is the timestamped word list from Layer 1 (None if Voxtral STT).
     `run_email` / `run_phone` let the orchestrator skip a field when the

@@ -1,4 +1,4 @@
-"""Layer 5 — final reconciler.
+"""Layer 5 - final reconciler.
 
 Sees: transcripts (one per STT model) + country info + a list of candidate_1
 records (one per transcript) + candidate_2 (audio LLM whole-record) + targeted
@@ -7,22 +7,22 @@ Produces: a reasoning paragraph + the final caller-info JSON.
 
 Four deterministic safety nets wrap the LLM call:
 
-1. `_filter_invalid_targeted` (BEFORE the LLM) — drops a targeted re-listen
+1. `_filter_invalid_targeted` (BEFORE the LLM) - drops a targeted re-listen
    value if it looks structurally broken (email without "@" + TLD, phone that
    doesn't parse). Stops a truncated crop from hijacking the choice.
 
-2. `_unanimous_override` (AFTER the LLM) — if every whole-record candidate
+2. `_unanimous_override` (AFTER the LLM) - if every whole-record candidate
    (each candidate_1 + candidate_2) agrees on a key, that value is locked
    regardless of what the LLM picked.
 
-3. `_majority_override` (AFTER `_unanimous_override`) — when whole-record
+3. `_majority_override` (AFTER `_unanimous_override`) - when whole-record
    candidates have a strict majority (e.g. 2 of 3 agree on a value), that
    majority wins. Catches cases where the LLM was charmed by a confident-
    wrong targeted re-listen (call_09 phone, call_26 email): the targeted
    said one thing, the audio LLM agreed with it, but two transcript-LLMs
    agreed on the correct value.
 
-4. `_email_name_alignment` (AFTER `_majority_override`) — NAME ↔ EMAIL
+4. `_email_name_alignment` (AFTER `_majority_override`) - NAME <-> EMAIL
    CONSISTENCY: if candidates disagree on a name AND their ASCII forms
    actually differ (i.e. the disagreement is real letter-substitution, not
    just diacritics), and the FINAL email's local-part has a token within
@@ -208,12 +208,12 @@ def _email_name_alignment(
     all_candidates: list[dict],
     max_edit_distance: int = 2,
 ) -> dict:
-    """NAME ↔ EMAIL CONSISTENCY, applied deterministically.
+    """NAME <-> EMAIL CONSISTENCY, applied deterministically.
 
     Triggers when:
       - candidates disagree on a name field, AND
       - their ASCII-folded forms also differ (i.e. it's a real letter
-        substitution, NOT a pure diacritic disagreement — without this guard
+        substitution, NOT a pure diacritic disagreement - without this guard
         we'd strip the accent on cases like 'García' / 'García' / 'Garcia'
         because 'garcia' is within edit-distance 2 of every candidate), AND
       - the FINAL email's local-part contains a token within edit-distance 2
@@ -227,7 +227,7 @@ def _email_name_alignment(
         cand_2.last_name  = 'Le Fèvre'
         final.email       = 'marie.lefevre@yahoo.fr'   (LLM picked correctly)
     ASCII-folded names: {'lefebvre', 'lefevre', 'le fevre'} → distinct → proceed.
-    Edit distance from 'lefevre' (email run) to each: [1, 0, 1] — all ≤ 2.
+    Edit distance from 'lefevre' (email run) to each: [1, 0, 1] - all ≤ 2.
     → final.last_name = 'Lefevre'  (was 'Lefebvre' from the LLM).
     """
     final_email = (final.get("email") or "").strip().lower()
@@ -279,7 +279,7 @@ def reconcile(
     targeted = _filter_invalid_targeted(targeted)
 
     if _is_empty_candidate(candidate_2):
-        cand2_str = "(unavailable for this run — rely on candidate_1 list)"
+        cand2_str = "(unavailable for this run - rely on candidate_1 list)"
     else:
         cand2_str = _candidate_to_str(candidate_2)
 

@@ -18,7 +18,7 @@ from src.config import (
 
 
 # ---------------------------------------------------------------------------
-# Layer 2 — country / origin detection
+# Layer 2 - country / origin detection
 # ---------------------------------------------------------------------------
 COUNTRY_SYSTEM = f"""{COUNTRY_RULES}
 
@@ -34,7 +34,7 @@ Output the JSON."""
 
 
 # ---------------------------------------------------------------------------
-# Layer 3 — Candidate 1: self-consistent LLM extraction over the transcript
+# Layer 3 - Candidate 1: self-consistent LLM extraction over the transcript
 # ---------------------------------------------------------------------------
 EXTRACT_SYSTEM = f"""You extract caller info from a phone-call transcription. The caller's country has already been determined and is provided to you as input. Use it as the authoritative signal for spelling and orthography.
 
@@ -77,15 +77,15 @@ Give the JSON dictionary."""
 
 
 # ---------------------------------------------------------------------------
-# Layer 4 — Candidate 2: direct Voxtral instruction-following on the audio
+# Layer 4 - Candidate 2: direct Voxtral instruction-following on the audio
 # ---------------------------------------------------------------------------
 # Voxtral runs the prompt directly on the audio. Country info is unknown at
-# this stage (we deliberately do not pass it through — this candidate is
+# this stage (we deliberately do not pass it through - this candidate is
 # meant to be an INDEPENDENT reading of the audio that the reconciler can
 # cross-check against candidate 1).
 VOXTRAL_DIRECT_PROMPT = f"""Extract first_name, last_name, email and phone_number from the above audio. Return ONLY a JSON object with exactly those four keys, no extra keys, no surrounding text.
 
-The audio is in the German language. The caller may not be German — names might be Spanish, French, Portuguese, Italian, Scandinavian, Dutch, Polish, Japanese, etc. Extract the name as the caller would write it on a passport / ID, with native diacritics if the name's origin uses them.
+The audio is in the German language. The caller may not be German - names might be Spanish, French, Portuguese, Italian, Scandinavian, Dutch, Polish, Japanese, etc. Extract the name as the caller would write it on a passport / ID, with native diacritics if the name's origin uses them.
 
 {EMAIL_RULES}
 
@@ -96,7 +96,7 @@ Output JSON only:
 
 
 # ---------------------------------------------------------------------------
-# Layer 4.5 — Targeted re-listening prompts
+# Layer 4.5 - Targeted re-listening prompts
 # ---------------------------------------------------------------------------
 # The audio LLM gets two laser-focused prompts that hit only one field at a time.
 # Email and phone are the fields where ASR-based extraction degrades the most
@@ -128,7 +128,7 @@ Output JSON only:
 
 
 # ---------------------------------------------------------------------------
-# Layer 5 — Reconciler
+# Layer 5 - Reconciler
 # ---------------------------------------------------------------------------
 # Receives: transcript, country info, candidate 1 (LLM self-consistency over
 # transcript), candidate 2 (Voxtral direct from audio). Produces a reasoning
@@ -138,7 +138,7 @@ RECONCILE_SYSTEM = f"""You are the final reconciler. You receive:
 - the caller's country (already determined upstream);
 - CANDIDATES_1: a LIST of answers, one per STT model. Each entry was produced by self-consistent LLM extraction over THAT transcript (majority-voted across multiple runs).
 - CANDIDATE 2: the answer produced by an audio LLM with one whole-record prompt (instruction-following on the raw audio).
-- TARGETED RE-LISTEN: optional. Single-field re-extractions where the audio LLM was prompted to focus on ONLY the email or ONLY the phone, on a cropped audio window. When present, treat these as the strongest single-field signal — they were produced by re-listening with the field's own rules in front of the model.
+- TARGETED RE-LISTEN: optional. Single-field re-extractions where the audio LLM was prompted to focus on ONLY the email or ONLY the phone, on a cropped audio window. When present, treat these as the strongest single-field signal - they were produced by re-listening with the field's own rules in front of the model.
 
 The candidates are INDEPENDENT readings of the same call. Your job is to combine them into the single most-probable JSON answer, with a short reasoning trace.
 
@@ -146,7 +146,7 @@ CONTEXT
 - {TRANSCRIPT_CONTEXT}
 - Each entry in CANDIDATES_1 sees only its own transcript; STT models make different errors, so disagreement between CANDIDATES_1 entries is informative.
 - Candidate 2 listens to the actual audio, so it tends to hear letters, digits and proper names more directly, but it does not know the country and may default to German spelling for non-German names.
-- Targeted re-listens listen to the audio with all of their attention on a single field — strong evidence for that field, no signal at all for other fields.
+- Targeted re-listens listen to the audio with all of their attention on a single field - strong evidence for that field, no signal at all for other fields.
 
 DECISION POLICY (apply per-key)
 
@@ -154,7 +154,7 @@ DECISION POLICY (apply per-key)
 
 2. TARGETED RE-LISTEN PRIORITY for email and phone. If the targeted re-listen value is present and structurally valid (email has "@" + TLD; phone parses to a real country prefix), prefer it over the whole-record candidates UNLESS the whole-record candidates are unanimous on a different value (then unanimous wins).
 
-3. NAME ↔ EMAIL CONSISTENCY (CRITICAL — run this BEFORE picking a name from the audio). If candidates disagree on a name field but agree on an email, AND the email's local-part has an alphabetic token within edit-distance 2 of EVERY candidate spelling, the email is the authority — use its token (capitalised) as the name. Example: cand_1.first_name="Armet", cand_2.first_name="Armed", email="ahmed.hassan@gmail.com" → first_name = "Ahmed".
+3. NAME <-> EMAIL CONSISTENCY (CRITICAL - run this BEFORE picking a name from the audio). If candidates disagree on a name field but agree on an email, AND the email's local-part has an alphabetic token within edit-distance 2 of EVERY candidate spelling, the email is the authority - use its token (capitalised) as the name. Example: cand_1.first_name="Armet", cand_2.first_name="Armed", email="ahmed.hassan@gmail.com" → first_name = "Ahmed".
 
 4. Otherwise apply the per-key rules below.
 
@@ -163,14 +163,14 @@ DECISION POLICY (apply per-key)
 {LAST_NAME_RULES}
 
 When the two candidates disagree on a NAME field:
-- If the candidates differ ONLY in diacritics (same letters, one has accents, the other does not), and the country's standard orthography uses those diacritics, pick the diacritic form. If neither candidate has the diacritics but the country clearly requires them, you may produce the diacritic form yourself (NAME fields only — never invent letters/digits for email or phone).
+- If the candidates differ ONLY in diacritics (same letters, one has accents, the other does not), and the country's standard orthography uses those diacritics, pick the diacritic form. If neither candidate has the diacritics but the country clearly requires them, you may produce the diacritic form yourself (NAME fields only - never invent letters/digits for email or phone).
 - If the candidates differ in letter spelling: prefer candidate 2 (audio) for the LETTERS the caller actually said, but apply candidate 1's orthography conventions on top (i.e. add the country-standard diacritics).
 - If candidate 2 is empty and candidate 1 is non-empty (or vice versa), take the non-empty one.
 
 {EMAIL_RULES}
 
 When the two candidates disagree on email:
-- Pick the candidate verbatim — do NOT invent letters yourself.
+- Pick the candidate verbatim - do NOT invent letters yourself.
 - NAME-TOKEN AGREEMENT: take the chosen NAME (first + last, lowercased, diacritic-stripped). For each email candidate, look at the alphabetic letter-runs inside the local-part (ignoring digits and separators). If one candidate's alphabetic letter-runs match the chosen NAME's letters and the other's do not, pick the matching one. This rule overrides "stay closer to the audio".
 - HANDLE ELEMENTS (digits, year suffixes, arbitrary segments): when candidates differ on whether they retain non-alphabetic handle elements, prefer the candidate that retains them.
 - If only one candidate has the "@" and a plausible domain, pick that one.
@@ -178,7 +178,7 @@ When the two candidates disagree on email:
 {PHONE_RULES}
 
 When the two candidates disagree on phone_number:
-- Discard candidates that start with "+0", "+04", "0", or "00" — they are mis-normalised. Pick a candidate that begins with a valid country code ("+49", "+33", "+34", "+44", "+1", "+55", "+46", "+39", "+81", "+31", ...).
+- Discard candidates that start with "+0", "+04", "0", or "00" - they are mis-normalised. Pick a candidate that begins with a valid country code ("+49", "+33", "+34", "+44", "+1", "+55", "+46", "+39", "+81", "+31", ...).
 - Prefer the candidate whose digit count matches a plausible national format for the caller's country.
 - Apply the stutter rule yourself if the chosen candidate still has a doubled trailing digit.
 

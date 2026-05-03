@@ -125,7 +125,7 @@ class VoxtralBackend:
         text = " ".join(d.strip() for d in decoded)
         del inputs, outputs
         self._free()
-        # Voxtral does not expose per-word timestamps — leave words=None.
+        # Voxtral does not expose per-word timestamps - leave words=None.
         return Transcription(text=text, backend=self.name, words=None)
 
     def instruct(
@@ -176,9 +176,9 @@ class ElevenLabsTranscriber:
     """ElevenLabs Speech-to-Text (Scribe). Transcription only.
 
     Uses the official `elevenlabs` SDK. Supports the optional `keyterms`
-    biasing field — useful for our domain (call recordings often use
+    biasing field - useful for our domain (call recordings often use
     German separator words "Punkt"/"Bindestrich"/"Unterstrich" inside
-    spelled-out emails) — wired through `config.ELEVENLABS_KEYTERMS`.
+    spelled-out emails) - wired through `config.ELEVENLABS_KEYTERMS`.
     """
 
     def __init__(self, model_id: str, api_key_env: str = "ELEVENLABS_API_KEY"):
@@ -230,7 +230,7 @@ class ElevenLabsTranscriber:
         )
 
     def timestamp(self, audio_path: str, language: str = "de") -> list[Word]:
-        """Reuse `.transcribe()` but discard the text — for the Timestamper role."""
+        """Reuse `.transcribe()` but discard the text - for the Timestamper role."""
         return self.transcribe(audio_path, language=language).words or []
 
 
@@ -251,7 +251,7 @@ class WhisperBackend:
 
     Uses transformers' `pipeline("automatic-speech-recognition")` with fp32
     weights and word-level `return_timestamps`. The pipeline returns a clean
-    `{"chunks": [{"text", "timestamp": (start, end)}]}` structure — far less
+    `{"chunks": [{"text", "timestamp": (start, end)}]}` structure - far less
     fragile than parsing `tokenizer.batch_decode(..., output_offsets=True)`,
     which silently returns plain strings on transformers 5.7.0.
 
@@ -360,20 +360,20 @@ def build_instructor(spec: str) -> AudioInstructor:
     inst = _get_or_build(spec)
     if not hasattr(inst, "instruct"):
         raise RuntimeError(
-            f"backend {spec!r} cannot follow audio instructions — pick a "
+            f"backend {spec!r} cannot follow audio instructions - pick a "
             "model that supports it (e.g. voxtral:...)."
         )
     return inst
 
 
 def build_timestamper(spec: str | None) -> Timestamper | None:
-    """Return None when spec is empty/None — the pipeline can run without one."""
+    """Return None when spec is empty/None - the pipeline can run without one."""
     if not spec or spec.lower() in ("none", "off"):
         return None
     inst = _get_or_build(spec)
     if not hasattr(inst, "timestamp"):
         raise RuntimeError(
-            f"backend {spec!r} cannot produce word timestamps — pick "
+            f"backend {spec!r} cannot produce word timestamps - pick "
             "whisper:* or elevenlabs:*."
         )
     return inst

@@ -1,4 +1,4 @@
-"""Layer 2 — country / linguistic-origin detection from the transcript."""
+"""Layer 2 - country / linguistic-origin detection from the transcript."""
 
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate

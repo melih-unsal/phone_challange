@@ -2,7 +2,7 @@
 
 Used both by `schema.CallerInfo` (production output) and by `evaluate`
 (comparison against ground truth). Centralised here so prediction-side and
-evaluation-side normalization stay byte-identical — this is what stops the
+evaluation-side normalization stay byte-identical - this is what stops the
 pipeline losing points to formatting mismatches like "+49 172 84492" vs
 "+4917284492" or "Jurgen" vs "Jürgen".
 """
@@ -49,7 +49,7 @@ def _country_dialcode(region: str) -> str:
 
 
 def normalize_email(value: str) -> str:
-    """Lowercase + strip. We don't rewrite the local-part — formatting was
+    """Lowercase + strip. We don't rewrite the local-part - formatting was
     already enforced upstream by the extraction prompt."""
     if not value:
         return ""

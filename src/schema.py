@@ -2,7 +2,7 @@
 
 The reconciler emits a free-form dict; this schema is the gate that
 turns it into a validated, normalized output. Failures are collected
-per-field rather than raised — Layer 5 already chose the best candidate
+per-field rather than raised - Layer 5 already chose the best candidate
 for each key, and we'd rather emit an unvalidated fallback string than
 drop the whole record.
 """

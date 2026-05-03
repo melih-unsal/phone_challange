@@ -1,4 +1,4 @@
-"""Layer 4 — Candidate 2.
+"""Layer 4 - Candidate 2.
 
 Direct audio instruction-following on the WAV (no transcript involved).
 The backend is whichever AudioInstructor was configured (Voxtral by default,

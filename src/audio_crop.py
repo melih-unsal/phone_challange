@@ -1,6 +1,6 @@
 """Crop a window of audio to a temporary WAV file.
 
-Uses only `soundfile` (libsndfile) — deliberately avoiding `librosa`
+Uses only `soundfile` (libsndfile) - deliberately avoiding `librosa`
 because librosa pulls in `numba` JIT and `audioread`, both of which have
 been observed to interact badly with torch's CUDA init on this machine
 (intermittent segfaults during the first iteration of the pipeline).

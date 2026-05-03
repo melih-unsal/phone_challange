@@ -24,9 +24,9 @@ CONTEXT
 - The caller may be of any nationality. Infer caller origin from, in order of signal strength:
     1. Email country-code TLD (.fr, .br, .se, .es, .it, .nl, .uk, .pt, etc.) and full domain (uol.com.br, free.fr, gmx.de, ...).
     2. Cultural pattern of the name itself.
-    3. Phone country code (WEAKEST — German number does not mean German caller).
+    3. Phone country code (WEAKEST - German number does not mean German caller).
 
-NAMES — origin-correct spelling and DIACRITICS
+NAMES - origin-correct spelling and DIACRITICS
 - Use the STANDARD spelling of the name in the inferred origin's language. Never default to German spelling for a non-German caller.
 - Diacritics are mandatory whenever the inferred origin's standard spelling carries them. The transcript and the email are ASCII and cannot encode diacritics, so their absence is NOT evidence that the name lacks diacritics.
 - Apply ALL of these patterns:
@@ -39,7 +39,7 @@ NAMES — origin-correct spelling and DIACRITICS
     • German: ä, ö, ü, ß where standard.
 - If you can recall how a name is overwhelmingly written on a passport/ID/legal document in its native country, output THAT form.
 
-NAME ↔ EMAIL CONSISTENCY (token-level — be CONSERVATIVE about modifying the email)
+NAME <-> EMAIL CONSISTENCY (token-level - be CONSERVATIVE about modifying the email)
 
 Split the email's local-part by ".", "-", "_" into tokens. Classify each token:
   - DIGITS-ONLY (e.g., "1983", "47") → keep unchanged.
@@ -61,9 +61,9 @@ Direction of correction (when the spoken NAME and a NAME-LIKE token disagree):
 
 The phrase "names look too different" maps onto min_distance > 2 above: in that case do NOT modify the email. Preserve all unrecognised tokens exactly as transcribed.
 
-EMAIL — other rules
+EMAIL - other rules
 - Lowercase output.
-- If the local-part contains a sequence of single letters joined by hyphens (caller spelled the name letter-by-letter), concatenate those letters and drop the hyphens between them. A hyphen between multi-letter tokens is a real hyphen — keep it.
+- If the local-part contains a sequence of single letters joined by hyphens (caller spelled the name letter-by-letter), concatenate those letters and drop the hyphens between them. A hyphen between multi-letter tokens is a real hyphen - keep it.
 - Separators between multi-letter name tokens (".", "-", "_") are preserved exactly as transcribed. In German speech, "Unterstrich" (underscore), "Bindestrich" (hyphen), and "Punkt" (dot) are distinct; do not normalize one to another.
 - If the transcript has NO "@" but contains a name-shaped string ending in a recognised TLD (.de, .com, .fr, .es, .it, .nl, .uk, .br, .se, .no, .pt, .net, .org, .eu, .ch, .at), the "@" was dropped by the ASR. Reconstruct: the domain is the rightmost two dot-segments (or three for known multi-level TLDs like .co.uk, .com.br); insert "@" before that domain. Never output "" when an address was clearly spoken.
 
