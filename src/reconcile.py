@@ -27,9 +27,7 @@ Four deterministic safety nets wrap the LLM call:
    actually differ (i.e. the disagreement is real letter-substitution, not
    just diacritics), and the FINAL email's local-part has a token within
    edit-distance 2 of every candidate spelling, replace the name with the
-   email's token. The ASCII-distinct guard prevents this from stripping
-   accents on cases like "García"/"Garcia" where 2/3 candidates correctly
-   produced the accented form.
+   email's token.
 """
 
 import json
@@ -93,8 +91,7 @@ def _is_empty_candidate(cand: dict) -> bool:
 
 def _filter_invalid_targeted(targeted: dict | None) -> dict | None:
     """Strip targeted values that are structurally invalid so the reconciler
-    doesn't even see them. A truncated crop yielding 'marie.lefevre@' is worse
-    than no signal at all."""
+    doesn't even see them."""
     if not targeted:
         return targeted
     out = dict(targeted)
@@ -195,7 +192,6 @@ def _email_local_runs(email: str) -> list[str]:
 
 
 def _ascii_fold(value: str) -> str:
-    """Strip diacritics and lowercase. 'García' -> 'garcia', 'Le Fèvre' -> 'le fevre'."""
     if not value:
         return ""
     decomposed = unicodedata.normalize("NFD", value)
@@ -213,22 +209,11 @@ def _email_name_alignment(
     Triggers when:
       - candidates disagree on a name field, AND
       - their ASCII-folded forms also differ (i.e. it's a real letter
-        substitution, NOT a pure diacritic disagreement - without this guard
-        we'd strip the accent on cases like 'García' / 'García' / 'Garcia'
-        because 'garcia' is within edit-distance 2 of every candidate), AND
+        substitution, NOT a pure diacritic disagreement.
       - the FINAL email's local-part contains a token within edit-distance 2
         of every candidate's ASCII-folded spelling.
 
     When all three hold, the email's token (capitalised) replaces the name.
-
-    Worked example for call_25:
-        cand_1A.last_name = 'Lefebvre'
-        cand_1B.last_name = 'Lefevre'
-        cand_2.last_name  = 'Le Fèvre'
-        final.email       = 'marie.lefevre@yahoo.fr'   (LLM picked correctly)
-    ASCII-folded names: {'lefebvre', 'lefevre', 'le fevre'} -> distinct -> proceed.
-    Edit distance from 'lefevre' (email run) to each: [1, 0, 1] - all ≤ 2.
-    -> final.last_name = 'Lefevre'  (was 'Lefebvre' from the LLM).
     """
     final_email = (final.get("email") or "").strip().lower()
     if "@" not in final_email:
