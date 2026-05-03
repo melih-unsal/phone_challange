@@ -1,0 +1,21 @@
+# Audio backends
+torch>=2.4
+transformers>=5.0          # Voxtral: VoxtralForConditionalGeneration
+accelerate>=0.30           # required by transformers for device_map=...
+mistral-common>=1.11       # Voxtral audio tokenizer / processor support
+elevenlabs>=2.0            # ElevenLabs Scribe SDK
+
+# LLM layers (country / extract / reconcile)
+langchain-core>=0.3
+langchain-openai>=0.3
+
+# Validation / normalization
+pydantic>=2.6
+phonenumbers>=9.0          # E.164 phone normalization
+email-validator>=2.0       # used by pydantic EmailStr
+
+# Misc
+python-dotenv>=1.0         # auto-load .env (OPENAI_API_KEY, ELEVENLABS_API_KEY)
+tqdm>=4.65
+phonenumbers>=9.0
+librosa

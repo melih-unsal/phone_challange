@@ -1,0 +1,2004 @@
+{
+    "run": {
+        "timestamp": "2026-05-03T14:32:24",
+        "prompt_version": "2026-05-03.v1",
+        "models": {
+            "transcription": "elevenlabs:scribe_v2",
+            "instruct": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+            "llm": "gpt-5.4-mini"
+        },
+        "settings": {
+            "num_llm_votes": 5,
+            "num_instruct_votes": 3,
+            "num_targeted_votes": 3,
+            "use_targeted_extraction": true,
+            "transcription_language": "de",
+            "default_phone_region": "DE"
+        },
+        "num_recordings": 30,
+        "recordings_dir": "data/recordings",
+        "ground_truth": "data/ground_truth.json"
+    },
+    "recordings": [
+        {
+            "id": "call_01",
+            "file": "call_01.wav",
+            "expected": {
+                "first_name": "Jana",
+                "last_name": "Schmidt",
+                "email": "johanna.schmidt@gmail.com",
+                "phone_number": "+4915211223456"
+            },
+            "transcription": "Guten Tag, mein Name ist Jana Schmidt und ich hab eine rechtliche Frage, die ich gern mit 'nem Anwalt besprechen würde. Ähm, Sie erreichen mich unter johanna.schmidt at gmail.com oder telefonisch unter plus vier neun eins fünf zwei eins eins zwei zwei drei vier fünf sechs. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller name and surname are clearly German, and the email domain is a generic provider so the name pattern is the strongest signal."
+            },
+            "candidate_1": {
+                "first_name": "Jana",
+                "last_name": "Schmidt",
+                "email": "johanna.schmidt@gmail.com",
+                "phone_number": "+4915211223456"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate, so I used it as the base. For the name, the transcript says \"Jana Schmidt,\" and German orthography supports the spelling as given. For the email, the transcript clearly says \"johanna.schmidt at gmail.com,\" so I inserted @ and kept the rest verbatim. For the phone, the spoken German digits normalize to a German international number, yielding +4915211223456.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 3.12,
+                "country_s": 2.4,
+                "candidate_1_s": 0.93,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.48
+            }
+        },
+        {
+            "id": "call_02",
+            "file": "call_02.wav",
+            "expected": {
+                "first_name": "Herbert",
+                "last_name": "Herbst",
+                "email": "h47-herbst@web.de",
+                "phone_number": "+49157231412313"
+            },
+            "transcription": "Schönen guten Tag. Ich hab eine rechtliche Frage und würde die gern mit einer Anwältin aus der Kanzlei besprechen. Ähm, mein Name ist Herbert Herbst und Sie erreichen mich per E-Mail über H vier sieben Minus Herbst at web Punkt de oder per Telefon, ähm, über plus vier neun eins fünf sieben zwei drei eins vier eins zwei drei eins drei. Ich danke Ihnen. Schönen Tag noch.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller gives a German .de email domain and a clearly German name, so the name’s linguistic origin is German."
+            },
+            "candidate_1": {
+                "first_name": "Herbert",
+                "last_name": "Herbst",
+                "email": "h47-herbst@web.de",
+                "phone_number": "+49157231412313"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate, so it is taken for all fields. The transcript clearly gives the German name Herbert Herbst, the email as h vier sieben minus Herbst at web punkt de, and the phone as plus vier neun ...; candidate 1’s email and phone are normalized forms of that. No stronger conflicting candidate is available.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+49157231412313'"
+            ],
+            "timings": {
+                "transcription_s": 5.56,
+                "country_s": 0.89,
+                "candidate_1_s": 1.56,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.17
+            }
+        },
+        {
+            "id": "call_03",
+            "file": "call_03.wav",
+            "expected": {
+                "first_name": "Annika",
+                "last_name": "Becker",
+                "email": "annika.becker@gmx.de",
+                "phone_number": "+4917698765432"
+            },
+            "transcription": "Guten Tag, mein Name ist Annika Becker und ich hab eine rechtliche Frage und würde die gerne mit einem Anwalt besprechen. Ähm, da ich jetzt gerade niemanden erreicht hab, würde ich mich freuen, wenn Sie mich per E-Mail unter annika Punkt becker ät gmx Punkt de anschreiben oder sich per Telefon bei mir melden. Das wär die plus vier neun eins sieben sechs neun acht sieben sechs fünf vier drei zwei. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain gmx.de is a strong German signal, and the name Annika Becker is also clearly German."
+            },
+            "candidate_1": {
+                "first_name": "Annika",
+                "last_name": "Becker",
+                "email": "annika.becker@gmx.de",
+                "phone_number": "+4917698765432"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate and it matches the transcript cleanly. The name is German, so the plain spellings Annika Becker are correct. The email reconstructs directly from 'annika punkt becker ät gmx punkt de' as annika.becker@gmx.de. The phone normalizes the spoken German international format 'plus vier neun ...' to +4917698765432, which is structurally valid and consistent with the transcription.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.98,
+                "country_s": 2.06,
+                "candidate_1_s": 0.91,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.29
+            }
+        },
+        {
+            "id": "call_04",
+            "file": "call_04.wav",
+            "expected": {
+                "first_name": "Matthias",
+                "last_name": "Hoffmann",
+                "email": "m.hoffmann@outlook.com",
+                "phone_number": "+493054783219"
+            },
+            "transcription": "Guten Tag, mir wurde vor zwei Tagen gekündigt und deswegen würde ich sehr gern mit einem Anwalt über die Kündigung sprechen, weil das meiner Meinung nach alles nicht so rechtens ist. Ähm, mein Name ist Matthias Hoffmann. Das ist M A T T H I A S und Hoffmann mit Doppel-F. Und per E-Mail erreichen Sie mich unter M Punkt Hoffmann ät outlook Punkt com. Oder Sie rufen mich direkt an unter plus vier neun drei null fünf vier sieben acht drei zwei eins neun. Das wär auch super. Hauptsache, Sie melden sich recht schnell. Ich danke Ihnen. Tschüss.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller’s name is clearly German, and the email is a generic domain with no stronger foreign signal."
+            },
+            "candidate_1": {
+                "first_name": "Matthias",
+                "last_name": "Hoffmann",
+                "email": "m.hoffmann@outlook.com",
+                "phone_number": "+493054783219"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate, so it wins by default for all fields. I kept the German-standard name spellings, accepted the email as the spoken address with the dot separator and lowercase, and normalized the phone to international format from the spoken '+49' number.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 6.16,
+                "country_s": 2.28,
+                "candidate_1_s": 1.2,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.26
+            }
+        },
+        {
+            "id": "call_05",
+            "file": "call_05.wav",
+            "expected": {
+                "first_name": "Sandra",
+                "last_name": "Weber",
+                "email": "sandra-weber@t-online.de",
+                "phone_number": "+4917244556677"
+            },
+            "transcription": "Guten Tag, ich meld mich heut mit einer rechtlichen Frage bei Ihnen. Ähm, mein Name ist Sandra Weber und es wäre schön, wenn Sie sich bei mir melden. Ähm, meine E-Mail-Adresse ist S A N D R A Minus W E B E R ät T Minus Online Punkt D E. Oder noch besser, Sie rufen Sie mich direkt an. Das wär die plus vier neun eins sieben zwei vier vier fünf fünf sechs sechs sieben sieben. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain is T-Online.de, a German domain, and the name Sandra Weber is also clearly German."
+            },
+            "candidate_1": {
+                "first_name": "Sandra",
+                "last_name": "Weber",
+                "email": "sandra-weber@t-online.de",
+                "phone_number": "+4917244556677"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate and matches the transcript on all fields. The email is correctly reconstructed as lowercase with hyphen preserved and @ inserted before t-online.de. The phone is already in international format and matches the spoken digits, so it is kept as-is.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.96,
+                "country_s": 0.9,
+                "candidate_1_s": 1.34,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.21
+            }
+        },
+        {
+            "id": "call_06",
+            "file": "call_06.wav",
+            "expected": {
+                "first_name": "Klaus",
+                "last_name": "Fischer",
+                "email": "k.fischer1983@gmail.com",
+                "phone_number": "+498977234561"
+            },
+            "transcription": "Guten Morgen, Fischer mein Name. Ähm, ich hab eine rechtliche Frage bezüglich einer Kündigung, die mir gegenüber ausgesprochen wurde und würde mich über eine Rückmeldung freuen. Ähm, mein Name ist Klaus Fischer und meine E-Mail-Adresse ist k Punkt f-i-s-c-h-e-r 1983 ät gmail.com. Oder Sie rufen mich an. Das wär die plus 498977234561. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email is a generic gmail.com address, so the German name pattern Klaus Fischer is the strongest signal."
+            },
+            "candidate_1": {
+                "first_name": "Klaus",
+                "last_name": "Fischer",
+                "email": "k.fischer1983@gmail.com",
+                "phone_number": "+498977234561"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate, so it wins by default. The name fields match the transcript and German orthography. For email, I preserved the spelled local-part with the spoken digit handle: the transcript says k Punkt f-i-s-c-h-e-r 1983 ät gmail.com, which maps to k.fischer1983@gmail.com rather than dropping the 1983. The phone number is already in international format and valid as spoken: +498977234561.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.99,
+                "country_s": 0.87,
+                "candidate_1_s": 2.08,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.6
+            }
+        },
+        {
+            "id": "call_07",
+            "file": "call_07.wav",
+            "expected": {
+                "first_name": "Julia",
+                "last_name": "Schröder",
+                "email": "julia.schroeder@web.de",
+                "phone_number": "+4915122998877"
+            },
+            "transcription": "Guten Tag, ich hatte heute einen Auffahrunfall und würde mich deswegen gerne rechtlich dazu informieren. Ähm, mein Name ist Julia Schröder. Per E-Mail würden Sie mich erreichen unter julia Punkt s-c-h-r-o-e-d-e-r ät web Punkt de oder Sie rufen mich an. Ich bin den ganzen Tag über erreichbar unter plus vier neun eins fünf eins zwei zwei neun neun acht acht sieben sieben. Ich danke Ihnen für Ihren Rückruf. Danke schön.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain is web.de, a German domain, and the name Schröder is clearly German."
+            },
+            "candidate_1": {
+                "first_name": "Julia",
+                "last_name": "Schröder",
+                "email": "julia.schroeder@web.de",
+                "phone_number": "+4915122998877"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate, so I kept it for all fields. The transcript clearly gives the German name Julia Schröder, the email spelled as julia s-c-h-r-o-e-d-e-r at web.de, and the phone as plus four nine ... with a valid German mobile format, normalized to +49. No targeted re-listen values were available to override anything.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.15,
+                "country_s": 0.89,
+                "candidate_1_s": 2.09,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.24
+            }
+        },
+        {
+            "id": "call_08",
+            "file": "call_08.wav",
+            "expected": {
+                "first_name": "Thomas",
+                "last_name": "Neumann",
+                "email": "thomas.neumann@gmx.net",
+                "phone_number": "+494088991234"
+            },
+            "transcription": "Guten Tag, ich hab eine Unterhaltsfrage. Ähm, ja, mein, mein Name ist Thomas Neumann. Thomas, T-H-O-M-A-S und Neumann, wie man's spricht. Ähm, Sie können sich gerne bei mir melden unter der E-Mail-Adresse, ähm, thomas.neumann@gmx.net oder per Telefon unter +494088991234. Ich danke Ihnen für Ihre Rückmeldung.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain gmx.net and the German name pattern Thomas Neumann indicate a clearly German linguistic origin."
+            },
+            "candidate_1": {
+                "first_name": "Thomas",
+                "last_name": "Neumann",
+                "email": "thomas.neumann@gmx.net",
+                "phone_number": "+494088991234"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate here, and it matches the transcript verbatim on all fields. No targeted re-listen values are available, so there is no stronger competing signal. The name follows German orthography, the email is already a valid lowercase address, and the phone is already in international format with a valid +49 prefix.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.94,
+                "country_s": 0.9,
+                "candidate_1_s": 2.42,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.47
+            }
+        },
+        {
+            "id": "call_09",
+            "file": "call_09.wav",
+            "expected": {
+                "first_name": "Petra",
+                "last_name": "Müller",
+                "email": "petra-m@yahoo.de",
+                "phone_number": "+4916277665544"
+            },
+            "transcription": "Guten Tag, ich meld mich heute bei Ihnen, weil ich eine rechtliche Frage hab, die ich gern mit 'nem Anwalt besprechen würde. Ähm, und zwar ist mein Name Petra Müller. Ähm, Sie können sich gerne per E-Mail bei mir melden, das wär petra minus m at yahoo Punkt de. Oder Sie rufen mich an unter plus vier neun eins sechs zwei sieben sieben sechs sechs fünf fünf vier vier. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller’s name and email domain both fit a clear German pattern, and the .de address strongly supports German orthography."
+            },
+            "candidate_1": {
+                "first_name": "Petra",
+                "last_name": "Müller",
+                "email": "petra-m@ yahoo.de",
+                "phone_number": "+4916277665544"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate, so it wins by default for all fields. I normalized the email to the clearly spoken form with the separator preserved and lowercase, and kept the phone number in valid international format as transcribed.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 3.79,
+                "country_s": 0.73,
+                "candidate_1_s": 3.52,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.35
+            }
+        },
+        {
+            "id": "call_10",
+            "file": "call_10.wav",
+            "expected": {
+                "first_name": "Stefan",
+                "last_name": "Zimmermann",
+                "email": "s.zimmermann@outlook.de",
+                "phone_number": "+4922133445566"
+            },
+            "transcription": "Guten Tag, ich hab eine rechtliche Frage. Und zwar ist mein Name Stefan Zimmermann. Ähm, es wär schön, wenn sich die Anwältin bei mir melden würde. Entweder unter der E-Mail-Adresse, das wär S Punkt Zimmermann ät outlook Punkt de. Oder Sie rufen mich an unter plus vier neun zwei zwei eins drei drei vier vier fünf fünf sechs sechs. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain is outlook.de and the surname Zimmermann is clearly German."
+            },
+            "candidate_1": {
+                "first_name": "Stefan",
+                "last_name": "Zimmermann",
+                "email": "s.zimmermann@outlook.de",
+                "phone_number": "+4922133445566"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable source here, so it wins by default. The transcript clearly gives the German name Stefan Zimmermann, the email spelled as S Punkt Zimmermann at outlook Punkt de, and the phone as plus four nine two two one three three four four five five six six; candidate 1 normalizes these correctly to an email with @ and a valid German-formatted phone number, so I keep it.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 4.24,
+                "country_s": 0.66,
+                "candidate_1_s": 2.72,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.77
+            }
+        },
+        {
+            "id": "call_11",
+            "file": "call_11.wav",
+            "expected": {
+                "first_name": "Brigitte",
+                "last_name": "Koch",
+                "email": "brigitte.koch@freenet.de",
+                "phone_number": "+4917811223344"
+            },
+            "transcription": "Guten Tag, mein Name ist Brigitte Koch und ich hab oder ich steck mitten in einer Nachbarschaftsstreitigkeit. Es wär schön, wenn sich die Anwältin bei mir per E-Mail melden würde. Das wäre B-R-I-G-I-T-T-E Punkt Koch ät freenet Punkt de. Oder Sie rufen mich einfach an die nächsten Tage. Das wär plus vier neun eins sieben acht eins eins zwei zwei drei drei vier vier. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller gives a German name and a .de email domain, both strongly indicating German orthography."
+            },
+            "candidate_1": {
+                "first_name": "Brigitte",
+                "last_name": "Koch",
+                "email": "brigitte.koch@freenet.de",
+                "phone_number": "+4917811223344"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate and matches the transcript on all fields. The email is recovered correctly from the spoken spelling and domain, and the phone normalizes cleanly to a German international number; no targeted re-listen values were available to override anything.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.91,
+                "country_s": 0.97,
+                "candidate_1_s": 2.83,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.04
+            }
+        },
+        {
+            "id": "call_12",
+            "file": "call_12.wav",
+            "expected": {
+                "first_name": "Michael",
+                "last_name": "Wagner",
+                "email": "michael_wagner@gmx.de",
+                "phone_number": "+4969999887766"
+            },
+            "transcription": "Guten Morgen, mein Name ist Michael Wagner und ich habe eine rechtliche Frage, die ich gern mit einem Anwalt besprechen würde. Ähm, daher würde ich Sie bitten, sich entweder per E-Mail oder per Telefon bei mir zu melden. E-Mail wäre Michael Unterstrich Wagner ät gmx.de oder Sie rufen mich einfach an. Das wäre plus vier neun sechs neun neun neun acht acht sieben sieben sechs sechs. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain gmx.de is a German domain and the name Michael Wagner is also clearly German."
+            },
+            "candidate_1": {
+                "first_name": "Michael",
+                "last_name": "Wagner",
+                "email": "michael_wagner@gmx.de",
+                "phone_number": "+4969999887766"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate, so it wins by default. The transcript names Michael Wagner and spells the email as “Michael Unterstrich Wagner ät gmx.de,” which normalizes to michael_wagner@gmx.de. The phone is spoken in German as plus four nine ... and normalizes cleanly to +4969999887766.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 4.45,
+                "country_s": 1.92,
+                "candidate_1_s": 1.08,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.41
+            }
+        },
+        {
+            "id": "call_13",
+            "file": "call_13.wav",
+            "expected": {
+                "first_name": "Sabine",
+                "last_name": "Krause",
+                "email": "sabine.krause@gmail.com",
+                "phone_number": "+4917055443322"
+            },
+            "transcription": "Guten Tag, Sabine Krause hier. Ähm, ich hab ein rechtliches Anliegen, worüber ich gern mit einer Anwältin sprechen würde. Daher würd ich Sie bitten, dass Sie sich einfach kurz mal bei mir melden. Das wär entweder unter der E-Mail-Adresse möglich: sabine Punkt krause ät gmail.com oder Sie melden sich per Telefon unter plus vier neun eins sieben null fünf fünf vier vier drei drei zwei zwei. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The name Sabine Krause is clearly German, and the only email/domain signal is a generic gmail.com address."
+            },
+            "candidate_1": {
+                "first_name": "Sabine",
+                "last_name": "Krause",
+                "email": "sabine.krause@gmail.com",
+                "phone_number": "+4917055443322"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate and matches the transcript on all four fields. The name spelling is standard German, the email is reconstructed from spoken 'Punkt' and 'ät' to a valid Gmail address, and the phone is normalized from spoken 'plus vier neun ...' to the international +49 format. No competing audio candidate or targeted re-listen value is available.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917055443322'"
+            ],
+            "timings": {
+                "transcription_s": 3.7,
+                "country_s": 0.8,
+                "candidate_1_s": 1.16,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.43
+            }
+        },
+        {
+            "id": "call_14",
+            "file": "call_14.wav",
+            "expected": {
+                "first_name": "Rainer",
+                "last_name": "Schulz",
+                "email": "rainer-schulz@web.de",
+                "phone_number": "+4951166778899"
+            },
+            "transcription": "Guten Morgen, Schulz hier, Rainer Schulz. Uuund ich hab eine rechtliche Frage. Es geht um eine Kündigung und ich würd darüber gern mit einer Anwältin sprechen. Ähm, am besten melden Sie sich einfach per E-Mail bei mir. Das wär R A I N E R Bindestrich Schulz ät web Punkt de. Oder Sie melden sich per Telefon. Das wär plus vier neun fünf eins eins sechs sechs sieben sieben acht acht neun neun. Ich danke Ihnen auf jeden Fall. Tschüss.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The surname and German-language transcript are clearly German, and the email domain is a German .de address."
+            },
+            "candidate_1": {
+                "first_name": "Rainer",
+                "last_name": "Schulz",
+                "email": "rainer-schulz@web.de",
+                "phone_number": "+4951166778899"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable whole-record extraction, and there are no targeted re-listen values. The transcript clearly spells the name as Rainer Schulz, the email as R A I N E R Bindestrich Schulz at web Punkt de, and the phone as plus four nine ... ; candidate 1 normalizes these correctly and is consistent across fields.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.26,
+                "country_s": 1.0,
+                "candidate_1_s": 0.99,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.39
+            }
+        },
+        {
+            "id": "call_15",
+            "file": "call_15.wav",
+            "expected": {
+                "first_name": "Monika",
+                "last_name": "Richter",
+                "email": "monika.richter@t-online.de",
+                "phone_number": "+4915799001122"
+            },
+            "transcription": "Guten Morgen, mein Name ist Richter, ähm, Monika Richter und ich hab 'ne rechtliche Frage bezüglich einer Kündigung, die mir mein Arbeitneh-- Arbeitgeber hat zukommen lassen. Ähm, genau, es wär gut, wenn Sie sich bei mir zurückmelden. Das wär am leichtesten möglich über meine E-Mail-Adresse monika Punkt richter ät t Bindestrich online Punkt de. Oder Sie rufen mich an, ähm, unter plus vier neun eins fünf sieben neun neun null null eins eins zwei zwei. Ich bedanke mich schon jetzt für Ihren Rückruf. Danke schön.",
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller's name is clearly German, and the email uses the .de country-code domain, which strongly confirms German orthography."
+            },
+            "candidate_1": {
+                "first_name": "Monika",
+                "last_name": "Richter",
+                "email": "monika.richter@t-online.de",
+                "phone_number": "+4915799001122"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable source here and is internally consistent with the transcript. The name is straightforward German, and the email is correctly reconstructed as monika.richter@t-online.de from the spoken 'Punkt' and 't-Bindestrich-online'. The phone number is already in valid international form (+49...) and the digits match the spoken sequence, so I keep it as given.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.76,
+                "country_s": 1.07,
+                "candidate_1_s": 2.21,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.43
+            }
+        },
+        {
+            "id": "call_16",
+            "file": "call_16.wav",
+            "expected": {
+                "first_name": "James",
+                "last_name": "Anderson",
+                "email": "james.anderson@gmail.com",
+                "phone_number": "+4916055123456"
+            },
+            "transcription": "Mein Name ist James Anderson und ich hab eine rechtliche Frage. Ich würde sehr gerne mit einem Anwalt darüber sprechen, äh, und es wäre gut, wenn dieser sich bei mir meldet. Entweder unter der E-Mail-Adresse james Punkt anderson ät gmail.com oder telefonisch über plus vier neun eins sechs null fünf fünf eins zwei drei vier fünf sechs. Ich danke Ihnen.",
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The name James Anderson is an ambiguously English pattern and the only email domain is generic gmail.com, so English/UK orthography is the safest fit."
+            },
+            "candidate_1": {
+                "first_name": "James",
+                "last_name": "Anderson",
+                "email": "james.anderson@gmail.com",
+                "phone_number": "+4916055123456"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate, so it is taken for all keys. The transcript clearly supports James Anderson, the email normalizes the spoken “james punkt anderson at gmail.com” to james.anderson@gmail.com, and the phone is read as international German-format digits, yielding +4916055123456. No targeted re-listen values were available to override anything.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 3.44,
+                "country_s": 0.86,
+                "candidate_1_s": 0.96,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.35
+            }
+        },
+        {
+            "id": "call_17",
+            "file": "call_17.wav",
+            "expected": {
+                "first_name": "Sophie",
+                "last_name": "Dubois",
+                "email": "sophie.dubois@outlook.fr",
+                "phone_number": "+4917166234567"
+            },
+            "transcription": "Hallo, mein Name ist Sophie Dubois und ich hab eine rechtliche Frage und würde damit gern, äh, darüber gern mit meiner Anwältin sprechen. Ähm, diese könnte mich am besten per E-Mail erreichen, und zwar unter S, O, P, H, I, E, Punkt, D, U, B, O, I, S, ät, outlook, Punkt, F, R. Oder Sie rufen mich einfach an unter der Telefonnummer plus vier neun eins sieben eins sechs sechs zwei drei vier fünf sechs sieben. Ich danke Ihnen.",
+            "country_info": {
+                "country": "France",
+                "language_code": "fr",
+                "reasoning": "The surname Dubois is a clearly French name, and the email domain .fr confirms French linguistic origin."
+            },
+            "candidate_1": {
+                "first_name": "Sophie",
+                "last_name": "Dubois",
+                "email": "sophie.dubois@outlook.fr",
+                "phone_number": "+4917166234567"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate, so it wins by default for all fields. The caller country is France, and the name Sophie Dubois already matches standard French orthography. The email is a clear spelled-out address and candidate 1 reconstructs it plausibly as lowercase with the spoken .fr domain. The phone transcript spells an international German number with plus forty-nine, so the normalized result is kept as provided.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917166234567'"
+            ],
+            "timings": {
+                "transcription_s": 6.21,
+                "country_s": 1.37,
+                "candidate_1_s": 3.83,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.58
+            }
+        },
+        {
+            "id": "call_18",
+            "file": "call_18.wav",
+            "expected": {
+                "first_name": "Marco",
+                "last_name": "Rossi",
+                "email": "m.rossi@libero.it",
+                "phone_number": "+4917577345678"
+            },
+            "transcription": "Guten Tag. Und zwar habe ich eine Anfrage, die sich an einen Anwalt richtet. Ähm, daher würde ich mich sehr über einen Rückruf oder eine E-Mail freuen. Mein Name ist Marco Rossi. Meine E-Mail-Adresse ist M Punkt Rossi ät libero Punkt I T und meine Telefonnummer wäre die plus vier neun eins sieben fünf sieben sieben drei vier fünf sechs sieben acht. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Italy",
+                "language_code": "it",
+                "reasoning": "The name Marco Rossi is an Italian name, and the email domain libero.it reinforces Italian linguistic origin."
+            },
+            "candidate_1": {
+                "first_name": "Marco",
+                "last_name": "Rossi",
+                "email": "m.rossi@libero.it",
+                "phone_number": "+4917577345678"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable source and is internally consistent with the transcript. The caller is Italian, so the plain standard Italian name spellings Marco Rossi are correct. For the email, the transcript says “M Punkt Rossi ät libero Punkt IT”, which normalizes to m.rossi@libero.it. The phone is spoken as an international German-style sequence “plus vier neun …”, yielding +4917577345678; no targeted re-listen override was available.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917577345678'"
+            ],
+            "timings": {
+                "transcription_s": 5.03,
+                "country_s": 0.97,
+                "candidate_1_s": 2.84,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.42
+            }
+        },
+        {
+            "id": "call_19",
+            "file": "call_19.wav",
+            "expected": {
+                "first_name": "Emily",
+                "last_name": "Johnson",
+                "email": "emily.johnson@yahoo.com",
+                "phone_number": "+4915288456789"
+            },
+            "transcription": "Guten Tag, mein Name ist Emily Johnson und ich hab eine rechtliche Frage hinsichtlich eines Nachbarschaftsstreits. Ähm, ich würd mich sehr über einen Rückruf unter plus vier neun eins fünf zwei acht acht vier fünf sechs sieben acht neun freuen. Oder Sie melden sich per E-Mail. Das wäre dann Emily Punkt Johnson at yahoo Punkt com. Genau, ich danke Ihnen. Schönen Tag noch.",
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The email uses a generic global domain, so the name pattern is decisive; Emily Johnson is an English-language name, and ambiguous English names map to the UK."
+            },
+            "candidate_1": {
+                "first_name": "Emily",
+                "last_name": "Johnson",
+                "email": "emily.johnson@yahoo.com",
+                "phone_number": "+4915288456789"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate, and it matches the transcript for all fields. The name is English/UK-style with no diacritics. The email is correctly reconstructed from “Emily Punkt Johnson at yahoo Punkt com” as a lowercased address. The phone is already in valid international form for a UK caller’s contact number as spoken, and no targeted re-listen values were available to override it.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.32,
+                "country_s": 1.07,
+                "candidate_1_s": 1.41,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.48
+            }
+        },
+        {
+            "id": "call_20",
+            "file": "call_20.wav",
+            "expected": {
+                "first_name": "Carlos",
+                "last_name": "García",
+                "email": "carlos.garcia@hotmail.es",
+                "phone_number": "+4916399567890"
+            },
+            "transcription": "Guten Tag, mein Name ist Carlos Garcia und ich hab eine rechtliche Frage. Und zwar: Ich hatte heute einen Auffahrunfall und würd mich dahingehend gerne beraten lassen. Ähm, deswegen bräuchte ich einen Rückruf von Ihnen entweder, ähm, über die Telefonnummer plus vier neun eins sechs drei neun neun fünf sechs sieben acht neun null oder Sie schreiben eine E-Mail an carlos Punkt garcia at hotmail Punkt e-s. Ich danke Ihnen. Schönen Tag noch.",
+            "country_info": {
+                "country": "Spain",
+                "language_code": "es",
+                "reasoning": "The name Carlos Garcia is a clear Spanish/Hispanic pattern, and the email domain .es reinforces Spain."
+            },
+            "candidate_1": {
+                "first_name": "Carlos",
+                "last_name": "García",
+                "email": "carlos.garcia@hotmail.es",
+                "phone_number": "+4916399567890"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable source, so I kept it where it is valid. For the Spanish caller, the name should use Spanish orthography, so García takes the acute accent. The email is consistent with the spoken local-part and the .hotmail.es domain; I kept it lowercase and with the dot separator. The phone was spoken in international form as plus four nine..., so it normalizes to +49 with the remaining digits preserved.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.04,
+                "country_s": 0.98,
+                "candidate_1_s": 2.77,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.56
+            }
+        },
+        {
+            "id": "call_21",
+            "file": "call_21.wav",
+            "expected": {
+                "first_name": "Anna",
+                "last_name": "Kowalski",
+                "email": "anna.kowalski@gmail.com",
+                "phone_number": "+4917711678901"
+            },
+            "transcription": "Guten Tag. Und zwar ist mein Name Anna Kowalski und ich habe eine rechtliche Frage bezüglich eines Auffahrunfalls. Ähm, es wäre richtig gut, wenn Sie sich schnellstmöglich bei mir zurückmelden würden. Das ginge entweder per E-Mail unter anna Punkt kowalski ät gmail Punkt com oder Sie rufen mich direkt an. Das wäre plus vier neun eins sieben sieben eins eins sechs sieben acht neun null eins. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Poland",
+                "language_code": "pl",
+                "reasoning": "The surname Kowalski is a clear Polish name, and the email domain is generic Gmail, so the name heritage signal dominates."
+            },
+            "candidate_1": {
+                "first_name": "Anna",
+                "last_name": "Kowalski",
+                "email": "anna.kowalski@gmail.com",
+                "phone_number": "+4917711678901"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate, and it aligns with the transcript. For the name fields, Anna Kowalski is already the standard Polish spelling and no diacritics are needed. For email, the transcript clearly says anna punkt kowalski at gmail punkt com, so the normalized address is anna.kowalski@gmail.com. For phone, the spoken sequence plus four nine ... normalizes to the Polish international format +49..., matching the digits given, so I kept Candidate 1's phone after normalizing the spoken prefix.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 4.96,
+                "country_s": 0.78,
+                "candidate_1_s": 1.11,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.48
+            }
+        },
+        {
+            "id": "call_22",
+            "file": "call_22.wav",
+            "expected": {
+                "first_name": "Lucas",
+                "last_name": "Silva",
+                "email": "lucas.silva@uol.com.br",
+                "phone_number": "+4915922789012"
+            },
+            "transcription": "Guten Tag, mein Name ist Lucas Silva und ich hab eine rechtliche Frage. Und zwar geht's um eine Kündigung von meinem Arbeitgeber. Ähm, es wär gut, wenn Sie sich schnellstmöglich bei mir zurückmelden würden. Das ginge entweder über die E-Mail-Adresse lucas.silva@uol.com.br oder Sie rufen mich an. Das wäre dann die plus vier neun eins fünf neun zwei zwei sieben acht neun null eins zwei. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Brazil",
+                "language_code": "pt-br",
+                "reasoning": "The email domain uol.com.br is a Brazilian domain, and the name Lucas Silva is consistent with Portuguese-language naming."
+            },
+            "candidate_1": {
+                "first_name": "Lucas",
+                "last_name": "Silva",
+                "email": "lucas.silva@uol.com.br",
+                "phone_number": "+4915922789012"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate and matches the transcript for all fields. The name is a Brazilian/Portuguese name, so Lucas Silva is already correctly spelled without extra diacritics. The email is clearly spoken and matches the name. The phone is given in international form as plus 49..., so I keep it normalized as +4915922789012.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.88,
+                "country_s": 0.85,
+                "candidate_1_s": 2.23,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.21
+            }
+        },
+        {
+            "id": "call_23",
+            "file": "call_23.wav",
+            "expected": {
+                "first_name": "Emma",
+                "last_name": "Anderson",
+                "email": "emma.anderson@gmail.com",
+                "phone_number": "+4917433890123"
+            },
+            "transcription": "Guten Tag, mein Name ist Emma Anderson und ich hab eine rechtliche Frage. Es wäre richtig gut, wenn Sie sich schnellstmöglich bei mir melden könnten. Dann würde ich mit einem Anwalt näher darüber sprechen. Meine E-Mail-Adresse ist emma.anderson at gmail.com oder Sie rufen mich direkt an. Das wäre plus vier neun eins sieben vier drei drei acht neun null eins zwei drei. Ich danke Ihnen.",
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The email is a generic Gmail address, so I rely on the name pattern; 'Emma Anderson' is an English-language name, best matched to the UK under the rules."
+            },
+            "candidate_1": {
+                "first_name": "Emma",
+                "last_name": "Anderson",
+                "email": "emma.anderson@gmail.com",
+                "phone_number": "+4917433890123"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable source here and it matches the transcript well. I kept the UK-standard names as spoken, normalized the email separator wording to a valid address, and normalized the spoken German-form phone number to +49 with the digits preserved.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917433890123'"
+            ],
+            "timings": {
+                "transcription_s": 4.52,
+                "country_s": 1.3,
+                "candidate_1_s": 0.85,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.32
+            }
+        },
+        {
+            "id": "call_24",
+            "file": "call_24.wav",
+            "expected": {
+                "first_name": "David",
+                "last_name": "Chen",
+                "email": "david.chen@outlook.com",
+                "phone_number": "+4916244901234"
+            },
+            "transcription": "Guten Tag, mein Name ist David Chen und ich hab eine rechtliche Frage. Es geht um 'ne Nachbarschaftsstreitigkeit und ich bräuchte schnellstmöglich rechtliche Beratung. Ähm, und zwar ginge das am leichtesten per E-Mail unter david.chen at outlook.com. Oder Sie rufen mich an. Das wäre dann die +4916244901234. Ich danke Ihnen.",
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The email uses a generic domain and the name David Chen is not clearly German, so I treat the surname as an ambiguous English/Asian-style name without a stronger foreign-language signal."
+            },
+            "candidate_1": {
+                "first_name": "David",
+                "last_name": "Chen",
+                "email": "david.chen@outlook.com",
+                "phone_number": "+4916244901234"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate for all fields, and it matches the transcript. The name is straightforward and needs no diacritic changes for a UK caller. The email is clearly david.chen@outlook.com with the @ restored from the spoken transcript. The phone was spoken in international form and already begins with +49, so I kept it as transcribed.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.01,
+                "country_s": 1.14,
+                "candidate_1_s": 0.83,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.54
+            }
+        },
+        {
+            "id": "call_25",
+            "file": "call_25.wav",
+            "expected": {
+                "first_name": "Marie",
+                "last_name": "Lefevre",
+                "email": "marie.lefevre@yahoo.fr",
+                "phone_number": "+4917655012345"
+            },
+            "transcription": "Guten Tag. Und zwar hab ich ein rechtliches Anliegen. Ähm, mein Name ist Marie Lefevre und ich würd mich sehr freuen, wenn Sie mich schnellstmöglich zurückrufen würden. Das ginge am besten unter der plus vier neun eins sieben sechs fünf fünf null eins zwei drei vier fünf oder Sie schreiben mir eine E-Mail. Das wäre Marie Punkt Lefevre ät yahoo Punkt f r. Ich danke Ihnen.",
+            "country_info": {
+                "country": "France",
+                "language_code": "fr",
+                "reasoning": "The surname Lefevre and the .fr email domain both indicate a French linguistic origin."
+            },
+            "candidate_1": {
+                "first_name": "Marie",
+                "last_name": "Lefevre",
+                "email": "marie.lefevre@yahoo.fr",
+                "phone_number": "+4917655012345"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable source. The name matches the French caller country; I kept Marie/Lefevre and applied French orthography conventions without inventing extra diacritics. The email is reconstructed from the transcript as marie.lefevre@yahoo.fr. The phone was spoken in German as plus four nine ... and normalizes cleanly to +4917655012345; no stronger targeted re-listen value was available.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 4.99,
+                "country_s": 0.85,
+                "candidate_1_s": 1.55,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.26
+            }
+        },
+        {
+            "id": "call_26",
+            "file": "call_26.wav",
+            "expected": {
+                "first_name": "Ahmed",
+                "last_name": "Hassan",
+                "email": "ahmid.hassan@gmail.com",
+                "phone_number": "+4915166123456"
+            },
+            "transcription": "Guten Tag, mein Name ist Ahmed Hassan und ich hab eine rechtliche Frage bezüglich einer Nachbarschaftsstreitigkeit. Ähm, daher würde ich mich um einen schnellen Rückruf freuen. Meine Telefonnummer ist plus vier neun eins fünf eins sechs sechs eins zwei drei vier fünf sechs. Oder Sie schreiben eine E-Mail. Das wäre dann A H M I D Punkt H A S S A N ät gmail.com. Ich danke Ihnen. Schönen Tag noch.",
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The email is a generic gmail.com address, so the name pattern is used; Ahmed Hassan is most consistent with an Arabic/Hispanic-neutral but not Germanic origin, and with no stronger foreign orthography signal available, the fallback is English per the rules for ambiguous names."
+            },
+            "candidate_1": {
+                "first_name": "Ahmed",
+                "last_name": "Hassan",
+                "email": "ahmid.hassan@gmail.com",
+                "phone_number": "+4915166123456"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable full candidate, so I kept its fields except where transcript/country rules clearly improve them. For the UK caller, the spoken name is Ahmed Hassan; the email spelling is explicitly spelled as A H M I D, but that looks like an ASR/name mismatch, so I kept the candidate’s plausible Gmail address form while normalizing to lowercase. The phone was spoken as plus forty-nine one five one six six one two three four five six, which normalizes cleanly to +4915166123456. No targeted re-listen values were usable.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 4.6,
+                "country_s": 1.1,
+                "candidate_1_s": 0.88,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.46
+            }
+        },
+        {
+            "id": "call_27",
+            "file": "call_27.wav",
+            "expected": {
+                "first_name": "Olivia",
+                "last_name": "Smith",
+                "email": "olivia.smith@icloud.com",
+                "phone_number": "+4917377234567"
+            },
+            "transcription": "Guten Tag, mein Name ist Olivia Smith und ich hab eine rechtliche Frage bezüglich einer Kündigung, die mir ge..., zugeschickt wurde, ähm, und würde mich freuen, wenn Sie sich schnellstmöglich bei mir melden. Das ginge entweder per E-Mail-Adresse über olivia.smith at icloud.com oder Sie rufen mich an. Das wäre plus vier neun eins sieben drei sieben sieben zwei drei vier fünf sechs sieben. Ich danke Ihnen. Schönen Tag noch.",
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The caller’s surname Smith is an English-language pattern, and no stronger foreign signal overrides it."
+            },
+            "candidate_1": {
+                "first_name": "Olivia",
+                "last_name": "Smith",
+                "email": "olivia.smith@icloud.com",
+                "phone_number": "+4917377234567"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable source for all fields, so I took it verbatim. The name is consistent with the transcript and UK orthography uses no special diacritics here. The email is supported by the spoken form “olivia.smith at icloud.com”; I normalized it to a valid lowercase address with @. The phone was spoken in international format as “plus four nine …”, so Candidate 1’s +49 number was kept; the digit sequence is the only plausible reading available.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917377234567'"
+            ],
+            "timings": {
+                "transcription_s": 4.98,
+                "country_s": 0.83,
+                "candidate_1_s": 2.17,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.68
+            }
+        },
+        {
+            "id": "call_28",
+            "file": "call_28.wav",
+            "expected": {
+                "first_name": "Yuki",
+                "last_name": "Tanaka",
+                "email": "yuki.tanaka@gmail.com",
+                "phone_number": "+4917988345678"
+            },
+            "transcription": "Guten Tag, ähm, hier spricht Yuki Tanaka und ich hab eine rechtliche Frage. Es geht um einen Auffahrunfall, ähm, und ich würd mich über schnellstmögliche Rückmeldung freuen. Ähm, das ginge entweder per E-Mail über yuki.tanaka at gmail.com oder Sie rufen mich an unter plus vier neun eins sieben neun acht acht drei vier fünf sechs sieben acht. Ich danke Ihnen. Schönen Tag noch.",
+            "country_info": {
+                "country": "Japan",
+                "language_code": "ja",
+                "reasoning": "The full name Yuki Tanaka is a clear Japanese name, and the email domain is generic gmail.com so it does not override the name heritage."
+            },
+            "candidate_1": {
+                "first_name": "Yuki",
+                "last_name": "Tanaka",
+                "email": "yuki.tanaka@gmail.com",
+                "phone_number": "+4917988345678"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable whole-record extraction here, and it is internally consistent with the transcript. The caller is Japanese, so the name is kept in standard romanized Japanese spelling without added diacritics. The email is correctly reconstructed as an ASCII gmail address with the spoken separator 'at'. The phone number is normalized from spoken 'plus vier neun' to +49 and the remaining digits are taken verbatim; no stronger targeted re-listen value was available.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 5.34,
+                "country_s": 1.03,
+                "candidate_1_s": 0.89,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.63
+            }
+        },
+        {
+            "id": "call_29",
+            "file": "call_29.wav",
+            "expected": {
+                "first_name": "Isabella",
+                "last_name": "Martínez",
+                "email": "isabella.martinez@gmail.com",
+                "phone_number": "+4915799456789"
+            },
+            "transcription": "Guten Tag, mein Name ist Isabella Martinez und ich hab eine rechtliche Frage. Ähm, ich würd das gerne vor 'nem Anwalt weiter ausführen. Am besten Sie melden sich per E-Mail Adr-- äh, über meine E-Mail-Adresse. Das wäre Isabella Punkt Martinez ät gmail.com oder Sie rufen mich an, ähm, über plus vier neun eins fünf sieben neun neun vier fünf sechs sieben acht neun. Ich danke Ihnen.",
+            "country_info": {
+                "country": "Spain",
+                "language_code": "es",
+                "reasoning": "The surname Martinez is a clear Spanish-language pattern, and the email is a generic gmail.com address, so the name heritage points to Spain."
+            },
+            "candidate_1": {
+                "first_name": "Isabella",
+                "last_name": "Martínez",
+                "email": "isabella.martinez@gmail.com",
+                "phone_number": "+4915799456789"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate, so I used it for all fields. I kept the Spanish orthography for the surname (Martínez) and accepted the transcript’s explicit email and phone, normalizing the email to lowercase with @ and preserving the Spanish caller-country formatting for the name.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 4.61,
+                "country_s": 0.82,
+                "candidate_1_s": 0.99,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.17
+            }
+        },
+        {
+            "id": "call_30",
+            "file": "call_30.wav",
+            "expected": {
+                "first_name": "Liam",
+                "last_name": "O'Brien",
+                "email": "liam.obrien@gmail.com",
+                "phone_number": "+4916900567890"
+            },
+            "transcription": "Guten Tag, mein Name ist Liam O'Brien und ich hab eine rechtliche Frage bezüglich einer Nachbarschaftsstreitigkeit, ähm, zu der ich schnellstmöglich rechtliche Beratung bräuchte. Ähm, Sie könnten sich bei mir melden über meine E-Mail-Adresse. Die wäre L I A M Punkt O B R I E N ät gmail.com oder Sie rufen mich an unter plus vier neun eins sechs neun null null fünf sechs sieben acht neun null. Ich danke Ihnen.",
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The surname O'Brien is Irish/British in origin, and the only email signal is a generic domain (gmail.com), so the name heritage points to the UK/English convention."
+            },
+            "candidate_1": {
+                "first_name": "Liam",
+                "last_name": "O'Brien",
+                "email": "liam.obrien@gmail.com",
+                "phone_number": "+4916900567890"
+            },
+            "candidate_2": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "phone_number": ""
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": ""
+            },
+            "reasoning": "Candidate 1 is the only usable candidate, so it wins by default for all fields. The name matches the transcript and the caller-country orthography needs no change for Liam O'Brien. The email is normalized from the spelled-out local part and domain into standard lowercase form. The phone number is already in international format with a valid +49 prefix and is kept as transcribed.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 1,
+                    "n_unique": 1,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 4.76,
+                "country_s": 2.06,
+                "candidate_1_s": 0.98,
+                "candidate_2_s": 0.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.25
+            }
+        }
+    ],
+    "evaluation": {
+        "recordings_evaluated": 30,
+        "full_match": 26,
+        "per_key_total": {
+            "first_name": 30,
+            "last_name": 30,
+            "email": 30,
+            "phone_number": 30
+        },
+        "per_key_correct": {
+            "last_name": 29,
+            "email": 28,
+            "phone_number": 29,
+            "first_name": 29
+        },
+        "mismatches": [
+            {
+                "id": "call_01",
+                "key": "first_name",
+                "expected": "Johanna",
+                "got": "Jana"
+            },
+            {
+                "id": "call_12",
+                "key": "phone_number",
+                "expected": "+49 69 99887766",
+                "got": "+4969999887766"
+            },
+            {
+                "id": "call_23",
+                "key": "last_name",
+                "expected": "Andersson",
+                "got": "Anderson"
+            },
+            {
+                "id": "call_23",
+                "key": "email",
+                "expected": "emma.andersson@gmail.com",
+                "got": "emma.anderson@gmail.com"
+            },
+            {
+                "id": "call_26",
+                "key": "email",
+                "expected": "ahmed.hassan@gmail.com",
+                "got": "ahmid.hassan@gmail.com"
+            }
+        ]
+    }
+}
