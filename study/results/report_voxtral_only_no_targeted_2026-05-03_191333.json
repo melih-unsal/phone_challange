@@ -1,0 +1,2523 @@
+{
+    "run": {
+        "timestamp": "2026-05-03T19:13:33",
+        "prompt_version": "2026-05-03.v1",
+        "models": {
+            "transcription": [
+                "voxtral:mistralai/Voxtral-Mini-3B-2507"
+            ],
+            "instruct": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+            "timestamp": "(disabled)",
+            "llm": "gpt-5.4-mini"
+        },
+        "settings": {
+            "num_llm_votes": 5,
+            "num_instruct_votes": 3,
+            "num_targeted_votes": 3,
+            "use_targeted_extraction": false,
+            "transcription_language": "de",
+            "default_phone_region": "DE"
+        },
+        "num_recordings": 30,
+        "recordings_dir": "data/recordings",
+        "ground_truth": "data/ground_truth.json"
+    },
+    "recordings": [
+        {
+            "id": "call_01",
+            "file": "call_01.wav",
+            "expected": {
+                "first_name": "Johanna",
+                "last_name": "Schmidt",
+                "email": "johanna.schmidt@gmail.com",
+                "phone_number": "+4915211223456"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Johanna Schmidt und ich habe eine rechtliche Frage, die ich gerne mit einem Anwalt besprechen würde. Sie erreichen mich unter johanna.schmidt@gmail.com oder telefonisch unter +49 152 11 22 3456. Ich danke Ihnen!",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The name Johanna Schmidt is clearly German, and the email domain is generic, so German orthography applies."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Johanna",
+                        "last_name": "Schmidt",
+                        "email": "johanna.schmidt@gmail.com",
+                        "phone_number": "+4915211223456"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Johanna",
+                "last_name": "Schmidt",
+                "email": "johanna.schmidt@gmail.com",
+                "phone_number": "+4915211223456"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on every field, so unanimous-wins applies for name, email, and phone. The phone is already in valid international format and needs no correction.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.24,
+                "country_s": 1.19,
+                "candidate_1_s": 1.65,
+                "candidate_2_s": 3.11,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.01
+            }
+        },
+        {
+            "id": "call_02",
+            "file": "call_02.wav",
+            "expected": {
+                "first_name": "Herbert",
+                "last_name": "Herbst",
+                "email": "h47-herbst@web.de",
+                "phone_number": "+49157231412313"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, ich habe eine rechtliche Frage und würde die gerne mit einer Anwältin aus der Kanzlei besprechen. Mein Name ist Herbert Herbst und Sie erreichen mich per E-Mail über h47-herbst@web.de oder per Telefon über +49 157 23 14 123 13. Ich danke Ihnen, schönen Tag noch.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The name Herbert Herbst is clearly German, and the email domain web.de supports German orthography."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Herbert",
+                        "last_name": "Herbst",
+                        "email": "h47-herbst@web.de",
+                        "phone_number": "+49157231412313"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Herbert",
+                "last_name": "Herbst",
+                "email": "h47-herbst@web.de",
+                "phone_number": "+49157231412313"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All available candidates agree on every field, so unanimity wins. I kept the German name spelling and the email/phone exactly as extracted, with the phone already in valid +49 international form.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+49157231412313'"
+            ],
+            "timings": {
+                "transcription_s": 1.22,
+                "country_s": 2.0,
+                "candidate_1_s": 1.04,
+                "candidate_2_s": 3.17,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.1
+            }
+        },
+        {
+            "id": "call_03",
+            "file": "call_03.wav",
+            "expected": {
+                "first_name": "Annika",
+                "last_name": "Becker",
+                "email": "annika.becker@gmx.de",
+                "phone_number": "+4917698765432"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Annika Becker und ich habe eine rechtliche Frage und würde die gerne mit einem Anwalt besprechen. Da ich jetzt gerade niemanden erreicht habe, würde ich mich freuen, wenn Sie mich per E-Mail unter annika.becker@gmx.de anschreiben oder sich per Telefon bei mir melden. Das wäre die +49 176 987 654 32. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller’s name Annika Becker is a clearly German name, and the email domain gmx.de also points to Germany."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Annika",
+                        "last_name": "Becker",
+                        "email": "annika.becker@gmx.de",
+                        "phone_number": "+4917698765432"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Annika",
+                "last_name": "Becker",
+                "email": "annika.becker@gmx.de",
+                "phone_number": "+4917698765432"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on every field, so the unanimous-wins rule applies. I kept the name, email, and phone verbatim; the phone is already in valid international format.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.37,
+                "country_s": 1.99,
+                "candidate_1_s": 0.96,
+                "candidate_2_s": 2.95,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.11
+            }
+        },
+        {
+            "id": "call_04",
+            "file": "call_04.wav",
+            "expected": {
+                "first_name": "Matthias",
+                "last_name": "Hoffmann",
+                "email": "m.hoffmann@outlook.com",
+                "phone_number": "+493054783219"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mir wurde vor zwei Tagen gekündigt und deswegen würde ich sehr gerne mit einem Anwalt über die Kündigung sprechen, weil das meiner Meinung nach alles nicht so rechtens ist. Mein Name ist Matthias Hoffmann, das ist M-A-T-T-H-I-A-S und Hoffmann mit Doppel-F. Und per E-Mail erreichen Sie mich unter m.hoffmann@outlook.com oder Sie rufen mich direkt an unter +49 30 547 83 219. Das wäre auch super. Hauptsache, Sie melden sich recht schnell. Ich danke Ihnen. Tschüss.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The name Matthias Hoffmann is clearly German, and the email is a generic global domain that does not override the name heritage."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Matthias",
+                        "last_name": "Hoffmann",
+                        "email": "m.hoffmann@outlook.com",
+                        "phone_number": "+493054783219"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Matthias",
+                "last_name": "Hoffmann",
+                "email": "m.hoffmann@outlook.com",
+                "phone_number": "+493054783219"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on every field, so unanimous-wins applies. I kept the verbatim name, email, and normalized the phone to the already-valid German international format.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.88,
+                "country_s": 0.97,
+                "candidate_1_s": 2.27,
+                "candidate_2_s": 3.35,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.47
+            }
+        },
+        {
+            "id": "call_05",
+            "file": "call_05.wav",
+            "expected": {
+                "first_name": "Sandra",
+                "last_name": "Weber",
+                "email": "sandra-weber@t-online.de",
+                "phone_number": "+4917244556677"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, ich melde mich heute mit einer rechtlichen Frage bei Ihnen. Mein Name ist Sandra Weber und es wäre schön, wenn Sie sich bei mir melden. Meine E-Mail-Adresse ist sandra-weber@t-online.de oder noch besser, Sie rufen mich direkt an, das wäre die Plus 49 172 44 55 66 77. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain t-online.de is a German domain, and the name Sandra Weber also fits a clearly German pattern."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Sandra",
+                        "last_name": "Weber",
+                        "email": "sandra-weber@t-online.de",
+                        "phone_number": "+4917244556677"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Sandra",
+                "last_name": "Weber",
+                "email": "sandra-weber@t-online.de",
+                "phone_number": "+4917244556677"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All available candidates are unanimous on every key, so I kept them verbatim. The phone is already correctly normalised to +49 national German format, and the email matches the spoken address exactly.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.38,
+                "country_s": 2.01,
+                "candidate_1_s": 2.16,
+                "candidate_2_s": 3.45,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.75
+            }
+        },
+        {
+            "id": "call_06",
+            "file": "call_06.wav",
+            "expected": {
+                "first_name": "Klaus",
+                "last_name": "Fischer",
+                "email": "k.fischer1983@gmail.com",
+                "phone_number": "+498977234561"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Morgen, Fischer mein Name. Ich habe eine rechtliche Frage bezüglich einer Kündigung, die mir gegenüber ausgesprochen würde und würde mich über eine Rückmeldung freuen. Mein Name ist Klaus Fischer und meine E-Mail-Adresse ist k.fischer1983@gmail.com oder Sie rufen mich an, das wäre die +49 89 77 234 561. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller uses a German given name and surname, and no foreign email or naming signal suggests another linguistic origin."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Klaus",
+                        "last_name": "Fischer",
+                        "email": "k.fischer1983@gmail.com",
+                        "phone_number": "+498977234561"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Klaus",
+                "last_name": "Fischer",
+                "email": "k.fischer1983@gmail.com",
+                "phone_number": "+498977234561"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All signals agree on every field: the transcript, CANDIDATES_1, and CANDIDATE 2 are unanimous, so per policy the unanimous values win without second-guessing. The phone is already in valid international form and the email is a valid lowercase Gmail address.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.43,
+                "country_s": 0.91,
+                "candidate_1_s": 2.02,
+                "candidate_2_s": 3.43,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.15
+            }
+        },
+        {
+            "id": "call_07",
+            "file": "call_07.wav",
+            "expected": {
+                "first_name": "Julia",
+                "last_name": "Schröder",
+                "email": "julia.schroeder@web.de",
+                "phone_number": "+4915122998877"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, ich hatte heute einen Auffahrunfall und würde mich deswegen gerne rechtlich dazu informieren. Mein Name ist Julia Schröder. Per E-Mail würden Sie mich erreichen unter julia.schroeder@web.de oder Sie rufen mich an. Ich bin den ganzen Tag über erreichbar unter +49 151 22 99 88 77. Ich danke Ihnen für Ihren Rückruf. Dankeschön.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain is a German TLD (.de), and the name Julia Schröder is clearly German."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Julia",
+                        "last_name": "Schröder",
+                        "email": "julia.schroeder@web.de",
+                        "phone_number": "+4915122998877"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Julia",
+                "last_name": "Schröder",
+                "email": "julia.schroeder@web.de",
+                "phone_number": "+4915122998877"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All sources agree on every field, so unanimous-wins applies. The German name is already correctly spelled with the needed umlaut, the email is consistent, and the phone is already in valid international format with the German country code.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.38,
+                "country_s": 0.71,
+                "candidate_1_s": 1.23,
+                "candidate_2_s": 3.15,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.19
+            }
+        },
+        {
+            "id": "call_08",
+            "file": "call_08.wav",
+            "expected": {
+                "first_name": "Thomas",
+                "last_name": "Neumann",
+                "email": "thomas.neumann@gmx.net",
+                "phone_number": "+494088991234"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, ich habe eine Unterhaltsfrage. Ja, mein Name ist Thomas Neumann. Thomas, T-H-O-M-A-S und Neumann, wie man es spricht. Sie können sich gerne bei mir melden unter der E-Mail-Adresse t-h-o-m-a-s.n-e-u-m-a-n-n@gmx.net oder per Telefon unter +49 40 88 99 1234. Ich danke Ihnen für Ihre Rückmeldung.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The name Thomas Neumann is clearly German, and the email domain gmx.net provides no foreign signal."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Thomas",
+                        "last_name": "Neumann",
+                        "email": "thomas.neumann@gmx.net",
+                        "phone_number": "+494088991234"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Thomas",
+                "last_name": "Neumann",
+                "email": "thomas.neumann@gmx.net",
+                "phone_number": "+494088991234"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All signals agree on the name, email, and phone number, so I kept the unanimous values verbatim. The email is already consistent with the spoken name and domain, and the phone is already in valid international German format.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.5,
+                "country_s": 0.71,
+                "candidate_1_s": 2.49,
+                "candidate_2_s": 3.47,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.36
+            }
+        },
+        {
+            "id": "call_09",
+            "file": "call_09.wav",
+            "expected": {
+                "first_name": "Petra",
+                "last_name": "Müller",
+                "email": "petra-m@yahoo.de",
+                "phone_number": "+491627765544"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, ich melde mich heute bei Ihnen, weil ich eine rechtliche Frage habe, die ich gerne mit einem Anwalt besprechen würde. Und zwar ist mein Name Petra Müller. Sie können sich gerne per E-Mail bei mir melden. Das wäre Petra-M@yahoo.de oder Sie rufen mich an unter +49 162 7766 5544. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller’s name Petra Müller and the .de email domain strongly indicate German orthography."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Petra",
+                        "last_name": "Müller",
+                        "email": "petra-m@yahoo.de",
+                        "phone_number": "+4916277665544"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Petra",
+                "last_name": "Müller",
+                "email": "petra-m@yahoo.de",
+                "phone_number": "+491627765544"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on the name and email, so I kept Petra Müller and petra-m@yahoo.de. For the phone, the whole-record audio candidate is the only one with a plausible German mobile format after normalization; the STT-based candidate has an extra digit block, while the audio candidate cleanly fits +49 162 7765544. Thus I chose candidate 2 for phone and the shared values for the other fields.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 2,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.28,
+                "country_s": 2.08,
+                "candidate_1_s": 2.51,
+                "candidate_2_s": 3.1,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.63
+            }
+        },
+        {
+            "id": "call_10",
+            "file": "call_10.wav",
+            "expected": {
+                "first_name": "Stefan",
+                "last_name": "Zimmermann",
+                "email": "s.zimmermann@outlook.de",
+                "phone_number": "+4922133445566"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, ich habe eine rechtliche Frage. Und zwar ist mein Name Stefan Zimmermann. Es wäre schön, wenn sich die Anwältin bei mir melden würde, entweder unter der E-Mail-Adresse, das wäre s.zimmermann@outlook.de, oder Sie rufen mich an unter +49 221 3344 5566. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The name Stefan Zimmermann is clearly German, and the email uses a German domain .de."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Stefan",
+                        "last_name": "Zimmermann",
+                        "email": "s.zimmermann@outlook.de",
+                        "phone_number": "+4922133445566"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Stefan",
+                "last_name": "Zimmermann",
+                "email": "s.zimmermann@outlook.de",
+                "phone_number": "+4922133445566"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All available candidates agree on every field, so unanimous-wins applies. The email and phone are already structurally valid and the phone is in correct +49 international form.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.22,
+                "country_s": 0.73,
+                "candidate_1_s": 2.2,
+                "candidate_2_s": 3.12,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.23
+            }
+        },
+        {
+            "id": "call_11",
+            "file": "call_11.wav",
+            "expected": {
+                "first_name": "Brigitte",
+                "last_name": "Koch",
+                "email": "brigitte.koch@freenet.de",
+                "phone_number": "+4917811223344"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Brigitte Koch und ich stecke mitten in einer Nachbarschaftsstreitigkeit. Es wäre schön, wenn sich die Anwältin bei mir per E-Mail melden würde. Das wäre brigitte.koch@freenet.de oder Sie rufen mich einfach an die nächsten Tage. Das wäre +49 178 11 22 33 44. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain is freenet.de and the name Brigitte Koch is a clearly German name, so the orthography is German."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Brigitte",
+                        "last_name": "Koch",
+                        "email": "brigitte.koch@freenet.de",
+                        "phone_number": "+4917811223344"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Brigitte",
+                "last_name": "Koch",
+                "email": "brigitte.koch@freenet.de",
+                "phone_number": "+4917811223344"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on every field, so unanimous-wins applies. The phone is already in valid international form with the German country code and the email is consistent with the spoken name.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.4,
+                "country_s": 0.73,
+                "candidate_1_s": 1.25,
+                "candidate_2_s": 2.91,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.24
+            }
+        },
+        {
+            "id": "call_12",
+            "file": "call_12.wav",
+            "expected": {
+                "first_name": "Michael",
+                "last_name": "Wagner",
+                "email": "michael-wagner@gmx.de",
+                "phone_number": "+496999887766"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Morgen, mein Name ist Michael Wagner und ich habe eine rechtliche Frage, die ich gerne mit einem Anwalt besprechen würde. Daher würde ich Sie bitten, sich entweder per E-Mail oder per Telefon bei mir zu melden. E-Mail wäre michael-wagner@gmx.de oder Sie rufen mich einfach an, das wäre +49 69 99 88 77 66. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain gmx.de and the German name pattern Michael Wagner strongly indicate German orthography."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Michael",
+                        "last_name": "Wagner",
+                        "email": "michael-wagner@gmx.de",
+                        "phone_number": "+496999887766"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Michael",
+                "last_name": "Wagner",
+                "email": "michael_wagner@gmx.de",
+                "phone_number": "+496999887766"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All sources agree on the name and phone number, so those win unchanged. For email, the only disagreement is the separator: candidate 1 has a hyphen and candidate 2 has an underscore. Since the spoken transcript says the address with a hyphen-like separator and both are otherwise identical, I keep the candidate 1 email. No targeted re-listen is present.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 2,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.33,
+                "country_s": 0.78,
+                "candidate_1_s": 1.21,
+                "candidate_2_s": 3.06,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.62
+            }
+        },
+        {
+            "id": "call_13",
+            "file": "call_13.wav",
+            "expected": {
+                "first_name": "Sabine",
+                "last_name": "Krause",
+                "email": "sabine.krause@gmail.com",
+                "phone_number": "+4917055443322"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, Sabine Krause hier. Ich habe ein rechtliches Anliegen, worüber ich gerne mit einer Anwältin sprechen würde. Daher würde ich Sie bitten, dass Sie sich einfach kurz mal bei mir melden. Das wäre entweder unter der E-Mail-Adresse möglich, sabine.krause@gmail.com oder Sie melden sich per Telefon unter +49 170 55 44 33 22. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The name Sabine Krause is a clearly German name, and the email domain is generic gmail.com, so the German orthography applies."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Sabine",
+                        "last_name": "Krause",
+                        "email": "sabine.krause@gmail.com",
+                        "phone_number": "+4917055443322"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Sabine",
+                "last_name": "Krause",
+                "email": "sabine.krause@gmail.com",
+                "phone_number": "+4917055443322"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on every field, so unanimous-wins applies. The phone is already normalized to a valid German country code, and the email/name match the transcript exactly.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917055443322'"
+            ],
+            "timings": {
+                "transcription_s": 1.37,
+                "country_s": 0.86,
+                "candidate_1_s": 0.89,
+                "candidate_2_s": 2.86,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.02
+            }
+        },
+        {
+            "id": "call_14",
+            "file": "call_14.wav",
+            "expected": {
+                "first_name": "Rainer",
+                "last_name": "Schulz",
+                "email": "rainer-schulz@web.de",
+                "phone_number": "+4951166778899"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Morgen, Schulz hier, Rainer Schulz. Und ich habe eine rechtliche Frage. Es geht um eine Kündigung und ich würde darüber gerne mit einer Anwältin sprechen. Am besten melden Sie sich einfach per E-Mail bei mir. Das wäre rainer-schulz@web.de Oder Sie melden sich per Telefon. Das wäre +49 511 66 77 88 99. Ich danke Ihnen auf jeden Fall. Tschüss.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The email domain is a German ccTLD (.de) and the name Rainer Schulz is clearly German."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Rainer",
+                        "last_name": "Schulz",
+                        "email": "rainer-schulz@web.de",
+                        "phone_number": "+4951166778899"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Rainer",
+                "last_name": "Schulz",
+                "email": "rainer-schulz@web.de",
+                "phone_number": "+4951166778899"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on every field, so unanimous-wins applies. The German transcript also supports the same name, email, and phone, with the phone already in valid international format.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.61,
+                "country_s": 0.73,
+                "candidate_1_s": 2.03,
+                "candidate_2_s": 3.25,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.02
+            }
+        },
+        {
+            "id": "call_15",
+            "file": "call_15.wav",
+            "expected": {
+                "first_name": "Monika",
+                "last_name": "Richter",
+                "email": "monika.richter@t-online.de",
+                "phone_number": "+4915799001122"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Morgen, mein Name ist Richter, Monika Richter, und ich habe eine rechtliche Frage bezüglich einer Kündigung, die mir mein Arbeitgeber zukommen lassen hat. Genau, es wäre gut, wenn Sie sich bei mir zurückmelden. Das wäre am leichtesten möglich über meine E-Mail-Adresse monika.richter.t-online.de oder Sie rufen mich an unter +49 157 9900 1122. Ich bedanke mich schon jetzt für Ihren Rückruf. Dankeschön.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Germany",
+                "language_code": "de",
+                "reasoning": "The caller gives a clearly German name (Monika Richter) and a German phone number, with no foreign signal in the email/domain."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Monika",
+                        "last_name": "Richter",
+                        "email": "monika.richter@t-online.de",
+                        "phone_number": "+4915799001122"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Monika",
+                "last_name": "Richter",
+                "email": "monika.richter@t-online.de",
+                "phone_number": "+4915799001122"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on all keys, so unanimous wins. The email is normalized from the spoken form without the dropped '@' in the transcript, and the phone is already in valid international format.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.67,
+                "country_s": 1.89,
+                "candidate_1_s": 1.03,
+                "candidate_2_s": 3.48,
+                "targeted_s": 0.0,
+                "reconcile_s": 0.99
+            }
+        },
+        {
+            "id": "call_16",
+            "file": "call_16.wav",
+            "expected": {
+                "first_name": "James",
+                "last_name": "Anderson",
+                "email": "james.anderson@gmail.com",
+                "phone_number": "+4916055123456"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Mein Name ist James Anderson und ich habe eine rechtliche Frage. Ich würde sehr gerne mit einem Anwalt darüber sprechen. Es wäre gut, wenn dieser sich bei mir meldet, entweder unter der E-Mail-Adresse james.anderson@gmail.com oder telefonisch über +49 160 55 123 456. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The name James Anderson is an English-language name, and the only email signal is a generic gmail.com address, so the name heritage is best classified as United Kingdom/English."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "James",
+                        "last_name": "Anderson",
+                        "email": "james.anderson@gmail.com",
+                        "phone_number": "+4916055123456"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "James",
+                "last_name": "Anderson",
+                "email": "james.anderson@gmail.com",
+                "phone_number": "+4916055123456"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on every field, so unanimous wins. The name and email are consistent, and the phone is already normalized as an international German number.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.12,
+                "country_s": 1.18,
+                "candidate_1_s": 1.66,
+                "candidate_2_s": 3.02,
+                "targeted_s": 0.0,
+                "reconcile_s": 0.86
+            }
+        },
+        {
+            "id": "call_17",
+            "file": "call_17.wav",
+            "expected": {
+                "first_name": "Sophie",
+                "last_name": "Dubois",
+                "email": "sophie.dubois@outlook.fr",
+                "phone_number": "+4917166234567"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Hallo, mein Name ist Sophie Dubois und ich habe eine rechtliche Frage und würde darüber gerne mit meiner Anwältin sprechen. Diese könnte mich am besten per E-Mail erreichen und zwar unter sophie.dupois@outlook.fr oder Sie rufen mich einfach an unter der Telefonnummer +49 171 66 23 45 67. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "France",
+                "language_code": "fr",
+                "reasoning": "The surname Dubois is clearly French, and the email uses the .fr country code TLD, both indicating French orthography."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Sophie",
+                        "last_name": "Dubois",
+                        "email": "sophie.dubois@outlook.fr",
+                        "phone_number": "+4917166234567"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Sophie",
+                "last_name": "Dubois",
+                "email": "sophie.dubois@outlook.fr",
+                "phone_number": "+4917166234567"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All whole-record candidates agree on every key, so unanimous-wins applies. I kept the agreed spelling for the French name and the agreed email/phone normalizations as given.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917166234567'"
+            ],
+            "timings": {
+                "transcription_s": 1.33,
+                "country_s": 0.87,
+                "candidate_1_s": 2.06,
+                "candidate_2_s": 3.47,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.04
+            }
+        },
+        {
+            "id": "call_18",
+            "file": "call_18.wav",
+            "expected": {
+                "first_name": "Marco",
+                "last_name": "Rossi",
+                "email": "m.rossi@libero.it",
+                "phone_number": "+4917577345678"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag! Und zwar habe ich eine Anfrage, die sich an einen Anwalt richtet. Daher würde ich mich sehr bei einem Rückruf oder einer E-Mail freuen. Mein Name ist Marco Rossi. Meine E-Mail-Adresse ist m.rossi@libero.it und meine Telefonnummer wäre die +49 175 77345678. Ich danke Ihnen!",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Italy",
+                "language_code": "it",
+                "reasoning": "The email domain libero.it and the name Marco Rossi both indicate Italian linguistic origin."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Marco",
+                        "last_name": "Rossi",
+                        "email": "m.rossi@libero.it",
+                        "phone_number": "+4917577345678"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Marco",
+                "last_name": "Rossi",
+                "email": "m.rossi@libero.it",
+                "phone_number": "+4917577345678"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All available candidates agree on every field, so unanimous-wins applies. The Italian name and email are consistent, and the phone is already normalized to international format.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917577345678'"
+            ],
+            "timings": {
+                "transcription_s": 1.24,
+                "country_s": 0.72,
+                "candidate_1_s": 2.11,
+                "candidate_2_s": 3.09,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.1
+            }
+        },
+        {
+            "id": "call_19",
+            "file": "call_19.wav",
+            "expected": {
+                "first_name": "Emily",
+                "last_name": "Johnson",
+                "email": "emily.johnson@yahoo.com",
+                "phone_number": "+4915288456789"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Emily Johnson und ich habe eine rechtliche Frage hinsichtlich eines Nachbarschaftsstreits. Ich würde mich sehr über einen Rückruf unter +49 152 88 456 789 freuen. Oder Sie melden sich per E-Mail, das wäre dann emily.johnson@yahoo.com. Genau, ich danke Ihnen. Schönen Tag noch.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The surname Johnson is an English-pattern name, and the only email is a generic global domain, so no stronger foreign signal is present."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Emily",
+                        "last_name": "Johnson",
+                        "email": "emily.johnson@yahoo.com",
+                        "phone_number": "+4915288456789"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Emily",
+                "last_name": "Johnson",
+                "email": "emily.johnson@yahoo.com",
+                "phone_number": "+4915288456789"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on first name, last name, email, and phone, so unanimous-wins applies. I kept the agreed spellings and normalized the phone from German national format to the international form already present in the candidates.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.29,
+                "country_s": 0.93,
+                "candidate_1_s": 2.31,
+                "candidate_2_s": 3.14,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.54
+            }
+        },
+        {
+            "id": "call_20",
+            "file": "call_20.wav",
+            "expected": {
+                "first_name": "Carlos",
+                "last_name": "García",
+                "email": "carlos.garcia@hotmail.es",
+                "phone_number": "+4916399567890"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Carlos Garcia und ich habe eine rechtliche Frage. Und zwar, ich hatte heute einen Unfall und würde mich da gerne beraten lassen. Deswegen bräuchte ich einen Rückruf von Ihnen, entweder über die Telefonnummer +49 163 99 56 7890 oder Sie schreiben meine E-Mail an carlos.garcia@hotmail.es. Ich danke Ihnen. Schönen Tag noch.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Spain",
+                "language_code": "es",
+                "reasoning": "The name Carlos Garcia is a clear Hispanic/Spanish pattern, and the email ends in .es, so Spanish orthography applies."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Carlos",
+                        "last_name": "García",
+                        "email": "carlos.garcia@hotmail.es",
+                        "phone_number": "+4916399567890"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Carlos",
+                "last_name": "Garcia",
+                "email": "carlos.garcia@hotmail.es",
+                "phone_number": "+4916399567890"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All sources agree on Carlos, the email, and the phone number after normalisation; for the last name, candidate 1 provides the Spanish orthographic form with the required accent while candidate 2 omits it, so I keep García. The phone is already in valid international form and the email is unanimous.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 2,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.46,
+                "country_s": 2.17,
+                "candidate_1_s": 2.36,
+                "candidate_2_s": 3.5,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.46
+            }
+        },
+        {
+            "id": "call_21",
+            "file": "call_21.wav",
+            "expected": {
+                "first_name": "Anna",
+                "last_name": "Kowalski",
+                "email": "anna.kowalski@gmail.com",
+                "phone_number": "+4917711678901"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, und zwar ist mein Name Anna Kowalski und ich habe eine rechtliche Frage bezüglich eines Auffahrunfalls. Es wäre richtig gut, wenn Sie sich schnellstmöglich bei mir zurückmelden würden. Das ginge entweder per E-Mail unter anna.kowalski@gmail.com oder Sie rufen mich direkt an, das wäre +49 177 11678901. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Poland",
+                "language_code": "pl",
+                "reasoning": "The surname Kowalski is a clearly Polish name, and the email is a generic domain that does not change the name’s linguistic origin."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Anna",
+                        "last_name": "Kowalski",
+                        "email": "anna.kowalski@gmail.com",
+                        "phone_number": "+4917711678901"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Anna",
+                "last_name": "Kowalski",
+                "email": "anna.kowalski@gmail.com",
+                "phone_number": "+4917711678901"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All signals agree on the same first name, last name, email, and phone number. The phone is already in valid international format and the email is structurally valid, so no adjustments are needed.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.32,
+                "country_s": 0.93,
+                "candidate_1_s": 2.15,
+                "candidate_2_s": 2.76,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.25
+            }
+        },
+        {
+            "id": "call_22",
+            "file": "call_22.wav",
+            "expected": {
+                "first_name": "Lucas",
+                "last_name": "Silva",
+                "email": "lucas.silva@uol.com.br",
+                "phone_number": "+4915922789012"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Lukas Silva und ich habe eine rechtliche Frage und zwar geht es um eine Kündigung von meinem Arbeitgeber. Es wäre gut, wenn Sie sich schnellstmöglich bei mir zurückmelden würden. Das ginge entweder über die E-Mail-Adresse lucas.silva@uol.com.br oder Sie rufen mich an, das wäre dann die +49 159 22 789 012. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Brazil",
+                "language_code": "pt-br",
+                "reasoning": "The email domain uol.com.br is a Brazilian TLD/domain, which is the strongest signal and determines the name’s linguistic origin."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Lucas",
+                        "last_name": "Silva",
+                        "email": "lucas.silva@uol.com.br",
+                        "phone_number": "+4915922789012"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Lucas",
+                "last_name": "Silva",
+                "email": "lucas.silva@uol.com.br",
+                "phone_number": "+4915922789012"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All available candidates agree on every field, so unanimous-wins applies. I kept the Brazilian Portuguese name spelling and the spoken email/phone as transcribed, with the phone already in valid +49 international format.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.56,
+                "country_s": 0.78,
+                "candidate_1_s": 2.11,
+                "candidate_2_s": 3.33,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.14
+            }
+        },
+        {
+            "id": "call_23",
+            "file": "call_23.wav",
+            "expected": {
+                "first_name": "Emma",
+                "last_name": "Anderson",
+                "email": "emma.anderson@gmail.com",
+                "phone_number": "+4917433890123"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Emma Anderson und ich habe eine rechtliche Frage. Es wäre richtig gut, wenn Sie sich schnellstmöglich bei mir melden könnten, dann würde ich mit einem Anwalt näher darüber sprechen. Meine E-Mail-Adresse ist emma.anderson@gmail.com oder Sie rufen mich direkt an, das wäre +49 174 33 89 01 23. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The email is a generic Gmail address, so I use the name pattern; 'Emma Anderson' is an English-pattern name and not clearly German."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Emma",
+                        "last_name": "Anderson",
+                        "email": "emma.anderson@gmail.com",
+                        "phone_number": "+4917433890123"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Emma",
+                "last_name": "Anderson",
+                "email": "emma.anderson@gmail.com",
+                "phone_number": "+4917433890123"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on first name, last name, email, and phone number, so unanimous-wins applies for every key. The phone was already normalized to international format and the email matches the spoken address exactly.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917433890123'"
+            ],
+            "timings": {
+                "transcription_s": 1.35,
+                "country_s": 0.82,
+                "candidate_1_s": 1.38,
+                "candidate_2_s": 2.92,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.01
+            }
+        },
+        {
+            "id": "call_24",
+            "file": "call_24.wav",
+            "expected": {
+                "first_name": "David",
+                "last_name": "Chen",
+                "email": "david.chen@outlook.com",
+                "phone_number": "+4916244901234"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist David Chen und ich habe eine rechtliche Frage. Es geht um eine Nachbarschaftsstreitigkeit und ich bräuchte schnellstmögliche rechtliche Beratung. Und zwar ginge das am leichtesten per E-Mail unter david.chen@outlook.com oder Sie rufen mich an, das wäre dann die +49 162 449 01234. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The email is a generic global domain, and the name David Chen is most plausibly treated as ambiguous English-style without a stronger foreign orthographic signal."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "David",
+                        "last_name": "Chen",
+                        "email": "david.chen@outlook.com",
+                        "phone_number": "+4916244901234"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "David",
+                "last_name": "Chen",
+                "email": "david.chen@outlook.com",
+                "phone_number": "+4916244901234"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on every field, so unanimous wins. The name is David Chen, the email is david.chen@outlook.com, and the phone normalizes to the already-international format +4916244901234.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.38,
+                "country_s": 1.62,
+                "candidate_1_s": 2.06,
+                "candidate_2_s": 3.0,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.23
+            }
+        },
+        {
+            "id": "call_25",
+            "file": "call_25.wav",
+            "expected": {
+                "first_name": "Marie",
+                "last_name": "Le Fèvre",
+                "email": "marie.lefèvre@yahoo.fr",
+                "phone_number": "+4917655012345"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, und zwar habe ich ein rechtliches Anliegen. Mein Name ist Marie Lefebvre und ich würde mich sehr freuen, wenn Sie mich schnellstmöglich zurückrufen würden. Das ginge am besten unter der Plus 49 176 55 0 12345 oder Sie schreiben meine E-Mail, das wäre marie.lefebvre@yahoo.fr. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "France",
+                "language_code": "fr",
+                "reasoning": "The email domain yahoo.fr and the French surname Lefebvre indicate a French name origin."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Marie",
+                        "last_name": "Lefebvre",
+                        "email": "marie.lefebvre@yahoo.fr",
+                        "phone_number": "+4917655012345"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Marie",
+                "last_name": "Le Fèvre",
+                "email": "marie.lefèvre@yahoo.fr",
+                "phone_number": "+4917655012345"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on Marie and the phone number, so those are kept. For the last name, the audio LLM adds the standard French orthography/spacing variant \"Le Fèvre\" while the transcript/other extraction show the same surname as a single token; I follow the audio-derived spelling but preserve the French diacritic on Fèvre as the country is France. For the email, the whole-record audio candidate provides the more orthographically correct French form with the accented local-part, and the domain matches the spoken yahoo.fr address, so I use it.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 2,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 2,
+                    "unanimous": false
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.31,
+                "country_s": 0.81,
+                "candidate_1_s": 2.39,
+                "candidate_2_s": 3.11,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.69
+            }
+        },
+        {
+            "id": "call_26",
+            "file": "call_26.wav",
+            "expected": {
+                "first_name": "Ahmed",
+                "last_name": "Hassan",
+                "email": "ahmed.hassan@gmail.com",
+                "phone_number": "+4915166123456"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Armet Hassan und ich habe eine rechtliche Frage bezüglich einer Nachbarschaftsstreitigkeit. Daher würde ich mich um einen schnellen Rückruf freuen. Meine Telefonnummer ist +49 151 66 123 456 oder Sie schreiben meine E-Mail, das wäre dann ahmed.hassan@gmail.com. Ich danke Ihnen, schönen Tag noch.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "France",
+                "language_code": "fr",
+                "reasoning": "The surname Hassan is a widespread Arabic-origin name, but the only strong signal here is the generic Gmail address, so the name is not clearly German; however, given the lack of a more specific orthographic cue, I cannot infer a non-German spelling convention from the transcript alone."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Ahmed",
+                        "last_name": "Hassan",
+                        "email": "ahmed.hassan@gmail.com",
+                        "phone_number": "+4915166123456"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Armed",
+                "last_name": "Hassan",
+                "email": "ahmed.hassan@gmail.com",
+                "phone_number": "+4915166123456"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "Email and phone are unanimous across the transcript-extraction candidate and the audio LLM, so they win as-is. For the name, the candidates disagree only on the first name spelling: the audio says \"Armed\" while the email local-part is \"ahmed\", which is an exact name-consistency match and therefore authority for the first name. French orthography does not add diacritics here. The phone normalizes to French caller context only if national format, but the spoken number is already in international +49 format, so it is kept unchanged.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 2,
+                    "unanimous": false
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.32,
+                "country_s": 2.14,
+                "candidate_1_s": 2.24,
+                "candidate_2_s": 3.09,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.7
+            }
+        },
+        {
+            "id": "call_27",
+            "file": "call_27.wav",
+            "expected": {
+                "first_name": "Olivia",
+                "last_name": "Smith",
+                "email": "olivia.smith@icloud.com",
+                "phone_number": "+4917377234567"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Olivia Smith und ich habe eine rechtliche Frage bezüglich einer Kündigung, die mir zugeschickt wurde und würde mich freuen, wenn Sie sich schnellstmöglich bei mir melden. Das ginge entweder per E-Mail-Adresse über olivia.smith@icloud.com oder Sie rufen mich an, das wäre +49 173 7723 4567. Ich danke Ihnen. Schönen Tag noch.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The email is a generic iCloud address, so the name pattern is the strongest signal; Olivia Smith is an English-language name."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Olivia",
+                        "last_name": "Smith",
+                        "email": "olivia.smith@icloud.com",
+                        "phone_number": "+4917377234567"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Olivia",
+                "last_name": "Smith",
+                "email": "olivia.smith@icloud.com",
+                "phone_number": "+4917377234567"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on every field, so unanimous wins. The phone is already in valid international format with German country code as spoken in the audio, and the email/name are consistent.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [
+                "phone not parseable: '+4917377234567'"
+            ],
+            "timings": {
+                "transcription_s": 1.6,
+                "country_s": 0.85,
+                "candidate_1_s": 0.98,
+                "candidate_2_s": 3.14,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.42
+            }
+        },
+        {
+            "id": "call_28",
+            "file": "call_28.wav",
+            "expected": {
+                "first_name": "Yuki",
+                "last_name": "Tanaka",
+                "email": "yuki.tanaka@gmail.com",
+                "phone_number": "+4917988345678"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, hier spricht Yuki Tanaka und ich habe eine rechtliche Frage. Es geht um einen Auffahrunfall und ich würde mich über schnellstmögliche Rückmeldung freuen. Das ging entweder per E-Mail über yuki.tanaka@gmail.com oder Sie rufen mich an unter +49 179 883 456 788. Ich danke Ihnen, schönen Tag noch.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Japan",
+                "language_code": "ja",
+                "reasoning": "The name Yuki Tanaka is clearly Japanese, and the email is a generic Gmail address, so the name’s linguistic origin determines the orthography."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Yuki",
+                        "last_name": "Tanaka",
+                        "email": "yuki.tanaka@gmail.com",
+                        "phone_number": "+49179883456788"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Yuki",
+                "last_name": "Tanaka",
+                "email": "yuki.tanaka@gmail.com",
+                "phone_number": "+4917988345678"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All name and email candidates agree, so those win unanimously. For the phone number, both candidates are in valid German international format, but the whole-record audio answer appears to have applied the stutter-drop rule to the final repeated digit, yielding the more plausible +4917988345678 rather than the longer +49179883456788 from the STT extraction.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 2,
+                    "unanimous": false
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.44,
+                "country_s": 0.81,
+                "candidate_1_s": 2.19,
+                "candidate_2_s": 3.41,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.56
+            }
+        },
+        {
+            "id": "call_29",
+            "file": "call_29.wav",
+            "expected": {
+                "first_name": "Isabella",
+                "last_name": "Martínez",
+                "email": "isabella.martinez@gmail.com",
+                "phone_number": "+4915799456789"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Isabella Martinez und ich habe eine rechtliche Frage. Ich würde das gerne vor einem Anwalt weiter ausführen. Am besten Sie melden sich über meine E-Mail-Adresse. Das wäre isabella.martinez@gmail.com oder Sie rufen mich an über +49 157 99 456 789. Ich danke Ihnen.",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "Spain",
+                "language_code": "es",
+                "reasoning": "The surname Martinez is a clear Spanish-language pattern; the email domain is generic and does not override it."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Isabella",
+                        "last_name": "Martínez",
+                        "email": "isabella.martinez@gmail.com",
+                        "phone_number": "+4915799456789"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Isabella",
+                "last_name": "Martinez",
+                "email": "isabella.martinez@gmail.com",
+                "phone_number": "+4915799456789"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All candidates agree on first name, email, and phone, so those win unanimously. For last name, the only disagreement is the acute accent: Spanish orthography supports Martínez, so I choose the diacritic form from CANDIDATES_1 over the accentless audio output. The phone is already in valid international format and matches across candidates.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 2,
+                    "unanimous": false
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.19,
+                "country_s": 2.1,
+                "candidate_1_s": 3.48,
+                "candidate_2_s": 3.1,
+                "targeted_s": 0.0,
+                "reconcile_s": 2.48
+            }
+        },
+        {
+            "id": "call_30",
+            "file": "call_30.wav",
+            "expected": {
+                "first_name": "Liam",
+                "last_name": "O'Brien",
+                "email": "liam.obrien@gmail.com",
+                "phone_number": "+4916900567890"
+            },
+            "transcripts": [
+                {
+                    "backend": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "text": "Guten Tag, mein Name ist Liam O'Brien und ich habe eine rechtliche Frage bezüglich einer Nachbarschaftsstreitigkeit, zu der ich schnellstmöglich rechtliche Beratung bräuchte. Sie könnten sich bei mir melden über meine E-Mail-Adresse, die wäre liam.obrien@gmail.com oder Sie rufen mich an unter +49 169 00 567890. Ich danke Ihnen!",
+                    "has_timestamps": false
+                }
+            ],
+            "country_info": {
+                "country": "United Kingdom",
+                "language_code": "en",
+                "reasoning": "The name Liam O'Brien is an English/Irish name, and the email is a generic Gmail address with no stronger country signal."
+            },
+            "candidates_1": [
+                {
+                    "transcriber": "voxtral:mistralai/Voxtral-Mini-3B-2507",
+                    "value": {
+                        "first_name": "Liam",
+                        "last_name": "O'Brien",
+                        "email": "liam.obrien@gmail.com",
+                        "phone_number": "+4916900567890"
+                    }
+                }
+            ],
+            "candidate_2": {
+                "first_name": "Liam",
+                "last_name": "O'Brien",
+                "email": "liam.obrien@gmail.com",
+                "phone_number": "+4916900567890"
+            },
+            "targeted": {
+                "email": "",
+                "phone_number": "",
+                "email_meta": {
+                    "mode": "skipped"
+                },
+                "phone_meta": {
+                    "mode": "skipped"
+                }
+            },
+            "reasoning": "All sources agree on the name, email, and phone, so unanimous-wins applies. I kept the verbatim name and email, and the phone normalizes cleanly to the already international +49 format.",
+            "agreement": {
+                "first_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "last_name": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "email": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                },
+                "phone_number": {
+                    "n_candidates": 2,
+                    "n_unique": 1,
+                    "unanimous": true
+                }
+            },
+            "warnings": [],
+            "timings": {
+                "transcription_s": 1.37,
+                "country_s": 0.81,
+                "candidate_1_s": 0.85,
+                "candidate_2_s": 3.03,
+                "targeted_s": 0.0,
+                "reconcile_s": 1.1
+            }
+        }
+    ],
+    "evaluation": {
+        "recordings_evaluated": 30,
+        "full_match": 26,
+        "per_key_total": {
+            "first_name": 30,
+            "last_name": 30,
+            "email": 30,
+            "phone_number": 30
+        },
+        "per_key_correct": {
+            "first_name": 30,
+            "last_name": 28,
+            "email": 27,
+            "phone_number": 29
+        },
+        "mismatches": [
+            {
+                "id": "call_09",
+                "key": "phone_number",
+                "expected": "+49 162 77665544",
+                "got": "+491627765544"
+            },
+            {
+                "id": "call_12",
+                "key": "email",
+                "expected": "michael_wagner@gmx.de",
+                "got": "michael-wagner@gmx.de"
+            },
+            {
+                "id": "call_23",
+                "key": "last_name",
+                "expected": "Andersson",
+                "got": "Anderson"
+            },
+            {
+                "id": "call_23",
+                "key": "email",
+                "expected": "emma.andersson@gmail.com",
+                "got": "emma.anderson@gmail.com"
+            },
+            {
+                "id": "call_25",
+                "key": "last_name",
+                "expected": "Lefevre",
+                "got": "Le Fèvre"
+            },
+            {
+                "id": "call_25",
+                "key": "email",
+                "expected": "marie.lefevre@yahoo.fr",
+                "got": "marie.lefèvre@yahoo.fr"
+            }
+        ]
+    }
+}

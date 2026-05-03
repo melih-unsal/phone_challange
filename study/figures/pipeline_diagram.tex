@@ -1,0 +1,179 @@
+% TikZ pipeline diagram for the paper. Inputted by paper.tex.
+% Coordinate-based layout: each node is placed at (col, row) with
+% generous spacing so labels never overlap.
+
+\begin{figure}[!t]
+\centering
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}[
+    x=18mm, y=14mm,
+    every node/.style={font=\small},
+    layer/.style={
+        rectangle, rounded corners=2pt, draw=black!40, line width=0.4pt,
+        align=center, minimum height=11mm, minimum width=34mm,
+        text=white, inner sep=2pt, font=\small\sffamily
+    },
+    io/.style={
+        ellipse, draw=black!50, line width=0.4pt, fill=black!7,
+        align=center, font=\small\sffamily, inner sep=2pt,
+        minimum height=8mm, minimum width=28mm
+    },
+    data/.style={
+        rectangle, rounded corners=1pt, draw=black!40,
+        line width=0.4pt, fill=black!4,
+        align=center, font=\scriptsize\itshape, inner sep=2pt,
+        minimum height=6mm, minimum width=22mm
+    },
+    gate/.style={
+        diamond, aspect=2.4, draw=black!40, line width=0.4pt,
+        fill=cGate, text=white, align=center, font=\small\sffamily,
+        inner sep=1pt, minimum width=46mm, minimum height=10mm
+    },
+    flow/.style={-{Stealth[length=2.6mm]}, line width=0.5pt, draw=black!75},
+    flow_dashed/.style={
+        -{Stealth[length=2.6mm]}, dashed, line width=0.5pt, draw=black!55
+    },
+    label_text/.style={font=\scriptsize\itshape, text=black!60}
+]
+
+% Coordinates: y decreases downward.
+% Columns: -3 (left)  -1.5  0  +1.5  +3 (right)
+
+% --- Layer 0: input ---
+\node[io] (in) at (0, 0) {WAV recording};
+
+% --- Layer 1: STT (parallel) ---
+\node[layer, fill=cVox]    (vox)    at (-2.0, -1.6)
+    {\textbf{Layer 1a -- Voxtral STT}\\[0.3mm]
+     \scriptsize bf16 \,|\, German};
+\node[layer, fill=cScribe] (scribe) at ( 2.0, -1.6)
+    {\textbf{Layer 1b -- Scribe v2 STT}\\[0.3mm]
+     \scriptsize ElevenLabs API \,|\, word timestamps};
+
+% --- Layer 1c: lazy Whisper (side) ---
+\node[layer, fill=cWhisper, minimum width=30mm] (whisper) at (4.4, -1.6)
+    {\textbf{Layer 1c -- Whisper}\\[0.3mm]
+     \scriptsize fp32 \,|\, lazy fallback\\[0.3mm]
+     \scriptsize timestamps only};
+
+% --- Transcript data nodes ---
+\node[data] (tA) at (-2.0, -2.9) {transcript A};
+\node[data] (tB) at ( 2.0, -2.9) {transcript B};
+
+% --- Layer 2: country (centred) ---
+\node[layer, fill=cCountry] (country) at (0, -2.9)
+    {\textbf{Layer 2 -- Country / origin}\\[0.3mm]
+     \scriptsize gpt-5.4-mini \,|\, T=0\\[0.3mm]
+     \scriptsize email TLD + name pattern};
+
+% --- Layer 3 / Layer 4: candidates ---
+\node[layer, fill=cCand1] (c1A) at (-2.6, -4.6)
+    {\textbf{Layer 3a -- Candidate 1A}\\[0.3mm]
+     \scriptsize gpt-5.4-mini \,|\, T=0.7 $\times$ 5\\[0.3mm]
+     \scriptsize per-key majority};
+\node[layer, fill=cCand2] (c2)  at ( 0,    -4.6)
+    {\textbf{Layer 4 -- Candidate 2}\\[0.3mm]
+     \scriptsize Voxtral SpeechLM \,|\, T=0.01 $\times$ 3\\[0.3mm]
+     \scriptsize whole-record direct extraction};
+\node[layer, fill=cCand1] (c1B) at ( 2.6, -4.6)
+    {\textbf{Layer 3b -- Candidate 1B}\\[0.3mm]
+     \scriptsize gpt-5.4-mini \,|\, T=0.7 $\times$ 5\\[0.3mm]
+     \scriptsize per-key majority};
+
+% --- Disagreement gate ---
+\node[gate] (gate) at (0, -6.4)
+    {\textsf{any candidate disagrees}\\[0.2mm]
+     \textsf{on email or phone?}};
+
+% --- Layer 4.5 + Layer 5 (side by side) ---
+\node[layer, fill=cTarget, minimum width=46mm] (targeted) at (-2.5, -7.9)
+    {\textbf{Layer 4.5 -- Targeted re-listen}\\[0.3mm]
+     \scriptsize Voxtral SpeechLM \,|\, T=0.01 $\times$ 3\\[0.3mm]
+     \scriptsize segment crop $\pm$3\,s, single-field prompt};
+\node[layer, fill=cRecon, minimum width=46mm]  (recon)    at ( 2.5, -7.9)
+    {\textbf{Layer 5 -- Reconciler}\\[0.3mm]
+     \scriptsize gpt-5.4-mini \,|\, T=0\\[0.3mm]
+     \scriptsize 4 deterministic safety nets};
+
+% --- Layer 6 + final output ---
+\node[layer, fill=cSchema, minimum width=46mm] (schema) at (0, -9.3)
+    {\textbf{Layer 6 -- Schema}\\[0.3mm]
+     \scriptsize Pydantic + phonenumbers\\[0.3mm]
+     \scriptsize E.164 \,|\, NFC \,|\, lower-case email};
+
+\node[io] (out) at (0, -10.5) {final JSON};
+
+% --- Edges ---
+\draw[flow] (in.south) -- (vox.north);
+\draw[flow] (in.south) -- (scribe.north);
+\draw[flow_dashed] (in.east) .. controls +(right:8mm) and +(up:6mm)
+                              .. (whisper.north);
+
+\draw[flow] (vox.south)    -- (tA.north);
+\draw[flow] (scribe.south) -- (tB.north);
+
+% transcripts feed country (transcripts are at row -2.9, country also at -2.9)
+\draw[flow] (tA.east) -- (country.west);
+\draw[flow] (tB.west) -- (country.east);
+
+% transcripts -> candidate-1 (each)
+\draw[flow] (tA.south) .. controls +(down:5mm) and +(up:6mm)
+                       .. (c1A.north);
+\draw[flow] (tB.south) .. controls +(down:5mm) and +(up:6mm)
+                       .. (c1B.north);
+
+% country -> all candidates
+\draw[flow] (country.south) -- (c2.north);
+\draw[flow] (country.south west) .. controls +(down:5mm) and +(up:5mm)
+                                  .. (c1A.north east);
+\draw[flow] (country.south east) .. controls +(down:5mm) and +(up:5mm)
+                                  .. (c1B.north west);
+
+% audio -> candidate-2 (long curve down the centre)
+\draw[flow] (in.south) .. controls +(down:6mm) and +(up:18mm)
+                        .. (c2.north);
+
+% candidates -> gate
+\draw[flow] (c1A.south) .. controls +(down:6mm) and +(left:14mm)
+                        .. (gate.west);
+\draw[flow] (c1B.south) .. controls +(down:6mm) and +(right:14mm)
+                        .. (gate.east);
+\draw[flow] (c2.south) -- (gate.north);
+
+% gate -> targeted (yes) and reconciler (no)
+\draw[flow] (gate.south) .. controls +(down:6mm) and +(up:6mm)
+                          .. node[label_text, midway, left=-1mm]{disagree}
+                          (targeted.north);
+\draw[flow] (gate.south) .. controls +(down:6mm) and +(up:6mm)
+                          .. node[label_text, midway, right=-1mm]{all agree}
+                          (recon.north);
+
+% Whisper -> targeted (lazy)
+\draw[flow_dashed] (whisper.south) .. controls +(down:55mm) and +(right:14mm)
+                                    .. (targeted.east);
+
+% targeted -> reconciler
+\draw[flow] (targeted.east) -- (recon.west);
+
+% reconciler -> schema -> output
+\draw[flow] (recon.south) .. controls +(down:6mm) and +(up:6mm)
+                          .. (schema.north);
+\draw[flow] (schema.south) -- (out.north);
+
+\end{tikzpicture}%
+}%
+\caption{Full pipeline architecture. The recording feeds two STT
+backends in parallel (Layer 1a/1b); when neither produced word
+timestamps, Whisper (Layer 1c) is invoked lazily. Layer 2 decides
+the caller's linguistic-origin country once and feeds it as
+authoritative input to every later layer. Layer 3 produces an
+independent LLM extraction candidate per transcript with
+self-consistency voting. Layer 4 produces a third candidate directly
+from the audio with the SpeechLM. The disagreement gate decides
+whether Layer 4.5 (targeted-segment re-listen) needs to run; on most
+recordings it does not. Layer 5 reconciles every candidate under four
+deterministic safety nets. Layer 6 normalises to E.164 / NFC /
+lower-case email. Solid arrows are unconditional flow; dashed arrows
+are lazy paths.}
+\label{fig:pipeline}
+\end{figure}

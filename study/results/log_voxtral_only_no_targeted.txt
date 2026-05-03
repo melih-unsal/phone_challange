@@ -1,0 +1,35 @@
+== resolved config ==
+  TRANSCRIPTION_MODELS  : ['voxtral:mistralai/Voxtral-Mini-3B-2507']
+  INSTRUCT_MODEL        : 'voxtral:mistralai/Voxtral-Mini-3B-2507'
+  TIMESTAMP_MODEL       : ''
+  USE_TARGETED_EXTRACTION: False
+  NUM_LLM_VOTES         : 5
+  NUM_INSTRUCT_VOTES    : 3
+  NUM_TARGETED_VOTES    : 3
+  TARGETED_PAD_SECONDS  : 3.0
+  PROMPT_VERSION        : 2026-05-03.v1
+  RESULTS_DIR           : study/results
+  AUTO_RESUME           : False
+=====================
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 13573.80it/s]
+Loading weights:   0%|          | 0/762 [00:00<?, ?it/s]Loading weights:  58%|█████▊    | 440/762 [00:00<00:00, 4392.53it/s]Loading weights: 100%|██████████| 762/762 [00:00<00:00, 1093.31it/s]
+Processing recordings:   0%|          | 0/30 [00:00<?, ?it/s]Processing recordings:   3%|▎         | 1/30 [00:08<03:57,  8.19s/it]Processing recordings:   7%|▋         | 2/30 [00:16<03:55,  8.40s/it]Processing recordings:  10%|█         | 3/30 [00:25<03:46,  8.39s/it]Processing recordings:  13%|█▎        | 4/30 [00:35<03:54,  9.00s/it]Processing recordings:  17%|█▋        | 5/30 [00:46<04:09, 10.00s/it]Processing recordings:  20%|██        | 6/30 [00:55<03:51,  9.64s/it]Processing recordings:  23%|██▎       | 7/30 [01:04<03:34,  9.32s/it]Processing recordings:  27%|██▋       | 8/30 [01:13<03:26,  9.39s/it]Processing recordings:  30%|███       | 9/30 [01:24<03:25,  9.77s/it]Processing recordings:  33%|███▎      | 10/30 [01:33<03:07,  9.37s/it]Processing recordings:  37%|███▋      | 11/30 [01:41<02:53,  9.12s/it]Processing recordings:  40%|████      | 12/30 [01:50<02:43,  9.08s/it]Processing recordings:  43%|████▎     | 13/30 [01:57<02:23,  8.45s/it]Processing recordings:  47%|████▋     | 14/30 [02:06<02:16,  8.51s/it]Processing recordings:  50%|█████     | 15/30 [02:15<02:10,  8.68s/it]Processing recordings:  53%|█████▎    | 16/30 [02:23<01:57,  8.43s/it]Processing recordings:  57%|█████▋    | 17/30 [02:31<01:50,  8.53s/it]Processing recordings:  60%|██████    | 18/30 [02:40<01:41,  8.45s/it]Processing recordings:  63%|██████▎   | 19/30 [02:50<01:38,  8.98s/it]Processing recordings:  67%|██████▋   | 20/30 [03:01<01:35,  9.57s/it]Processing recordings:  70%|███████   | 21/30 [03:10<01:25,  9.52s/it]Processing recordings:  73%|███████▎  | 22/30 [03:19<01:14,  9.34s/it]Processing recordings:  77%|███████▋  | 23/30 [03:27<01:01,  8.78s/it]Processing recordings:  80%|████████  | 24/30 [03:37<00:55,  9.24s/it]Processing recordings:  83%|████████▎ | 25/30 [03:46<00:46,  9.26s/it]Processing recordings:  87%|████████▋ | 26/30 [03:57<00:38,  9.63s/it]Processing recordings:  90%|█████████ | 27/30 [04:05<00:27,  9.14s/it]Processing recordings:  93%|█████████▎| 28/30 [04:14<00:18,  9.22s/it]Processing recordings:  97%|█████████▋| 29/30 [04:27<00:10, 10.16s/it]Processing recordings: 100%|██████████| 30/30 [04:34<00:00,  9.26s/it]Processing recordings: 100%|██████████| 30/30 [04:34<00:00,  9.14s/it]
+
+Recording call_09: Mismatch in key 'phone_number' - expected: '+49 162 77665544', got: '+491627765544'
+Recording call_12: Mismatch in key 'email' - expected: 'michael_wagner@gmx.de', got: 'michael-wagner@gmx.de'
+Recording call_23: Mismatch in key 'last_name' - expected: 'Andersson', got: 'Anderson'
+Recording call_23: Mismatch in key 'email' - expected: 'emma.andersson@gmail.com', got: 'emma.anderson@gmail.com'
+Recording call_25: Mismatch in key 'last_name' - expected: 'Lefevre', got: 'Le Fèvre'
+Recording call_25: Mismatch in key 'email' - expected: 'marie.lefevre@yahoo.fr', got: 'marie.lefèvre@yahoo.fr'
+
+============================================================
+Summary
+============================================================
+Recordings evaluated:  30
+Full-record matches:   26 / 30
+  email           27 / 30   ( 90.0%)
+  first_name      30 / 30   (100.0%)
+  last_name       28 / 30   ( 93.3%)
+  phone_number    29 / 30   ( 96.7%)
+
+Report written to: study/results/report_voxtral_only_no_targeted_2026-05-03_191333.json

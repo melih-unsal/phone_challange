@@ -1,0 +1,34 @@
+== resolved config ==
+  TRANSCRIPTION_MODELS  : ['elevenlabs:scribe_v2']
+  INSTRUCT_MODEL        : ''
+  TIMESTAMP_MODEL       : ''
+  USE_TARGETED_EXTRACTION: False
+  NUM_LLM_VOTES         : 5
+  NUM_INSTRUCT_VOTES    : 3
+  NUM_TARGETED_VOTES    : 3
+  TARGETED_PAD_SECONDS  : 3.0
+  PROMPT_VERSION        : 2026-05-03.v1
+  RESULTS_DIR           : study/results
+  AUTO_RESUME           : False
+=====================
+WARNING: could not build INSTRUCT_MODEL='': model spec '' must be '<backend>:<model_id>' (e.g. 'voxtral:mistralai/Voxtral-Mini-3B-2507')
+         Layer 4 (candidate 2) and Layer 4.5 (targeted re-listen) will be skipped.
+Processing recordings:   0%|          | 0/30 [00:00<?, ?it/s]Processing recordings:   3%|▎         | 1/30 [00:11<05:40, 11.73s/it]Processing recordings:   7%|▋         | 2/30 [00:20<04:36,  9.88s/it]Processing recordings:  10%|█         | 3/30 [00:30<04:26,  9.88s/it]Processing recordings:  13%|█▎        | 4/30 [00:42<04:39, 10.76s/it]Processing recordings:  17%|█▋        | 5/30 [00:53<04:32, 10.89s/it]Processing recordings:  20%|██        | 6/30 [01:04<04:22, 10.94s/it]Processing recordings:  23%|██▎       | 7/30 [01:16<04:18, 11.26s/it]Processing recordings:  27%|██▋       | 8/30 [01:27<04:06, 11.20s/it]Processing recordings:  30%|███       | 9/30 [01:37<03:50, 11.00s/it]Processing recordings:  33%|███▎      | 10/30 [01:45<03:19,  9.97s/it]Processing recordings:  37%|███▋      | 11/30 [01:56<03:13, 10.18s/it]Processing recordings:  40%|████      | 12/30 [02:07<03:08, 10.44s/it]Processing recordings:  43%|████▎     | 13/30 [02:16<02:53, 10.18s/it]Processing recordings:  47%|████▋     | 14/30 [02:31<03:03, 11.50s/it]Processing recordings:  50%|█████     | 15/30 [02:41<02:46, 11.10s/it]Processing recordings:  53%|█████▎    | 16/30 [02:48<02:16,  9.76s/it]Processing recordings:  57%|█████▋    | 17/30 [03:01<02:19, 10.71s/it]Processing recordings:  60%|██████    | 18/30 [03:09<02:00, 10.04s/it]Processing recordings:  63%|██████▎   | 19/30 [03:18<01:45,  9.63s/it]Processing recordings:  67%|██████▋   | 20/30 [03:30<01:45, 10.51s/it]Processing recordings:  70%|███████   | 21/30 [03:41<01:35, 10.61s/it]Processing recordings:  73%|███████▎  | 22/30 [03:53<01:27, 10.91s/it]Processing recordings:  77%|███████▋  | 23/30 [04:02<01:13, 10.45s/it]Processing recordings:  80%|████████  | 24/30 [04:13<01:02, 10.41s/it]Processing recordings:  83%|████████▎ | 25/30 [04:21<00:49,  9.95s/it]Processing recordings:  87%|████████▋ | 26/30 [04:31<00:39,  9.87s/it]Processing recordings:  90%|█████████ | 27/30 [04:41<00:29,  9.93s/it]Processing recordings:  93%|█████████▎| 28/30 [04:52<00:20, 10.33s/it]Processing recordings:  97%|█████████▋| 29/30 [05:02<00:10, 10.01s/it]Processing recordings: 100%|██████████| 30/30 [05:19<00:00, 12.11s/it]Processing recordings: 100%|██████████| 30/30 [05:19<00:00, 10.64s/it]
+
+Recording call_01: Mismatch in key 'first_name' - expected: 'Johanna', got: 'Jana'
+Recording call_23: Mismatch in key 'last_name' - expected: 'Andersson', got: 'Anderson'
+Recording call_23: Mismatch in key 'email' - expected: 'emma.andersson@gmail.com', got: 'emma.anderson@gmail.com'
+Recording call_25: Mismatch in key 'last_name' - expected: 'Lefevre', got: 'Lefèvre'
+Recording call_26: Mismatch in key 'email' - expected: 'ahmed.hassan@gmail.com', got: 'ahmid.hassan@gmail.com'
+
+============================================================
+Summary
+============================================================
+Recordings evaluated:  30
+Full-record matches:   26 / 30
+  email           28 / 30   ( 93.3%)
+  first_name      29 / 30   ( 96.7%)
+  last_name       28 / 30   ( 93.3%)
+  phone_number    30 / 30   (100.0%)
+
+Report written to: study/results/report_scribe_only_no_audiollm_2026-05-03_185927.json

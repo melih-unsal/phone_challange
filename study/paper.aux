@@ -1,0 +1,69 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Problem Formulation}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Methodology}{2}{section.4}\protected@file@percent }
+\newlabel{sec:method}{{4}{2}{Methodology}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Layer 1: Multi-backend transcription}{2}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:m_l1}{{4.1}{2}{Layer 1: Multi-backend transcription}{subsection.4.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Full pipeline architecture. The recording feeds two STT backends in parallel (Layer 1a/1b); when neither produced word timestamps, Whisper (Layer 1c) is invoked lazily. Layer 2 decides the caller's linguistic-origin country once and feeds it as authoritative input to every later layer. Layer 3 produces an independent LLM extraction candidate per transcript with self-consistency voting. Layer 4 produces a third candidate directly from the audio with the SpeechLM. The disagreement gate decides whether Layer 4.5 (targeted-segment re-listen) needs to run; on most recordings it does not. Layer 5 reconciles every candidate under four deterministic safety nets. Layer 6 normalises to E.164 / NFC / lower-case email. Solid arrows are unconditional flow; dashed arrows are lazy paths.}}{3}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:pipeline}{{1}{3}{Full pipeline architecture. The recording feeds two STT backends in parallel (Layer 1a/1b); when neither produced word timestamps, Whisper (Layer 1c) is invoked lazily. Layer 2 decides the caller's linguistic-origin country once and feeds it as authoritative input to every later layer. Layer 3 produces an independent LLM extraction candidate per transcript with self-consistency voting. Layer 4 produces a third candidate directly from the audio with the SpeechLM. The disagreement gate decides whether Layer 4.5 (targeted-segment re-listen) needs to run; on most recordings it does not. Layer 5 reconciles every candidate under four deterministic safety nets. Layer 6 normalises to E.164 / NFC / lower-case email. Solid arrows are unconditional flow; dashed arrows are lazy paths}{figure.caption.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Layer 1b: Word-level timestamping}{4}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:m_l1b}{{4.2}{4}{Layer 1b: Word-level timestamping}{subsection.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Layer 2: Country and linguistic-origin detection}{4}{subsection.4.3}\protected@file@percent }
+\newlabel{sec:m_l2}{{4.3}{4}{Layer 2: Country and linguistic-origin detection}{subsection.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Layer 3: Candidate-1 (transcript-LLM)}{4}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:m_l3}{{4.4}{4}{Layer 3: Candidate-1 (transcript-LLM)}{subsection.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Layer 4: Candidate-2 (SpeechLM whole-record)}{4}{subsection.4.5}\protected@file@percent }
+\newlabel{sec:m_l4}{{4.5}{4}{Layer 4: Candidate-2 (SpeechLM whole-record)}{subsection.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Layer 4.5: Conditional targeted re-listening}{4}{subsection.4.6}\protected@file@percent }
+\newlabel{sec:m_l45}{{4.6}{4}{Layer 4.5: Conditional targeted re-listening}{subsection.4.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}Layer 5: Reconciler with deterministic safety nets}{5}{subsection.4.7}\protected@file@percent }
+\newlabel{sec:m_l5}{{4.7}{5}{Layer 5: Reconciler with deterministic safety nets}{subsection.4.7}{}}
+\@writefile{toc}{\contentsline {paragraph}{Net 1 -- Pre-LLM filter on targeted output.}{5}{paragraph*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Net 2 -- Unanimous override.}{5}{paragraph*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Net 3 -- Strict-majority override.}{5}{paragraph*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Net 4 -- Email-name alignment.}{5}{paragraph*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8}Layer 6: Schema validation and normalisation}{5}{subsection.4.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9}CLI override harness}{5}{subsection.4.9}\protected@file@percent }
+\newlabel{sec:m_cli}{{4.9}{5}{CLI override harness}{subsection.4.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Architecture summary}{6}{section.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Per-stage configuration. Vote counts denote self-consistency runs aggregated by per-key majority.}}{6}{table.caption.6}\protected@file@percent }
+\newlabel{tab:layers}{{1}{6}{Per-stage configuration. Vote counts denote self-consistency runs aggregated by per-key majority}{table.caption.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Experiments}{6}{section.6}\protected@file@percent }
+\newlabel{sec:exp}{{6}{6}{Experiments}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Setup}{6}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Headline numbers}{6}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Per-key accuracy}{6}{subsection.6.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Full-record matches (out of 30) per configuration. Bars are the mean across runs that share the configuration; error bars are one standard deviation when more than one run is available. The legend in each label encodes the four design axes \textsf  {<STT> | <audio-LLM> | <targeted> | <Whisper>}.}}{7}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:full_match}{{2}{7}{Full-record matches (out of 30) per configuration. Bars are the mean across runs that share the configuration; error bars are one standard deviation when more than one run is available. The legend in each label encodes the four design axes \textsf {<STT> | <audio-LLM> | <targeted> | <Whisper>}}{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Per-key accuracy across configurations. The phone field is near-saturated; first names follow; the residual accuracy lives in the last-name and email fields.}}{7}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:per_key}{{3}{7}{Per-key accuracy across configurations. The phone field is near-saturated; first names follow; the residual accuracy lives in the last-name and email fields}{figure.caption.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Full-record accuracy across configurations. The label encodes the STT set, the audio LLM (\textsf  {AL+}/\textsf  {AL-}), the targeted re-listen (\textsf  {T+}/\textsf  {T-}), and the Whisper timestamper (\textsf  {W+}/\textsf  {W-}). \textsf  {n} is the number of reports aggregated for the cell. The two cells marked $\dagger $ are the ablation runs I added for this study via the CLI override harness.}}{8}{table.caption.7}\protected@file@percent }
+\newlabel{tab:headline}{{2}{8}{Full-record accuracy across configurations. The label encodes the STT set, the audio LLM (\textsf {AL+}/\textsf {AL-}), the targeted re-listen (\textsf {T+}/\textsf {T-}), and the Whisper timestamper (\textsf {W+}/\textsf {W-}). \textsf {n} is the number of reports aggregated for the cell. The two cells marked $\dagger $ are the ablation runs I added for this study via the CLI override harness}{table.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Per-stage latency}{8}{subsection.6.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Average per-recording wall-clock time per pipeline stage. The candidate-1 stage scales with the number of STT models. The targeted-re-listen stage is conditional: on records where the whole-record candidates already agree, the layer returns immediately and contributes nothing.}}{8}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:timing}{{4}{8}{Average per-recording wall-clock time per pipeline stage. The candidate-1 stage scales with the number of STT models. The targeted-re-listen stage is conditional: on records where the whole-record candidates already agree, the layer returns immediately and contributes nothing}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Inter-candidate agreement and re-listen activity}{9}{subsection.6.5}\protected@file@percent }
+\newlabel{fig:agreement}{{5a}{9}{Inter-candidate agreement on the best run, per field. Phone and email are unanimous on most records; first/last-name disagreements are concentrated on a few diacritic-heavy callers}{figure.caption.11}{}}
+\newlabel{sub@fig:agreement}{{a}{9}{Inter-candidate agreement on the best run, per field. Phone and email are unanimous on most records; first/last-name disagreements are concentrated on a few diacritic-heavy callers}{figure.caption.11}{}}
+\newlabel{fig:targeted}{{5b}{9}{Layer 4.5 firing modes on the best run. \textsf {cropped} means the layer ran on a Whisper-cropped audio window; \textsf {skipped\_unanimous} means the gate closed because all whole-record candidates agreed}{figure.caption.11}{}}
+\newlabel{sub@fig:targeted}{{b}{9}{Layer 4.5 firing modes on the best run. \textsf {cropped} means the layer ran on a Whisper-cropped audio window; \textsf {skipped\_unanimous} means the gate closed because all whole-record candidates agreed}{figure.caption.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Disagreement distribution (left) drives Layer 4.5 firing behaviour (right). Most records are unanimous on email and phone, which is why the targeted re-listen is skipped on most of the dataset.}}{9}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:agreement_and_targeted}{{5}{9}{Disagreement distribution (left) drives Layer 4.5 firing behaviour (right). Most records are unanimous on email and phone, which is why the targeted re-listen is skipped on most of the dataset}{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Ablation Study}{9}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{STT choice.}{9}{paragraph*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{SpeechLM (audio LLM) on or off.}{9}{paragraph*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Targeted re-listen on or off.}{9}{paragraph*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Whisper timestamper.}{10}{paragraph*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Aggregate error counts}{10}{subsection.7.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Total errors by field, aggregated across every reported run. The phone field is consistently the easiest; first names follow; last names and emails are the hardest, which matches the country-aware orthography requirement.}}{10}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:error_taxonomy}{{6}{10}{Total errors by field, aggregated across every reported run. The phone field is consistently the easiest; first names follow; last names and emails are the hardest, which matches the country-aware orthography requirement}{figure.caption.16}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Error Analysis}{10}{section.8}\protected@file@percent }
+\newlabel{sec:errors}{{8}{10}{Error Analysis}{section.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{11}{section.9}\protected@file@percent }
+\gdef \@abspage@last{11}
