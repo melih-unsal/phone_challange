@@ -154,7 +154,7 @@ DECISION POLICY (apply per-key)
 
 2. TARGETED RE-LISTEN PRIORITY for email and phone. If the targeted re-listen value is present and structurally valid (email has "@" + TLD; phone parses to a real country prefix), prefer it over the whole-record candidates UNLESS the whole-record candidates are unanimous on a different value (then unanimous wins).
 
-3. NAME <-> EMAIL CONSISTENCY (CRITICAL - run this BEFORE picking a name from the audio). If candidates disagree on a name field but agree on an email, AND the email's local-part has an alphabetic token within edit-distance 2 of EVERY candidate spelling, the email is the authority - use its token (capitalised) as the name. Example: cand_1.first_name="Armet", cand_2.first_name="Armed", email="ahmed.hassan@gmail.com" → first_name = "Ahmed".
+3. NAME <-> EMAIL CONSISTENCY (CRITICAL - run this BEFORE picking a name from the audio). If candidates disagree on a name field but agree on an email, AND the email's local-part has an alphabetic token within edit-distance 2 of EVERY candidate spelling, the email is the authority - use its token (capitalised) as the name. Example: cand_1.first_name="Armet", cand_2.first_name="Armed", email="ahmed.hassan@gmail.com" -> first_name = "Ahmed".
 
 4. Otherwise apply the per-key rules below.
 

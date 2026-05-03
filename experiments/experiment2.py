@@ -28,16 +28,16 @@ HARD RULES (read before answering):
 - The country you return determines what orthography to apply to the name. Pick the country whose standard orthography matches the name's heritage.
 - NEVER return "United States" / "USA" / language_code "en" as a default for ambiguous-or-Hispanic-or-foreign names. The USA gives no orthographic guidance because its names span every tradition. If you would otherwise pick USA, pick the country of the name's actual heritage instead.
 - Map each name's heritage to a single linguistic-origin country:
-    • Hispanic / Spanish-language name pattern → country = "Spain", language_code = "es" (regardless of where the caller lives - Mexico, Argentina, etc. all use the same Spanish orthography).
-    • French name pattern → "France", "fr".
-    • Portuguese-language name pattern: with email TLD .br → "Brazil", "pt-br"; otherwise → "Portugal", "pt".
-    • Scandinavian name pattern → "Sweden", "sv" (or Norway/Denmark/Iceland with corresponding code if the pattern is unmistakeably one of those).
-    • Italian name pattern → "Italy", "it".
-    • Japanese name pattern → "Japan", "ja".
-    • Polish name pattern → "Poland", "pl".
-    • Dutch / Flemish pattern → "Netherlands", "nl".
-    • Clearly German name with no foreign signal → "Germany", "de".
-    • Genuinely ambiguous English name (Smith, Brown, Johnson) with no foreign signal → "United Kingdom", "en" - NOT "United States".
+    • Hispanic / Spanish-language name pattern -> country = "Spain", language_code = "es" (regardless of where the caller lives - Mexico, Argentina, etc. all use the same Spanish orthography).
+    • French name pattern -> "France", "fr".
+    • Portuguese-language name pattern: with email TLD .br -> "Brazil", "pt-br"; otherwise -> "Portugal", "pt".
+    • Scandinavian name pattern -> "Sweden", "sv" (or Norway/Denmark/Iceland with corresponding code if the pattern is unmistakeably one of those).
+    • Italian name pattern -> "Italy", "it".
+    • Japanese name pattern -> "Japan", "ja".
+    • Polish name pattern -> "Poland", "pl".
+    • Dutch / Flemish pattern -> "Netherlands", "nl".
+    • Clearly German name with no foreign signal -> "Germany", "de".
+    • Genuinely ambiguous English name (Smith, Brown, Johnson) with no foreign signal -> "United Kingdom", "en" - NOT "United States".
 - Trust signal 1 (email TLD/domain) most. Trust signal 2 (name heritage) when the email is a generic global domain like gmail.com / hotmail.com / outlook.com / yahoo.com.
 - Country of residence is irrelevant. Linguistic origin of the NAME is the only thing that matters.
 
@@ -70,8 +70,8 @@ CONTEXT
 NAMES - origin-correct spelling and DIACRITICS
 - Diacritics are mandatory whenever the country's standard spelling has them. The transcript and the email's local-part are ASCII and cannot encode diacritics, so their absence is NOT evidence the name lacks diacritics.
 - Apply ALL of these patterns:
-    • Spanish surnames ending in -ez → acute accent on the vowel before -ez (-áez / -éez / -íez / -óez / -úez).
-    • Spanish surnames whose stress falls on a non-default syllable (e.g., the sequence "-ía-" with stressed í, or final stressed vowel) → mark with acute accent. Common short Spanish surnames whose final two letters are "ia" with stress on the i carry an accent on the í.
+    • Spanish surnames ending in -ez -> acute accent on the vowel before -ez (-áez / -éez / -íez / -óez / -úez).
+    • Spanish surnames whose stress falls on a non-default syllable (e.g., the sequence "-ía-" with stressed í, or final stressed vowel) -> mark with acute accent. Common short Spanish surnames whose final two letters are "ia" with stress on the i carry an accent on the í.
     • Spanish/Portuguese names with ñ, ã, õ keep those characters.
     • Portuguese/Brazilian: tildes (ã, õ), acutes (á, é, í, ó, ú), ç where standard.
     • French: é, è, ê, à, ç where standard.
@@ -89,9 +89,9 @@ Step B: for each token, identify a "candidate string" - a single contiguous run 
   - If the token is mixed (contains both letters and digits), find the LONGEST contiguous alphabetic run inside it. If that run has length ≥ 2, the candidate string is that run; the digits and any other letters are NOT part of the candidate string and will be preserved in place. If the longest alphabetic run has length < 2, there is no candidate string - keep the token unchanged.
 
 Step C: for the candidate string (lowercased, ASCII), compute the minimum edit distance to (a) the spoken first name (lowercased, ASCII) and (b) the spoken last name (lowercased, ASCII).
-  - If min_distance == 0 → already correct, leave the token unchanged.
-  - If min_distance ≤ 2, OR ≤ 1 when the candidate string has length ≤ 5 → this is a NAME-LIKE substring. Replace the candidate string inside the token with the standard country spelling of the matching name (lowercase, ASCII, no diacritics). Every other character of the token (digits, other letters not in the candidate string) is preserved in its original position.
-  - If min_distance > 2 → does NOT resemble the spoken name. Leave the entire token unchanged.
+  - If min_distance == 0 -> already correct, leave the token unchanged.
+  - If min_distance ≤ 2, OR ≤ 1 when the candidate string has length ≤ 5 -> this is a NAME-LIKE substring. Replace the candidate string inside the token with the standard country spelling of the matching name (lowercase, ASCII, no diacritics). Every other character of the token (digits, other letters not in the candidate string) is preserved in its original position.
+  - If min_distance > 2 -> does NOT resemble the spoken name. Leave the entire token unchanged.
 
 Step D: for the NAME fields (first_name, last_name), use the standard country spelling WITH diacritics. The email's local-part remains ASCII (no diacritics) regardless.
 
@@ -106,10 +106,10 @@ EMAIL - other rules
 PHONE NUMBER
 
 Normalize the dialing prefix BEFORE applying any other rule:
-- "+CC..." → already international, keep.
-- "00CC..." (no "+") → replace "00" with "+".
-- "0CC..." (no "+", where CC is a valid country code such as 49) → drop the leading "0", prepend "+".
-- "0NNN..." (no "+", where NNN is a national-format number such as German mobile prefixes 0151/0152/0157/0159/0160/0162/0163/0170/0171/0172/0173/0174/0175/0176/0177/0178/0179, or German landlines 030/040/069/089/...) → drop the leading "0" and prepend the country code that matches the caller's country (default "+49" for German national-format numbers).
+- "+CC..." -> already international, keep.
+- "00CC..." (no "+") -> replace "00" with "+".
+- "0CC..." (no "+", where CC is a valid country code such as 49) -> drop the leading "0", prepend "+".
+- "0NNN..." (no "+", where NNN is a national-format number such as German mobile prefixes 0151/0152/0157/0159/0160/0162/0163/0170/0171/0172/0173/0174/0175/0176/0177/0178/0179, or German landlines 030/040/069/089/...) -> drop the leading "0" and prepend the country code that matches the caller's country (default "+49" for German national-format numbers).
 
 After prefix normalization the number is "+CC" + digits_after_cc. Apply the stutter rule:
     if len(digits_after_cc) >= 12 and digits_after_cc[-1] == digits_after_cc[-2]:

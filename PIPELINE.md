@@ -15,7 +15,7 @@ flowchart LR
     L1A --> TA[(transcript A)]
     L1B --> TB[(transcript B)]
 
-    TA --> L2[<b>Layer 2</b><br/>Country detection<br/>name + email TLD<br/>→ orthography]
+    TA --> L2[<b>Layer 2</b><br/>Country detection<br/>name + email TLD<br/>-> orthography]
     L2 --> CI[(country_info)]
 
     TA --> L3A
@@ -32,7 +32,7 @@ flowchart LR
     AMB -- disagreement --> L1C
     L1C --> L45
     A   --> L45
-    L45[<b>Layer 4.5 - Re-listen</b><br/>only disagreeing fields<br/>segment detect → crop ±3 s<br/>focused prompt × N]
+    L45[<b>Layer 4.5 - Re-listen</b><br/>only disagreeing fields<br/>segment detect -> crop ±3 s<br/>focused prompt × N]
 
     L3A --> C1A[(cand 1A)]
     L3B --> C1B[(cand 1B)]
@@ -47,7 +47,7 @@ flowchart LR
     C1B --> L5
     C2  --> L5
     CT  --> L5
-    L5[<b>Layer 5 - Reconciler</b><br/>LLM reasoning +<br/>1 invalid-targeted filter<br/>2 unanimous override<br/>3 NAME <-> EMAIL alignment] --> L6[<b>Layer 6 - Schema</b><br/>Pydantic CallerInfo<br/>phonenumbers → E.164<br/>NFC names · lower email]
+    L5[<b>Layer 5 - Reconciler</b><br/>LLM reasoning +<br/>1 invalid-targeted filter<br/>2 unanimous override<br/>3 NAME <-> EMAIL alignment] --> L6[<b>Layer 6 - Schema</b><br/>Pydantic CallerInfo<br/>phonenumbers -> E.164<br/>NFC names · lower email]
     L6 --> O([report.json])
 
     classDef voxtral  fill:#0277bd,stroke:#01579b,color:#ffffff
@@ -123,7 +123,7 @@ flowchart LR
     g -- disagreement --> wd[Whisper word timestamps] --> det[segments.py<br/>find_email/phone_segments]
     det -->|start_s, end_s| crop[audio_crop.py<br/>soundfile crop ±3 s]
     crop --> rl[disagreeing field only:<br/>EMAIL_TARGETED_PROMPT × N<br/>or PHONE_TARGETED_PROMPT × N]
-    rl --> vote[majority vote → targeted]
+    rl --> vote[majority vote -> targeted]
 
     classDef gate fill:#5d4037,stroke:#3e2723,color:#ffffff
     classDef whisper fill:#00838f,stroke:#006064,color:#ffffff
@@ -137,7 +137,7 @@ flowchart LR
 
 How it works (per record):
 
-1. **Gate** in [main.py](main.py): build `cand_1` and `cand_2` first; only if `cand_1[k] != cand_2[k]` for `email` or `phone_number` do we proceed. Most records agree → Layer 4.5 is skipped entirely.
+1. **Gate** in [main.py](main.py): build `cand_1` and `cand_2` first; only if `cand_1[k] != cand_2[k]` for `email` or `phone_number` do we proceed. Most records agree -> Layer 4.5 is skipped entirely.
 2. **Timestamps** ([Layer 1b - Whisper](src/transcription.py)): word-level timestamps come from `whisper-large-v3-turbo` at fp32 (the fp16 path SIGILL'd in `SuppressTokensLogitsProcessor`). Whisper isn't called when the gate skipped the record.
 3. **Detect** ([src/segments.py](src/segments.py)): `find_phone_segments` looks for sustained runs of digits / German digit-words (`null`, `eins`, `zwei`, …) and the `plus` / `vorwahl` markers. `find_email_segments` looks for `Punkt` / `Bindestrich` / `Unterstrich` / `ät` / domain hints (`gmail`, `gmx`, `de`, `com`) plus letter-by-letter spelling.
 4. **Crop** ([src/audio_crop.py](src/audio_crop.py)): merged window widened with `TARGETED_PAD_SECONDS = 3` of context on each side; `soundfile` (no librosa, no numba) writes a temp WAV.
@@ -170,7 +170,7 @@ flowchart TB
     class orth out
 ```
 
-A dedicated layer maps `name heritage + email TLD/domain → linguistic-origin country`. That country is the authority for diacritics and orthography downstream. Deciding it once removes a class of "5 LLM runs picked 3 different countries" failures, and lets the prompts say "use *this* country's rules" instead of asking each run to re-derive them.
+A dedicated layer maps `name heritage + email TLD/domain -> linguistic-origin country`. That country is the authority for diacritics and orthography downstream. Deciding it once removes a class of "5 LLM runs picked 3 different countries" failures, and lets the prompts say "use *this* country's rules" instead of asking each run to re-derive them.
 
 ### 4. Four deterministic safety nets after the LLM reconciler
 
@@ -180,9 +180,9 @@ The reconciler is an LLM, so it can be charmed by a confident-wrong cropped audi
 flowchart LR
     s0[<b>0. _filter_invalid_targeted</b><br/>BEFORE the LLM<br/>drops targeted email/phone that<br/>fails is_valid_email_shape<br/>or phonenumbers.is_valid_number]
     s0 --> llm[LLM reconciler<br/>picks per key + reasoning]
-    llm --> s1[<b>1. _unanimous_override</b><br/>if EVERY whole-record cand<br/>agrees on a key → that wins]
+    llm --> s1[<b>1. _unanimous_override</b><br/>if EVERY whole-record cand<br/>agrees on a key -> that wins]
     s1 --> s2[<b>2. _majority_override</b><br/>strict majority of whole-record<br/>cands wins - e.g. 2 of 3]
-    s2 --> s3[<b>3. _email_name_alignment</b><br/>if names disagree AND ASCII<br/>forms also differ AND email's<br/>local-part has a token within<br/>edit-dist 2 of every cand →<br/>use email token]
+    s2 --> s3[<b>3. _email_name_alignment</b><br/>if names disagree AND ASCII<br/>forms also differ AND email's<br/>local-part has a token within<br/>edit-dist 2 of every cand -><br/>use email token]
     s3 --> out([final])
 
     classDef indigo fill:#4527a0,stroke:#311b92,color:#ffffff
@@ -202,7 +202,7 @@ flowchart LR
 
 - **call_09 phone** - Voxtral and Scribe both transcribed `+4916277665544`; the audio LLM dropped a digit to `+491627765544`; the targeted re-listen echoed the audio LLM. The LLM trusted the targeted-priority rule and emitted the wrong value. `_majority_override` sees 2 vs 1 across the whole-record candidates and locks the right one.
 - **call_26 email** - 2 of 3 candidates produced `ahmed.hassan@...`; Scribe's transcript-LLM produced `ahmid.hassan@...`; the targeted re-listen echoed Scribe. Same fix.
-- **call_20 / call_29 last_name** - `García`/`García`/`Garcia` and `Martínez`/`Martínez`/`Martinez`. The accented form is a strict majority → it wins.
+- **call_20 / call_29 last_name** - `García`/`García`/`Garcia` and `Martínez`/`Martínez`/`Martinez`. The accented form is a strict majority -> it wins.
 
 **Net 3 - `_email_name_alignment` - NAME <-> EMAIL CONSISTENCY done deterministically.** When candidates disagree on a name field AND their **ASCII-folded** forms also differ (i.e. it's a real letter substitution, not a pure diacritic disagreement), scan the FINAL email's local-part for an alphabetic token within edit-distance 2 of every candidate spelling. If found, replace the name with that token (capitalised).
 
@@ -211,7 +211,7 @@ Two guards are critical:
 - **ASCII-folded comparison.** Without this, "García"/"Garcia" both have edit-distance ≤ 2 from `garcia` in the email, and we'd strip the accent the majority override just put in.
 - **ASCII-distinct guard.** If candidates' ASCII-folded forms are all the same, the disagreement is purely diacritic and the country-orthography rule (not the ASCII email) is the authority - so we skip alignment.
 
-Worked example (call_25): final email = `marie.lefevre@yahoo.fr`; candidate last_names = `Lefebvre`, `Lefevre`, `Le Fèvre`. ASCII-folded: `lefebvre`, `lefevre`, `le fevre` - distinct. Edit distances to email-run `lefevre`: [1, 0, 1] - all ≤ 2. → `last_name = "Lefevre"`.
+Worked example (call_25): final email = `marie.lefevre@yahoo.fr`; candidate last_names = `Lefebvre`, `Lefevre`, `Le Fèvre`. ASCII-folded: `lefebvre`, `lefevre`, `le fevre` - distinct. Edit distances to email-run `lefevre`: [1, 0, 1] - all ≤ 2. -> `last_name = "Lefevre"`.
 
 ### 5. Reasoning-first reconciliation
 
@@ -225,11 +225,11 @@ flowchart LR
       ct[targeted]
     end
     in --> R{Reconciler<br/>policy}
-    R -->|unanimous → verbatim| out
+    R -->|unanimous -> verbatim| out
     R -->|targeted-priority for email/phone| out
-    R -->|diacritics → country std| out
-    R -->|phone → discard +0/+04| out
-    R -->|email → name-token agreement| out
+    R -->|diacritics -> country std| out
+    R -->|phone -> discard +0/+04| out
+    R -->|email -> name-token agreement| out
     out([reasoning + final JSON])
 
     classDef inp fill:#37474f,stroke:#263238,color:#ffffff
@@ -332,7 +332,7 @@ Top-level `run` block:
 | Layer 3 - candidate per transcript | gpt-5.4-mini | 0.7 | 5 per transcript | one independent candidate per STT model |
 | Layer 4 - candidate 2     | Voxtral        | 0.01  | 3 | whole-record audio instruction-following |
 | Layer 4.5 - re-listen     | Voxtral        | 0.01  | 3 per disagreeing field | conditional: only when any candidate disagrees on email/phone; segment crop ±3 s |
-| Layer 5 - reconciler      | gpt-5.4-mini   | 0     | 1 | invalid-targeted filter (pre-LLM) → LLM pick → unanimous → strict-majority → name<->email alignment (ASCII-distinct guarded) |
+| Layer 5 - reconciler      | gpt-5.4-mini   | 0     | 1 | invalid-targeted filter (pre-LLM) -> LLM pick -> unanimous -> strict-majority -> name<->email alignment (ASCII-distinct guarded) |
 | Layer 6 - schema          | Pydantic + phonenumbers | - | - | E.164 / NFC / lower-casing |
 
 A/B switches in [src/config.py](src/config.py): `TRANSCRIPTION_MODELS` (list), `INSTRUCT_MODEL`, `TIMESTAMP_MODEL`, `NUM_LLM_VOTES`, `NUM_INSTRUCT_VOTES`, `NUM_TARGETED_VOTES`, `TARGETED_PAD_SECONDS`, `USE_TARGETED_EXTRACTION`, `VOXTRAL_ATTN_IMPL`, `DEFAULT_PHONE_REGION`, `PROMPT_VERSION`, `AUTO_RESUME`.
@@ -347,7 +347,7 @@ A/B switches in [src/config.py](src/config.py): `TRANSCRIPTION_MODELS` (list), `
 | [src/country.py](src/country.py) | Layer 2 |
 | [src/extract_llm.py](src/extract_llm.py) | Layer 3 (candidate 1) |
 | [src/extract_voxtral.py](src/extract_voxtral.py) | Layer 4 (candidate 2) |
-| [src/targeted_extract.py](src/targeted_extract.py) | Layer 4.5 - segment detect → crop → re-prompt |
+| [src/targeted_extract.py](src/targeted_extract.py) | Layer 4.5 - segment detect -> crop -> re-prompt |
 | [src/reconcile.py](src/reconcile.py) | Layer 5 |
 | [src/schema.py](src/schema.py) | Layer 6 - Pydantic `CallerInfo` |
 | [src/validators.py](src/validators.py) | shared by schema + evaluator |

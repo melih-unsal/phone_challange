@@ -39,7 +39,7 @@ def main(audio_path: str) -> None:
     print(trans.text)
     print("=" * 60)
     if trans.has_timestamps():
-        print(f"\nword timestamps: {len(trans.words)} words, {trans.words[0].start:.2f}s → {trans.words[-1].end:.2f}s")
+        print(f"\nword timestamps: {len(trans.words)} words, {trans.words[0].start:.2f}s -> {trans.words[-1].end:.2f}s")
         # Show first 8 words for sanity
         for w in trans.words[:8]:
             print(f"  {w.start:6.2f}s  {w.text}")

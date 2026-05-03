@@ -13,7 +13,7 @@ flowchart TD
     X --> R2["run 2"]
     X --> R3["run 3"]
     R1 & R2 & R3 --> M["<b>majority_vote()</b><br/>per-key Counter.most_common(1)"]
-    M --> P["<b>Phone post-processing</b><br/>· strip spaces<br/>· prefix: +00→+, +0→+, 00→+, 0→+49<br/>· stutter: drop final repeat if ≥14 digits<br/>· format as +CC AAA NNNNNNNN"]
+    M --> P["<b>Phone post-processing</b><br/>· strip spaces<br/>· prefix: +00->+, +0->+, 00->+, 0->+49<br/>· stutter: drop final repeat if ≥14 digits<br/>· format as +CC AAA NNNNNNNN"]
     P --> O([results.json])
 
     style B fill:#e1f5ff,stroke:#0288d1
@@ -31,14 +31,14 @@ flowchart TD
     A([WAV file]) --> L1["<b>Layer 1 - Voxtral</b><br/>transcription"]
     L1 --> T["transcript"]
 
-    T --> L2["<b>Layer 2 - Country detection</b><br/>gpt-5.4-mini, temp=0<br/>maps name pattern + email TLD<br/>→ country + language_code<br/>(USA forbidden as default)"]
+    T --> L2["<b>Layer 2 - Country detection</b><br/>gpt-5.4-mini, temp=0<br/>maps name pattern + email TLD<br/>-> country + language_code<br/>(USA forbidden as default)"]
     L2 --> CI["country_info<br/>{country, language_code, reasoning}"]
 
     T --> L3
     CI --> L3["<b>Layer 3 - Self-consistent extraction</b><br/>chain.batch([input] × 5)<br/>gpt-5.4-mini, temp=0.7<br/>uses given country (no inference)<br/>applies token-level consistency rule"]
     L3 --> RUNS["runs[5]<br/>each: {thinking, first, last, email, phone}"]
 
-    RUNS --> AGG["<b>aggregate_candidates()</b><br/>per-key Counter.most_common()<br/>→ {key: [{value, count}, ...]}"]
+    RUNS --> AGG["<b>aggregate_candidates()</b><br/>per-key Counter.most_common()<br/>-> {key: [{value, count}, ...]}"]
     AGG --> CAND["candidates dict<br/><i>(values are lists)</i>"]
 
     CAND --> L4
@@ -48,7 +48,7 @@ flowchart TD
 
     DRAFT --> L5
     CI --> L5
-    T --> L5["<b>Layer 5 - Verification</b><br/>gpt-5.4-mini, temp=0<br/>NAME <-> email reconciliation<br/>· edit-distance per email name-token<br/>· dist=0 → ok; 1–2 → reconcile to country standard<br/>· >2 → leave alone (handle/prefix)"]
+    T --> L5["<b>Layer 5 - Verification</b><br/>gpt-5.4-mini, temp=0<br/>NAME <-> email reconciliation<br/>· edit-distance per email name-token<br/>· dist=0 -> ok; 1–2 -> reconcile to country standard<br/>· >2 -> leave alone (handle/prefix)"]
     L5 --> VER["verified answer"]
 
     VER --> P["<b>Phone post-processing</b><br/>same rules as test.py"]

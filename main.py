@@ -302,7 +302,7 @@ def run() -> Path:
 
         # Layer 4.5 - segment-targeted re-listen. Only run on fields where
         # any whole-record candidate disagrees with another. Most records
-        # end up unanimous → skip the layer (and Whisper) entirely.
+        # end up unanimous -> skip the layer (and Whisper) entirely.
         t0 = time.perf_counter()
         all_emails = {(c["value"].get("email") or "").strip() for c in candidates_1}
         all_emails.add((cand2.get("email") or "").strip())

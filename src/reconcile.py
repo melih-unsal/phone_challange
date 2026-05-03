@@ -195,7 +195,7 @@ def _email_local_runs(email: str) -> list[str]:
 
 
 def _ascii_fold(value: str) -> str:
-    """Strip diacritics and lowercase. 'García' → 'garcia', 'Le Fèvre' → 'le fevre'."""
+    """Strip diacritics and lowercase. 'García' -> 'garcia', 'Le Fèvre' -> 'le fevre'."""
     if not value:
         return ""
     decomposed = unicodedata.normalize("NFD", value)
@@ -226,9 +226,9 @@ def _email_name_alignment(
         cand_1B.last_name = 'Lefevre'
         cand_2.last_name  = 'Le Fèvre'
         final.email       = 'marie.lefevre@yahoo.fr'   (LLM picked correctly)
-    ASCII-folded names: {'lefebvre', 'lefevre', 'le fevre'} → distinct → proceed.
+    ASCII-folded names: {'lefebvre', 'lefevre', 'le fevre'} -> distinct -> proceed.
     Edit distance from 'lefevre' (email run) to each: [1, 0, 1] - all ≤ 2.
-    → final.last_name = 'Lefevre'  (was 'Lefebvre' from the LLM).
+    -> final.last_name = 'Lefevre'  (was 'Lefebvre' from the LLM).
     """
     final_email = (final.get("email") or "").strip().lower()
     if "@" not in final_email:
@@ -244,11 +244,11 @@ def _email_name_alignment(
         if not names:
             continue
 
-        # No real disagreement → leave alone (unanimous/majority already handled).
+        # No real disagreement -> leave alone (unanimous/majority already handled).
         if len({n.casefold() for n in names}) <= 1:
             continue
 
-        # Diacritic-only disagreement → don't strip accents based on the
+        # Diacritic-only disagreement -> don't strip accents based on the
         # ASCII email. The country-aware orthography rule wants the accent.
         if len({_ascii_fold(n) for n in names}) <= 1:
             continue

@@ -36,7 +36,7 @@ GERMAN_DIGIT_WORDS = {
     "zwanzig", "dreißig", "dreissig", "vierzig", "fünfzig", "fuenfzig",
     "sechzig", "siebzig", "achtzig", "neunzig",
     "hundert", "tausend",
-    "und",  # "ein und vierzig" → 41
+    "und",  # "ein und vierzig" -> 41
 }
 
 EMAIL_SEPARATOR_WORDS = {"punkt", "bindestrich", "unterstrich", "dot", "dash", "hyphen"}
@@ -186,7 +186,7 @@ def merge_or_fallback(
     spans: list[tuple[float, float]],
     audio_duration: Optional[float] = None,
 ) -> Optional[tuple[float, float]]:
-    """Collapse multiple segments into one (start of first → end of last) so the
+    """Collapse multiple segments into one (start of first -> end of last) so the
     audio-LLM gets a single contiguous crop rather than a stitch of pieces.
 
     Returns None when no segments were found - caller falls back to full audio.

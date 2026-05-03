@@ -22,13 +22,13 @@ LLM_MODEL_NAME = "gpt-5.4-mini"
 LLM_BASE_URL = "https://us.api.openai.com/v1"
 
 # Audio-model specs are model-agnostic: "<backend>:<model_id>".
-#   backend = "voxtral"     → local HuggingFace VoxtralForConditionalGeneration
-#   backend = "elevenlabs"  → ElevenLabs Speech-to-Text API (transcription only)
-#   backend = "whisper"     → local HuggingFace Whisper (timestamps only)
+#   backend = "voxtral"     -> local HuggingFace VoxtralForConditionalGeneration
+#   backend = "elevenlabs"  -> ElevenLabs Speech-to-Text API (transcription only)
+#   backend = "whisper"     -> local HuggingFace Whisper (timestamps only)
 #
 # TRANSCRIPTION_MODELS is a LIST. Each entry produces its own transcript and
 # its own candidate_1 (Layer 3 extracts independently from each transcript).
-# More diverse transcripts → more independent readings for the reconciler
+# More diverse transcripts -> more independent readings for the reconciler
 # to triangulate from. ASR errors are usually correlated within a single
 # model and uncorrelated across models, so adding a second STT is high-value.
 TRANSCRIPTION_MODELS = [
@@ -131,7 +131,7 @@ FIRST_NAME_RULES = """FIRST_NAME
 LAST_NAME_RULES = """LAST_NAME
 - Same origin-correct, diacritic-aware rules as FIRST_NAME.
 - Additional Spanish patterns:
-    * Spanish surnames ending in -ez → acute accent on the vowel before -ez (-áez / -éez / -íez / -óez / -úez).
+    * Spanish surnames ending in -ez -> acute accent on the vowel before -ez (-áez / -éez / -íez / -óez / -úez).
     * Spanish surnames whose stress falls on a non-default syllable (e.g. "-ía-" with stressed í, or final stressed vowel) carry an acute accent.
 - Output the form a native of the country would write on a passport / ID."""
 
@@ -145,10 +145,10 @@ EMAIL_RULES = """EMAIL
 PHONE_RULES = """PHONE_NUMBER
 
 Prefix normalisation (apply BEFORE any other phone rule):
-- "+CC..." → already international, keep as-is.
-- "00CC..." (no "+") → replace "00" with "+".
-- "0CC..." (no "+", where CC is a valid country code such as 49) → drop the leading "0", prepend "+".
-- "0NNN..." (no "+", where NNN is a national-format number such as German mobile prefixes 0151/0152/0157/0159/0160/0162/0163/0170/0171/0172/0173/0174/0175/0176/0177/0178/0179, or German landlines 030/040/069/089/...) → drop the leading "0" and prepend the country code that matches the caller's country (default "+49" for German national-format numbers).
+- "+CC..." -> already international, keep as-is.
+- "00CC..." (no "+") -> replace "00" with "+".
+- "0CC..." (no "+", where CC is a valid country code such as 49) -> drop the leading "0", prepend "+".
+- "0NNN..." (no "+", where NNN is a national-format number such as German mobile prefixes 0151/0152/0157/0159/0160/0162/0163/0170/0171/0172/0173/0174/0175/0176/0177/0178/0179, or German landlines 030/040/069/089/...) -> drop the leading "0" and prepend the country code that matches the caller's country (default "+49" for German national-format numbers).
 
 After prefix normalisation the number is "+CC" + digits_after_cc.
 
@@ -167,14 +167,14 @@ NAME_EMAIL_CONSISTENCY = """NAME <-> EMAIL CONSISTENCY (token-level - modify the
 Step A: split the email's local-part by ".", "-", "_" into tokens.
 
 Step B: for each token, find a single "candidate string" - one contiguous run of alphabetic letters within the token that the edit-distance test will apply to:
-- Token is purely alphabetic length ≥ 2 → candidate string is the whole token.
-- Token is purely digits OR a single alphabetic letter → no candidate string; keep the token unchanged.
-- Token is mixed (letters + digits) → take the LONGEST contiguous alphabetic run inside it. If that run has length ≥ 2 it is the candidate string; everything else in the token (digits, other letters) is preserved in place. If the longest run has length < 2, no candidate string; keep the token unchanged.
+- Token is purely alphabetic length ≥ 2 -> candidate string is the whole token.
+- Token is purely digits OR a single alphabetic letter -> no candidate string; keep the token unchanged.
+- Token is mixed (letters + digits) -> take the LONGEST contiguous alphabetic run inside it. If that run has length ≥ 2 it is the candidate string; everything else in the token (digits, other letters) is preserved in place. If the longest run has length < 2, no candidate string; keep the token unchanged.
 
 Step C: for the candidate string (lowercased ASCII), compute the minimum edit distance to (a) the spoken first name and (b) the spoken last name (both lowercased ASCII).
-- min_distance == 0 → already correct, leave the token unchanged.
-- min_distance ≤ 2, OR ≤ 1 when the candidate string has length ≤ 5 → NAME-LIKE substring. Replace the candidate string inside the token with the standard country spelling of the matching name (lowercase ASCII, no diacritics). Every other character of the token (digits, other letters) keeps its original position.
-- min_distance > 2 → does NOT resemble the spoken name. Leave the entire token unchanged.
+- min_distance == 0 -> already correct, leave the token unchanged.
+- min_distance ≤ 2, OR ≤ 1 when the candidate string has length ≤ 5 -> NAME-LIKE substring. Replace the candidate string inside the token with the standard country spelling of the matching name (lowercase ASCII, no diacritics). Every other character of the token (digits, other letters) keeps its original position.
+- min_distance > 2 -> does NOT resemble the spoken name. Leave the entire token unchanged.
 
 Step D: NAME fields use the standard country spelling WITH diacritics. The email's local-part stays ASCII (no diacritics) regardless."""
 
@@ -198,16 +198,16 @@ HARD RULES:
 - The country you return determines what orthography to apply to the name.
 - NEVER return "United States" / "USA" / language_code "en" as a default for ambiguous-or-Hispanic-or-foreign names. The USA gives no orthographic guidance because its names span every tradition. If you would otherwise pick USA, pick the country of the name's actual heritage instead.
 - Map name heritage to a single linguistic-origin country:
-    * Hispanic / Spanish-language pattern → "Spain", "es" (regardless of where the caller lives).
-    * French pattern → "France", "fr".
-    * Portuguese-language pattern: email TLD .br → "Brazil", "pt-br"; otherwise → "Portugal", "pt".
-    * Scandinavian pattern → "Sweden", "sv" (or Norway/Denmark/Iceland with corresponding code if the pattern is unmistakeably one of those).
-    * Italian pattern → "Italy", "it".
-    * Japanese pattern → "Japan", "ja".
-    * Polish pattern → "Poland", "pl".
-    * Dutch / Flemish pattern → "Netherlands", "nl".
-    * Clearly German with no foreign signal → "Germany", "de".
-    * Genuinely ambiguous English (Smith, Brown, Johnson) with no foreign signal → "United Kingdom", "en" - NOT "United States".
+    * Hispanic / Spanish-language pattern -> "Spain", "es" (regardless of where the caller lives).
+    * French pattern -> "France", "fr".
+    * Portuguese-language pattern: email TLD .br -> "Brazil", "pt-br"; otherwise -> "Portugal", "pt".
+    * Scandinavian pattern -> "Sweden", "sv" (or Norway/Denmark/Iceland with corresponding code if the pattern is unmistakeably one of those).
+    * Italian pattern -> "Italy", "it".
+    * Japanese pattern -> "Japan", "ja".
+    * Polish pattern -> "Poland", "pl".
+    * Dutch / Flemish pattern -> "Netherlands", "nl".
+    * Clearly German with no foreign signal -> "Germany", "de".
+    * Genuinely ambiguous English (Smith, Brown, Johnson) with no foreign signal -> "United Kingdom", "en" - NOT "United States".
 - Trust signal 1 (email TLD/domain) most. Trust signal 2 (name heritage) when the email is a generic global domain like gmail.com / hotmail.com / outlook.com / yahoo.com.
 - Country of residence is irrelevant. Linguistic origin of the NAME is the only thing that matters."""
 

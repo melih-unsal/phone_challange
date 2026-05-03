@@ -30,8 +30,8 @@ NAMES - origin-correct spelling and DIACRITICS
 - Use the STANDARD spelling of the name in the inferred origin's language. Never default to German spelling for a non-German caller.
 - Diacritics are mandatory whenever the inferred origin's standard spelling carries them. The transcript and the email are ASCII and cannot encode diacritics, so their absence is NOT evidence that the name lacks diacritics.
 - Apply ALL of these patterns:
-    • Spanish surnames ending in -ez → acute accent on the vowel before -ez (gives -áez / -éez / -íez / -óez / -úez patterns).
-    • Spanish surnames whose stress falls on a non-default syllable (e.g., contain the letter sequence "-ía-" with the í stressed, or end in a stressed vowel) → mark that vowel with an acute accent (á, é, í, ó, ú). In particular, common short Spanish surnames whose final two letters are "ia" with stress on the i carry an accent on that í.
+    • Spanish surnames ending in -ez -> acute accent on the vowel before -ez (gives -áez / -éez / -íez / -óez / -úez patterns).
+    • Spanish surnames whose stress falls on a non-default syllable (e.g., contain the letter sequence "-ía-" with the í stressed, or end in a stressed vowel) -> mark that vowel with an acute accent (á, é, í, ó, ú). In particular, common short Spanish surnames whose final two letters are "ia" with stress on the i carry an accent on that í.
     • Spanish/Portuguese names with ñ, ã, õ keep those characters.
     • Portuguese/Brazilian: tildes (ã, õ), acutes (á, é, í, ó, ú), ç where standard.
     • French: é, è, ê, à, ç where standard.
@@ -42,22 +42,22 @@ NAMES - origin-correct spelling and DIACRITICS
 NAME <-> EMAIL CONSISTENCY (token-level - be CONSERVATIVE about modifying the email)
 
 Split the email's local-part by ".", "-", "_" into tokens. Classify each token:
-  - DIGITS-ONLY (e.g., "1983", "47") → keep unchanged.
-  - MIXED (alphanumeric, contains at least one digit or non-letter, e.g. "h47", "user2") → keep unchanged. The user chose these; do not touch them.
-  - SINGLE LETTER (e.g., "k", "m") → keep unchanged (it is an initial).
-  - ALPHABETIC of length ≥ 2 → consider for name normalization (next paragraph).
+  - DIGITS-ONLY (e.g., "1983", "47") -> keep unchanged.
+  - MIXED (alphanumeric, contains at least one digit or non-letter, e.g. "h47", "user2") -> keep unchanged. The user chose these; do not touch them.
+  - SINGLE LETTER (e.g., "k", "m") -> keep unchanged (it is an initial).
+  - ALPHABETIC of length ≥ 2 -> consider for name normalization (next paragraph).
 
 For each ALPHABETIC token of length ≥ 2, compute its character-level edit distance to (a) the spoken first name (lowercased, ASCII) and (b) the spoken last name (lowercased, ASCII). Take the minimum.
-  - If min_distance == 0 → already correct, leave it alone (but the NAME field should still apply origin diacritics; see DIACRITICS).
-  - If min_distance ≤ 2 (or ≤ 1 for tokens of length ≤ 5) → this is a NAME-LIKE token, almost certainly an ASR mistake of the name. Replace it with the standard origin spelling of the matching name (lowercased, ASCII, no diacritics).
-  - If min_distance > 2 → the token does NOT resemble the spoken name. LEAVE IT UNCHANGED. It may be a chosen handle, prefix, or unrelated identifier (do not strip it, do not replace it).
+  - If min_distance == 0 -> already correct, leave it alone (but the NAME field should still apply origin diacritics; see DIACRITICS).
+  - If min_distance ≤ 2 (or ≤ 1 for tokens of length ≤ 5) -> this is a NAME-LIKE token, almost certainly an ASR mistake of the name. Replace it with the standard origin spelling of the matching name (lowercased, ASCII, no diacritics).
+  - If min_distance > 2 -> the token does NOT resemble the spoken name. LEAVE IT UNCHANGED. It may be a chosen handle, prefix, or unrelated identifier (do not strip it, do not replace it).
 
 For the NAME fields (first_name, last_name): use the standard origin spelling WITH diacritics.
 
 Direction of correction (when the spoken NAME and a NAME-LIKE token disagree):
-  - If spoken NAME is a recognised name in the inferred origin and the email token is a near-miss → fix the EMAIL token to match the standard NAME spelling (ASCII).
-  - If the email token is a recognised name in the inferred origin's language but the spoken NAME is in a different language's spelling → fix the NAME field to match the email token (then apply origin diacritics).
-  - If both look like recognised names in different traditions → use the form standard in the inferred origin for BOTH.
+  - If spoken NAME is a recognised name in the inferred origin and the email token is a near-miss -> fix the EMAIL token to match the standard NAME spelling (ASCII).
+  - If the email token is a recognised name in the inferred origin's language but the spoken NAME is in a different language's spelling -> fix the NAME field to match the email token (then apply origin diacritics).
+  - If both look like recognised names in different traditions -> use the form standard in the inferred origin for BOTH.
 
 The phrase "names look too different" maps onto min_distance > 2 above: in that case do NOT modify the email. Preserve all unrecognised tokens exactly as transcribed.
 
@@ -70,10 +70,10 @@ EMAIL - other rules
 PHONE NUMBER
 
 Normalize the dialing prefix BEFORE applying any other phone rule:
-- If the transcribed number begins with "+" → already international, keep as-is.
-- If it begins with "00" (and no "+") → replace the "00" with "+" (German/European international call prefix).
-- If it begins with a single "0" (and no "+") AND the next 1–3 digits are a valid country code (e.g., "049…", "044…") → drop that leading "0" and prepend "+". This case occurs when the speaker said "00 49 …" but the ASR ate one zero, leaving "0 49 …".
-- If it begins with a single "0" (and no "+") AND the next digits are a national-format number (e.g., German mobile prefixes 0151/0152/0157/0159/0160/0162/0163/0170/0171/0172/0173/0174/0175/0176/0177/0178/0179, German landline prefixes 030/040/069/089/…) → drop the leading "0" and prepend the country code with "+" (default "+49" for a German national-format number; use the country code that matches the inferred origin/area code).
+- If the transcribed number begins with "+" -> already international, keep as-is.
+- If it begins with "00" (and no "+") -> replace the "00" with "+" (German/European international call prefix).
+- If it begins with a single "0" (and no "+") AND the next 1–3 digits are a valid country code (e.g., "049…", "044…") -> drop that leading "0" and prepend "+". This case occurs when the speaker said "00 49 …" but the ASR ate one zero, leaving "0 49 …".
+- If it begins with a single "0" (and no "+") AND the next digits are a national-format number (e.g., German mobile prefixes 0151/0152/0157/0159/0160/0162/0163/0170/0171/0172/0173/0174/0175/0176/0177/0178/0179, German landline prefixes 030/040/069/089/…) -> drop the leading "0" and prepend the country code with "+" (default "+49" for a German national-format number; use the country code that matches the inferred origin/area code).
 
 After prefix normalization, the number is "+CC" + digits_after_cc.
 

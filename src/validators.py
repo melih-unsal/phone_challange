@@ -41,7 +41,7 @@ _EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
 
 def _country_dialcode(region: str) -> str:
-    """Return the dialing prefix for a phonenumbers region (e.g. 'DE' → '49')."""
+    """Return the dialing prefix for a phonenumbers region (e.g. 'DE' -> '49')."""
     try:
         return str(phonenumbers.country_code_for_region(region))
     except Exception:
@@ -76,13 +76,13 @@ def normalize_phone(value: str, default_region: str = "DE") -> str:
 
     # Hand-rolled prefix repair to give phonenumbers a valid string to chew on
     if raw.startswith("+00"):
-        raw = "+" + raw[3:]      # "+00CC..." → "+CC..."
+        raw = "+" + raw[3:]      # "+00CC..." -> "+CC..."
     elif raw.startswith("+0"):
-        raw = "+" + raw[2:]      # "+0CC..."  → "+CC..."  (drops a stray 0 between + and CC)
+        raw = "+" + raw[2:]      # "+0CC..."  -> "+CC..."  (drops a stray 0 between + and CC)
     elif raw.startswith("00"):
-        raw = "+" + raw[2:]      # "00CC..."  → "+CC..."
+        raw = "+" + raw[2:]      # "00CC..."  -> "+CC..."
     elif raw.startswith("0"):
-        raw = f"+{int(_country_dialcode(default_region))}" + raw[1:]   # national format → international
+        raw = f"+{int(_country_dialcode(default_region))}" + raw[1:]   # national format -> international
     elif not raw.startswith("+"):
         raw = "+" + raw
 
@@ -119,9 +119,9 @@ def field_match(predicted: str, ground_truth, *, key: Optional[str] = None) -> b
     """Compare a predicted value against a ground-truth value (str or list).
 
     Each field gets a normalisation tailored to its tolerable variation:
-      - email          → lowercase + strip
-      - phone_number   → E.164
-      - first_name / last_name → NFC + casefold + whitespace-collapse
+      - email          -> lowercase + strip
+      - phone_number   -> E.164
+      - first_name / last_name -> NFC + casefold + whitespace-collapse
     """
     if isinstance(ground_truth, list):
         return any(field_match(predicted, gt, key=key) for gt in ground_truth)
