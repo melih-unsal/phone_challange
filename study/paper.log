@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.9.22)  3 MAY 2026 22:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.9.22)  3 MAY 2026 22:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -874,7 +874,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf/fonts/enc/
 dvips/cm-super/cm-super-t1.enc}]
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
-21.
+22.
  (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
@@ -895,53 +895,49 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 ) [2{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] [3] [4] [5]
-Underfull \hbox (badness 3291) in paragraph at lines 462--462
-[]|\T1/cmr/m/n/10 (+20) isolates targeted-re-listen
- []
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/full_match_by_config.png, id=162, 645.46144pt x 386.6445pt>
+<figures/full_match_by_config.png, id=162, 642.29962pt x 386.6445pt>
 File: figures/full_match_by_config.png Graphic file (type png)
 <use figures/full_match_by_config.png>
 Package pdftex.def Info: figures/full_match_by_config.png  used on input line 4
-77.
-(pdftex.def)             Requested size: 454.10422pt x 272.02394pt.
-<figures/per_key_accuracy.png, id=165, 785.93625pt x 424.13457pt>
+78.
+(pdftex.def)             Requested size: 454.10422pt x 273.36317pt.
+<figures/per_key_accuracy.png, id=165, 779.16093pt x 424.13457pt>
 File: figures/per_key_accuracy.png Graphic file (type png)
 <use figures/per_key_accuracy.png>
-Package pdftex.def Info: figures/per_key_accuracy.png  used on input line 498.
-(pdftex.def)             Requested size: 454.10422pt x 245.06628pt.
+Package pdftex.def Info: figures/per_key_accuracy.png  used on input line 500.
+(pdftex.def)             Requested size: 454.10422pt x 247.18903pt.
 [6] [7 <./figures/full_match_by_config.png> <./figures/per_key_accuracy.png>]
-<figures/timing_breakdown.png, id=184, 787.743pt x 408.3255pt>
+<figures/timing_breakdown.png, id=184, 787.2913pt x 408.3255pt>
 File: figures/timing_breakdown.png Graphic file (type png)
 <use figures/timing_breakdown.png>
-Package pdftex.def Info: figures/timing_breakdown.png  used on input line 527.
-(pdftex.def)             Requested size: 454.10422pt x 235.3897pt.
+Package pdftex.def Info: figures/timing_breakdown.png  used on input line 529.
+(pdftex.def)             Requested size: 454.10422pt x 235.52054pt.
 
 [8 <./figures/timing_breakdown.png>]
 <figures/agreement_distribution.png, id=197, 569.57794pt x 315.72957pt>
 File: figures/agreement_distribution.png Graphic file (type png)
 <use figures/agreement_distribution.png>
 Package pdftex.def Info: figures/agreement_distribution.png  used on input line
- 554.
+ 556.
 (pdftex.def)             Requested size: 234.22556pt x 129.83536pt.
 <figures/targeted_mode_distribution.png, id=198, 569.57794pt x 315.72957pt>
 File: figures/targeted_mode_distribution.png Graphic file (type png)
 <use figures/targeted_mode_distribution.png>
 Package pdftex.def Info: figures/targeted_mode_distribution.png  used on input 
-line 562.
+line 564.
 (pdftex.def)             Requested size: 234.22556pt x 129.83536pt.
  [9 <./figures/agreement_distribution.png> <./figures/targeted_mode_distributio
 n.png>]
 <figures/error_taxonomy.png, id=210, 533.44293pt x 308.50256pt>
 File: figures/error_taxonomy.png Graphic file (type png)
 <use figures/error_taxonomy.png>
-Package pdftex.def Info: figures/error_taxonomy.png  used on input line 647.
+Package pdftex.def Info: figures/error_taxonomy.png  used on input line 650.
 (pdftex.def)             Requested size: 296.36137pt x 171.39041pt.
  [10 <./figures/error_taxonomy.png>]
-Overfull \hbox (4.99898pt too wide) in paragraph at lines 715--725
+Overfull \hbox (4.99898pt too wide) in paragraph at lines 718--728
 []\T1/cmr/m/n/10.95 (-20) reads ev-ery re-port un-der those two di-rec-to-ries,
  writes [][]\T1/cmtt/m/n/10.95 study/data/runs.csv[]\T1/cmr/m/n/10.95 (-20) , [
 ][]\T1/cmtt/m/n/10.95 study/data/per_key.csv[]\T1/cmr/m/n/10.95 (-20) ,
@@ -956,11 +952,11 @@ Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: EFFBF78DC8CF99521429D83D953FBEF2;4418.
  ) 
 Here is how much of TeX's memory you used:
- 26774 strings out of 476182
- 495775 string characters out of 5795595
+ 26778 strings out of 476182
+ 495821 string characters out of 5795595
  1944975 words of memory out of 5000000
  48033 multiletter control sequences out of 15000+600000
- 589544 words of font info for 212 fonts, out of 8000000 for 9000
+ 589695 words of font info for 214 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,10n,87p,1194b,868s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
@@ -980,7 +976,7 @@ e1/public/cm-super/sfti0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/s
 fti1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1095.pfb></usr/sh
 are/texmf/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/texmf/fonts/type
 1/public/cm-super/sftt1095.pfb>
-Output written on paper.pdf (11 pages, 750564 bytes).
+Output written on paper.pdf (11 pages, 747086 bytes).
 PDF statistics:
  331 PDF objects out of 1000 (max. 8388607)
  260 compressed objects within 3 object streams

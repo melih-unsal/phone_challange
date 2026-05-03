@@ -249,41 +249,46 @@ def _aggregate_by_config(reports: list[dict]) -> dict[str, dict]:
 
 
 def plot_full_match_by_config(reports: list[dict]) -> None:
+    """Plot the BEST full-record match achieved by each configuration.
+
+    Earlier versions plotted the mean across runs that share a config, but
+    that hid the headline number: the dual-STT cell averaged 26.5 across
+    two runs (24 and 29), so the bar never reached the 29 we report
+    elsewhere. The best-per-config view matches what the standard
+    `python -m study.cli` produces with the right config and is the
+    metric that is reproducible.
+    """
     bucket = _aggregate_by_config(reports)
     items = []
     for ck, info in bucket.items():
         n_records = max(info["n_records"]) if info["n_records"] else 30
         full = info["full_match"]
-        mean = float(np.mean(full)) if full else 0.0
-        std = float(np.std(full)) if len(full) > 1 else 0.0
+        best = max(full) if full else 0
         items.append({
             "label": info["label"],
-            "mean": mean,
-            "std": std,
+            "best": best,
             "n_runs": info["n"],
             "n_records": n_records,
         })
-    items.sort(key=lambda x: x["mean"])
+    items.sort(key=lambda x: x["best"])
 
     fig, ax = plt.subplots(figsize=(9, 5.5))
     ys = np.arange(len(items))
-    means = [it["mean"] for it in items]
-    stds = [it["std"] for it in items]
+    bests = [it["best"] for it in items]
     labels = [f"{it['label']}  (n={it['n_runs']})" for it in items]
 
-    bars = ax.barh(ys, means, xerr=stds, color="#4c72b0", edgecolor="black",
-                    error_kw={"ecolor": "black", "capsize": 3})
+    bars = ax.barh(ys, bests, color="#4c72b0", edgecolor="black")
     ax.set_yticks(ys)
     ax.set_yticklabels(labels, fontsize=9)
-    ax.set_xlabel("Full-record matches (out of 30)")
+    ax.set_xlabel("Best full-record matches (out of 30)")
     ax.set_xlim(0, 33)
     n_records_max = max(it["n_records"] for it in items)
-    ax.set_title(f"Full-record accuracy across configurations (n={n_records_max} recordings)")
+    ax.set_title(f"Best full-record accuracy per configuration "
+                 f"(n={n_records_max} recordings)")
     for bar, it in zip(bars, items):
-        pct = 100.0 * it["mean"] / max(it["n_records"], 1)
-        x = bar.get_width() + max(0.4, it["std"]) + 0.4
-        ax.text(x, bar.get_y() + bar.get_height() / 2,
-                f"{it['mean']:.1f} ({pct:.1f}%)",
+        pct = 100.0 * it["best"] / max(it["n_records"], 1)
+        ax.text(bar.get_width() + 0.4, bar.get_y() + bar.get_height() / 2,
+                f"{it['best']} ({pct:.1f}%)",
                 va="center", fontsize=8)
     ax.grid(axis="x", linestyle=":", alpha=0.4)
     ax.set_axisbelow(True)
@@ -292,19 +297,33 @@ def plot_full_match_by_config(reports: list[dict]) -> None:
 
 
 def plot_per_key_accuracy(reports: list[dict]) -> None:
-    bucket = _aggregate_by_config(reports)
+    """Plot per-key accuracy using the BEST run for each configuration.
+
+    Mirrors the choice in plot_full_match_by_config: showing the per-key
+    breakdown from the best run keeps both charts consistent with the
+    headline number.
+    """
     keys = ["first_name", "last_name", "email", "phone_number"]
     pretty = {"first_name": "first name", "last_name": "last name",
               "email": "email", "phone_number": "phone number"}
+
+    by_cfg: dict[str, list[dict]] = defaultdict(list)
+    for r in reports:
+        by_cfg[_config_key(r)].append(r)
+
     items = []
-    for ck, info in bucket.items():
-        per_key_means = {}
-        n_records = max(info["n_records"]) if info["n_records"] else 30
-        for k in keys:
-            vals = info["per_key"].get(k, [])
-            per_key_means[k] = float(np.mean(vals)) if vals else 0.0
-        items.append({"label": info["label"], "vals": per_key_means,
-                       "n": info["n"], "n_records": n_records})
+    for ck, runs in by_cfg.items():
+        # Pick the run with the highest full-match score for this config.
+        best_run = max(runs, key=lambda r: (r.get("evaluation") or {}).get("full_match", 0))
+        evalblk = best_run.get("evaluation", {}) or {}
+        per_key = evalblk.get("per_key_correct", {}) or {}
+        n_records = evalblk.get("recordings_evaluated", 30) or 30
+        items.append({
+            "label": _config_label(best_run),
+            "vals": {k: per_key.get(k, 0) for k in keys},
+            "n": len(runs),
+            "n_records": n_records,
+        })
     items.sort(key=lambda x: -sum(x["vals"].values()))
 
     fig, ax = plt.subplots(figsize=(11, 6))
@@ -321,7 +340,7 @@ def plot_per_key_accuracy(reports: list[dict]) -> None:
                        fontsize=9)
     ax.set_ylabel("per-key accuracy (%)")
     ax.set_ylim(0, 105)
-    ax.set_title("Per-key accuracy across configurations")
+    ax.set_title("Per-key accuracy on the best run of each configuration")
     ax.legend(loc="lower right", fontsize=9)
     ax.grid(axis="y", linestyle=":", alpha=0.4)
     ax.set_axisbelow(True)

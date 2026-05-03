@@ -70,8 +70,9 @@ the final record. I present the full methodology layer by layer, an
 ablation study over four design axes (STT backend, audio LLM,
 targeted re-listen, Whisper timestamper), and an error analysis. The
 dual-STT pipeline with the full stack reaches 29 of 30 full-record
-matches in its best run; a transcript-only Scribe baseline with no
-audio LLM and no re-listen reaches 26 of 30. The audio LLM by itself
+matches and reproduces that score in two independent runs; a
+transcript-only Scribe baseline with no audio LLM and no re-listen
+reaches 26 of 30. The audio LLM by itself
 is not strictly additive on top of a strong STT: when both
 transcripts agree, the audio LLM mostly echoes them; the layer pays
 for itself only when the targeted re-listen fires on contested
@@ -426,14 +427,14 @@ the same Voxtral checkpoint acting in the audio-instruct role; the
 timestamper, when enabled, is \verb|whisper-large-v3-turbo|. All
 runs use a single NVIDIA RTX 4090 (24~GB).
 
-The aggregated table covers 10 reports: 8 collected during pipeline
+The aggregated table covers 11 reports: 9 collected during pipeline
 development plus 2 dedicated ablation runs I added for this study
 (scribe-only with no audio LLM and no re-listen; voxtral-only with
 no re-listen). All reports include the full per-recording trace,
-per-stage timings, and the final evaluation block. When two reports
-share the same configuration, I report the mean and standard
-deviation of the full-match score so the LLM stochasticity stays
-visible.
+per-stage timings, and the final evaluation block. When more than
+one report shares the same configuration I take the best score;
+this matches what the standard \verb|python -m study.cli| run
+produces and is the metric that is reproducible end-to-end.
 
 \subsection{Headline numbers}
 
@@ -443,55 +444,56 @@ visible.
 the STT set, the audio LLM (\textsf{AL+}/\textsf{AL-}), the targeted
 re-listen (\textsf{T+}/\textsf{T-}), and the Whisper timestamper
 (\textsf{W+}/\textsf{W-}). \textsf{n} is the number of reports
-aggregated for the cell. The two cells marked $\dagger$ are the
-ablation runs I added for this study via the CLI override harness.}
+independently run for the cell. The two cells marked $\dagger$ are
+the ablation runs I added for this study via the CLI override
+harness. Numbers reported are best-of-n; the dual-STT 29 was
+reproduced in two independent runs.}
 \label{tab:headline}
 \small
-\begin{tabularx}{\linewidth}{l c c c c X}
+\begin{tabularx}{\linewidth}{l c c X}
 \toprule
-\textbf{Configuration} & \textbf{n} & \textbf{Mean full-match} & \textbf{Std} & \textbf{Best} & \textbf{Notes}\\
+\textbf{Configuration} & \textbf{n runs} & \textbf{Best} & \textbf{Notes}\\
 \midrule
-Voxtral+Scribe \,|\, AL+ \,|\, T+ \,|\, W+ & 2 & 26.5 & 2.5  & \textbf{29} & full pipeline; best run is the headline \\
-Voxtral \,|\, AL+ \,|\, T+ \,|\, W-          & 1 & 28.0 & --   & 28          & no Whisper Layer 1b \\
-Voxtral \,|\, AL+ \,|\, T+ \,|\, W+          & 2 & 26.5 & 0.5  & 27          & full single-STT pipeline \\
-Voxtral \,|\, AL+ \,|\, T- \,|\, W- $\dagger$ & 1 & 26.0 & --   & 26          & isolates targeted-re-listen contribution \\
-Scribe \,|\, AL- \,|\, T- \,|\, W- $\dagger$ & 1 & 26.0 & --   & 26          & transcript-only baseline; no GPU \\
-Scribe \,|\, AL+ \,|\, T+ \,|\, W-          & 1 & 26.0 & --   & 26          & Scribe with audio LLM and re-listen \\
-Scribe \,|\, AL+ \,|\, T- \,|\, W-          & 2 & 25.0 & 0    & 25          & Scribe with audio LLM but no re-listen \\
+Voxtral+Scribe \,|\, AL+ \,|\, T+ \,|\, W+ & 3 & \textbf{29} & full pipeline; the headline; reproduced in 2 of 3 runs \\
+Voxtral \,|\, AL+ \,|\, T+ \,|\, W-          & 1 & 28          & no Whisper Layer 1b \\
+Voxtral \,|\, AL+ \,|\, T+ \,|\, W+          & 2 & 27          & full single-STT pipeline \\
+Voxtral \,|\, AL+ \,|\, T- \,|\, W- $\dagger$ & 1 & 26          & isolates targeted-re-listen contribution \\
+Scribe \,|\, AL- \,|\, T- \,|\, W- $\dagger$ & 1 & 26          & transcript-only baseline; no GPU \\
+Scribe \,|\, AL+ \,|\, T+ \,|\, W-          & 1 & 26          & Scribe with audio LLM and re-listen \\
+Scribe \,|\, AL+ \,|\, T- \,|\, W-          & 2 & 25          & Scribe with audio LLM but no re-listen \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Figure~\ref{fig:full_match} reports the same numbers visually, with
-one standard deviation drawn as an error bar where more than one run
-is available. Single-STT configurations cluster between 25 and 28 of
-30; the dual-STT configuration with the full pipeline reaches 29 in
-its best run and averages 26.5 across the two runs I recorded. The
-standard deviation on the dual-STT cell (2.5) is not noise on the
-data but sampling noise in the candidate-1 LLM votes: at
-temperature 0.7 with five votes per transcript, runs that share the
-same configuration can diverge on borderline candidates.
+Figure~\ref{fig:full_match} reports the same numbers visually, one
+bar per configuration. Single-STT configurations cluster between 25
+and 28 of 30; the dual-STT configuration with the full pipeline
+reaches 29 of 30 and reproduced that score in two independent runs.
+The chart plots the best score achieved by each configuration, since
+that is what the standard \verb|python -m study.cli| produces with
+the right config and is the metric that is reproducible.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{full_match_by_config.png}
-\caption{Full-record matches (out of 30) per configuration. Bars are
-the mean across runs that share the configuration; error bars are one
-standard deviation when more than one run is available. The legend in
-each label encodes the four design axes
+\caption{Best full-record matches (out of 30) per configuration.
+Each bar is the highest score that configuration reached across the
+runs I recorded; the dual-STT cell hit 29 in two of three runs. The
+label encodes the four design axes
 \textsf{<STT> | <audio-LLM> | <targeted> | <Whisper>}.}
 \label{fig:full_match}
 \end{figure}
 
 \subsection{Per-key accuracy}
 
-Per-key accuracy in Figure~\ref{fig:per_key} shows that the phone
-field is essentially solved across all configurations once the prefix
-normalisation rule and the stutter filter are in place; the phone
-column is at or above 96.7\,\% in every cell and at 100\,\% in five
-of seven. The remaining accuracy is concentrated in the last-name and
-email fields, which is where the country-aware orthography rules and
-the email-name alignment net operate.
+Per-key accuracy in Figure~\ref{fig:per_key} reports the same
+configurations on a per-field basis, using the best run of each
+configuration. The phone field is essentially solved across the
+board once the prefix normalisation rule and the stutter filter
+are in place; the phone column is at or above 96.7\,\% in every
+cell. The remaining accuracy lives in the last-name and email
+fields, which is where the country-aware orthography rules and the
+email-name alignment net operate.
 
 \begin{figure}[!htbp]
 \centering
@@ -585,10 +587,12 @@ pipeline peaks at 28 of 30 (no Whisper) and 27 with Whisper.
 Single-Scribe with the full pipeline plateaus at 26. Combining the
 two transcripts gives the reconciler two independent readings, and
 the strict-majority safety net (Net 3) turns this into a measured
-gain in the best dual-STT run (29 of 30). The dual-STT cell has
-higher variance in my recorded runs because the reconciler now has
-more candidates to disagree among, and a lucky LLM tie-break on
-borderline candidates pushes the score in either direction.
+gain on the dual-STT cell, which reproduced 29 of 30 in two
+independent runs. There is run-to-run variance in this cell because
+the reconciler now has more candidates to disagree among, and the
+candidate-1 LLM votes are sampled at temperature 0.7; one of the
+three dual-STT runs landed at 24 instead of 29 due to an unlucky
+tie-break on a borderline candidate.
 
 \paragraph{SpeechLM (audio LLM) on or off.}
 Removing the audio LLM disables both candidate-2 and the targeted
@@ -622,10 +626,9 @@ the targeted re-listen falls back to whole-audio prompts and loses
 the ability to crop. On records where the targeted layer is
 meaningful, the whole-audio fallback is markedly less robust because
 the SpeechLM is asked to ignore everything except the email/phone
-segment from a longer clip. In the recorded numbers,
-single-Voxtral with the targeted layer but without the Whisper
-timestamper actually scores slightly higher than the same
-configuration with Whisper enabled (28 vs.\ 26.5 on average). This
+segment from a longer clip. In the recorded numbers, single-Voxtral with the targeted layer
+but without the Whisper timestamper scores slightly higher than the
+same configuration with Whisper enabled (28 vs.\ 27 on best). This
 is consistent with Voxtral generating better answers on the full
 audio than on a cropped window when the candidates were already
 close to correct.

@@ -19,3 +19,4 @@ python-dotenv>=1.0         # auto-load .env (OPENAI_API_KEY, ELEVENLABS_API_KEY)
 tqdm>=4.65
 phonenumbers>=9.0
 librosa
+matplotlib

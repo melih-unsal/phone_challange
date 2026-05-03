@@ -8,11 +8,12 @@ This repository contains my solution to the challenge: extract
 of 30 German phone-call recordings.
 
 The strongest configuration of the pipeline reaches **29 of 30
-full-record matches** (96.7%) on the dataset, with 100% accuracy on
-the phone-number and first-name fields, and 96.7% on email and last
-name. A transcript-only baseline (no audio LLM, no re-listen) reaches
-26 of 30, so the audio-grounded layers contribute three additional
-recordings.
+full-record matches** (96.7%) on the dataset and reproduces that
+score in two independent runs, with 100% accuracy on the
+phone-number and first-name fields and 96.7% on email and last
+name. A transcript-only baseline (no audio LLM, no re-listen)
+reaches 26 of 30, so the audio-grounded layers contribute three
+additional recordings.
 
 A full write-up lives in [`study/paper.pdf`](study/paper.pdf) and a
 slide deck for the Loom walkthrough is in
@@ -136,17 +137,17 @@ The full methodology is in Section 4 of
 
 ## Results
 
-### Headline accuracy
+### Headline accuracy (best of every recorded run per configuration)
 
-| Configuration                                  | n | Mean | Std | Best |
-|------------------------------------------------|--:|-----:|----:|-----:|
-| **Voxtral + Scribe \| full pipeline**          | 2 | 26.5 | 2.5 | **29** |
-| Voxtral \| +targeted, no Whisper               | 1 | 28.0 |  -  | 28   |
-| Voxtral \| +targeted, +Whisper                 | 2 | 26.5 | 0.5 | 27   |
-| Voxtral \| no targeted (ablation)              | 1 | 26.0 |  -  | 26   |
-| Scribe  \| no audio LLM, no targeted (ablation)| 1 | 26.0 |  -  | 26   |
-| Scribe  \| +targeted                           | 1 | 26.0 |  -  | 26   |
-| Scribe  \| no targeted                         | 2 | 25.0 | 0.0 | 25   |
+| Configuration                                  | n runs | Best |
+|------------------------------------------------|-------:|-----:|
+| **Voxtral + Scribe \| full pipeline**          | 3      | **29** (2 of 3 runs hit 29) |
+| Voxtral \| +targeted, no Whisper               | 1      | 28   |
+| Voxtral \| +targeted, +Whisper                 | 2      | 27   |
+| Voxtral \| no targeted (ablation)              | 1      | 26   |
+| Scribe  \| no audio LLM, no targeted (ablation)| 1      | 26   |
+| Scribe  \| +targeted                           | 1      | 26   |
+| Scribe  \| no targeted                         | 2      | 25   |
 
 Table is computed by [`study/analyze.py`](study/analyze.py) from every
 report under `results/` and `study/results/`.

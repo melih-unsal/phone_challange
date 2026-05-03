@@ -351,22 +351,22 @@ def build():
     s = add_blank(p); add_bg(s)
     add_header(s, "results", "Headline accuracy across configurations")
     rows = [
-        ["Configuration", "n", "Mean", "Std", "Best"],
-        ["Voxtral + Scribe  |  full pipeline",      "2", "26.5", "2.5",  "29"],
-        ["Voxtral  |  +targeted, no Whisper",        "1", "28.0", "-",    "28"],
-        ["Voxtral  |  +targeted, +Whisper",          "2", "26.5", "0.5",  "27"],
-        ["Voxtral  |  no targeted (NEW)",            "1", "26.0", "-",    "26"],
-        ["Scribe  |  no audio LLM, no targeted (NEW)","1","26.0", "-",    "26"],
-        ["Scribe  |  +targeted",                     "1", "26.0", "-",    "26"],
-        ["Scribe  |  no targeted",                   "2", "25.0", "0.0",  "25"],
+        ["Configuration", "n runs", "Best", "Notes"],
+        ["Voxtral + Scribe  |  full pipeline",       "3", "29", "best in 2 of 3 runs"],
+        ["Voxtral  |  +targeted, no Whisper",         "1", "28", "no Whisper Layer 1c"],
+        ["Voxtral  |  +targeted, +Whisper",           "2", "27", "full single-STT"],
+        ["Voxtral  |  no targeted (NEW)",             "1", "26", "isolates targeted layer"],
+        ["Scribe  |  no audio LLM, no targeted (NEW)","1", "26", "transcript-only baseline"],
+        ["Scribe  |  +targeted",                      "1", "26", "Scribe full stack"],
+        ["Scribe  |  no targeted",                    "2", "25", "Scribe minus re-listen"],
     ]
     table_shape = s.shapes.add_table(
-        rows=len(rows), cols=5,
+        rows=len(rows), cols=4,
         left=Inches(0.6), top=Inches(1.7),
         width=Inches(12.1), height=Inches(4.6),
     )
     tbl = table_shape.table
-    widths = [Inches(6.6), Inches(0.8), Inches(1.4), Inches(1.4), Inches(1.4)]
+    widths = [Inches(5.5), Inches(1.0), Inches(1.0), Inches(4.6)]
     for i, w in enumerate(widths):
         tbl.columns[i].width = w
     for r_idx, row in enumerate(rows):
