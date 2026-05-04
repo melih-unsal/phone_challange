@@ -10,6 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
 from src.config import KEYS, LLM_BASE_URL, LLM_MODEL_NAME, NUM_LLM_VOTES
+from src.observability import langchain_config
 from src.prompts import EXTRACT_HUMAN, EXTRACT_SYSTEM
 from src.utils import majority_vote
 
@@ -24,7 +25,12 @@ def build_extract_chain():
         max_tokens=1200,
         base_url=LLM_BASE_URL,
     )
-    return prompt | llm | JsonOutputParser()
+    # Tag the LangChain run so each self-consistency vote shows up in
+    # Langfuse as "layer3.candidate_1" instead of the generic
+    # "RunnableSequence".
+    return (prompt | llm | JsonOutputParser()).with_config(
+        run_name="layer3.candidate_1"
+    )
 
 
 def extract_candidate_1(chain, transcription: str, country: str, language_code: str) -> dict:
@@ -39,13 +45,14 @@ def extract_candidate_1(chain, transcription: str, country: str, language_code: 
         "language_code": language_code,
         "transcription": transcription,
     }
+    cfg = langchain_config()
     try:
-        runs = chain.batch([chain_input] * NUM_LLM_VOTES)
+        runs = chain.batch([chain_input] * NUM_LLM_VOTES, config=cfg)
     except Exception:
         runs = []
         for _ in range(NUM_LLM_VOTES):
             try:
-                runs.append(chain.invoke(chain_input))
+                runs.append(chain.invoke(chain_input, config=cfg))
             except Exception:
                 pass
 

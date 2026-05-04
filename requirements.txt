@@ -1,22 +1,30 @@
-# Audio backends
-torch>=2.4
-transformers>=5.0          # Voxtral: VoxtralForConditionalGeneration
-accelerate>=0.30           # required by transformers for device_map=...
-mistral-common>=1.11       # Voxtral audio tokenizer / processor support
-elevenlabs>=2.0            # ElevenLabs Scribe SDK
-
-# LLM layers (country / extract / reconcile)
-langchain-core>=0.3
-langchain-openai>=0.3
-
-# Validation / normalization
+# Core dependencies (no GPU required) - matches pyproject.toml [project.dependencies]
+#
+# langchain / langchain-core / langchain-openai are pinned to the 0.3.x
+# series. Reason: langfuse v2's LangChain CallbackHandler was written
+# against langchain 0.x and silently no-ops on langchain 1.x (so chain
+# invocations succeed but no traces are produced). We need langfuse v2
+# because the bundled docker-compose runs Langfuse v2 server (v3 needs
+# ClickHouse + Redis + MinIO).
+langchain-core>=0.3,<1.0
+langchain-openai>=0.3,<1.0
+langchain>=0.3,<1.0
 pydantic>=2.6
-phonenumbers>=9.0          # E.164 phone normalization
-email-validator>=2.0       # used by pydantic EmailStr
-
-# Misc
-python-dotenv>=1.0         # auto-load .env (OPENAI_API_KEY, ELEVENLABS_API_KEY)
-tqdm>=4.65
 phonenumbers>=9.0
-librosa
-matplotlib
+email-validator>=2.0
+python-dotenv>=1.0
+tqdm>=4.65
+soundfile>=0.12
+elevenlabs>=2.0
+
+# Optional observability (matches [observability] extra).
+# Pinned to <3 because the bundled docker-compose runs Langfuse v2
+# (v3 needs ClickHouse + Redis + MinIO and is too heavy for a local
+# demo). The v3 Python SDK calls v3-only API endpoints that error out
+# against a v2 server; the v2 SDK matches.
+langfuse>=2.0,<3
+
+# Optional study tooling (matches [study] extra)
+matplotlib>=3.6
+numpy>=1.24
+python-pptx>=1.0

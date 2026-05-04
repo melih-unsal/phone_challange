@@ -63,6 +63,10 @@ from src.country import build_country_chain, detect_country
 from src.evaluate import evaluate
 from src.extract_llm import build_extract_chain, extract_candidate_1
 from src.extract_voxtral import extract_candidate_2
+from src.observability import is_enabled as observability_enabled
+from src.observability import set_session as observability_set_session
+from src.observability import shutdown as observability_shutdown
+from src.observability import span as obs_span
 from src.reconcile import build_reconcile_chain, reconcile
 from src.schema import validate_caller_info
 from src.targeted_extract import targeted_extract
@@ -166,6 +170,9 @@ def _write_report(path: Path, report: dict) -> None:
 
 
 def run() -> Path:
+    if observability_enabled():
+        print("Langfuse observability: ENABLED "
+              f"(host={os.environ.get('LANGFUSE_HOST', 'cloud')})")
     # Build all configured transcribers. Each will produce its own
     # transcript per recording, and Layer 3 will derive an independent
     # candidate from each.
@@ -229,6 +236,35 @@ def run() -> Path:
         }
         done_ids = set()
 
+    # Tag every Langfuse trace from this run with the report basename as
+    # session_id and a few config-derived tags so the team can filter
+    # / compare runs in the UI. Looks like:
+    #     session_id  : "report_2026-05-04_011234"
+    #     tags        : ["prompt=2026-05-03.v1",
+    #                     "stt=voxtral+scribe",
+    #                     "audio_llm=on", "targeted=on", "whisper=on",
+    #                     "ablation=scribe_only_no_audiollm"]   <-- if PHONEBOT_RUN_TAG
+    if observability_enabled():
+        session_id = output_path.stem  # e.g. "report_2026-05-04_011234"
+        stt_short = "+".join(
+            "voxtral" if "voxtral" in s.lower() else
+            "scribe"  if "scribe"  in s.lower() else
+            s.split(":", 1)[0]
+            for s in TRANSCRIPTION_MODELS
+        )
+        tags = [
+            f"prompt={PROMPT_VERSION}",
+            f"stt={stt_short or 'none'}",
+            f"audio_llm={'on' if instructor is not None else 'off'}",
+            f"targeted={'on' if USE_TARGETED_EXTRACTION else 'off'}",
+            f"whisper={'on' if timestamper is not None else 'off'}",
+        ]
+        run_tag = os.environ.get("PHONEBOT_RUN_TAG", "").strip()
+        if run_tag:
+            tags.append(f"ablation={run_tag}")
+        observability_set_session(session_id, tags)
+        print(f"Langfuse session: {session_id}  tags: {tags}")
+
     do_targeted = USE_TARGETED_EXTRACTION and instructor is not None
 
     pending = [f for f in recordings if f.split(".")[0] not in done_ids]
@@ -238,6 +274,12 @@ def run() -> Path:
         total=len(recordings),
         initial=len(done_ids),
     )
+    # Track per-transcriber success across the run so we can flag silent
+    # partial failures at the end.
+    transcriber_stats: dict[str, dict[str, int]] = {
+        tr.name: {"ok": 0, "failed": 0} for tr in transcribers
+    }
+
     for filename in pbar:
         path = os.path.join(RECORDINGS_DIR, filename)
         per_call_timings: dict[str, float] = {}
@@ -247,11 +289,24 @@ def run() -> Path:
         transcriptions: list[Transcription] = []
         for tr in transcribers:
             try:
-                transcriptions.append(tr.transcribe(path, language=TRANSCRIPTION_LANGUAGE))
+                with obs_span("layer1.transcribe", backend=tr.name,
+                              file=filename,
+                              language=TRANSCRIPTION_LANGUAGE) as s:
+                    transcription = tr.transcribe(path, language=TRANSCRIPTION_LANGUAGE)
+                    transcriptions.append(transcription)
+                    s.set_output({
+                        "text": transcription.text,
+                        "has_word_timestamps": transcription.has_timestamps(),
+                        "n_words": len(transcription.words or []),
+                    })
+                transcriber_stats[tr.name]["ok"] += 1
             except Exception as e:
-                print(f"WARNING: transcriber {tr.name!r} failed on {filename}: {e}")
+                transcriber_stats[tr.name]["failed"] += 1
+                print(f"WARNING: transcriber {tr.name!r} failed on {filename}: {e}",
+                      flush=True)
         if not transcriptions:
-            print(f"ERROR: every transcriber failed on {filename}; skipping")
+            print(f"ERROR: every transcriber failed on {filename}; skipping",
+                  flush=True)
             continue
         per_call_timings["transcription_s"] = round(time.perf_counter() - t0, 2)
 
@@ -261,7 +316,16 @@ def run() -> Path:
         if words is None and timestamper is not None:
             t0 = time.perf_counter()
             try:
-                words = timestamper.timestamp(path, language=TRANSCRIPTION_LANGUAGE)
+                with obs_span("layer1b.timestamp", backend=timestamper.name,
+                              file=filename) as s:
+                    words = timestamper.timestamp(path, language=TRANSCRIPTION_LANGUAGE)
+                    s.set_output({
+                        "n_words": len(words or []),
+                        "preview": [
+                            {"text": w.text, "start": w.start, "end": w.end}
+                            for w in (words or [])[:10]
+                        ],
+                    })
             except Exception as e:
                 print(f"WARNING: timestamper failed on {filename}: {e}")
                 words = None
@@ -295,7 +359,11 @@ def run() -> Path:
         # instructor failed to build at startup.
         t0 = time.perf_counter()
         if instructor is not None:
-            cand2 = extract_candidate_2(instructor, path)
+            with obs_span("layer4.candidate_2", backend=instructor.name,
+                          file=filename) as s:
+                cand2 = extract_candidate_2(instructor, path)
+                s.set_output({k: cand2.get(k, "") for k in KEYS})
+                s.add_metadata(n_runs=len(cand2.get("_runs", [])))
         else:
             cand2 = {k: "" for k in KEYS}
         per_call_timings["candidate_2_s"] = round(time.perf_counter() - t0, 2)
@@ -311,10 +379,18 @@ def run() -> Path:
         run_email = len({e for e in all_emails if e}) > 1
         run_phone = len({p for p in all_phones if p}) > 1
         if do_targeted and (run_email or run_phone):
-            targeted = targeted_extract(
-                instructor, path, words=words,
-                run_email=run_email, run_phone=run_phone,
-            )
+            with obs_span("layer4_5.targeted_extract", file=filename,
+                          run_email=run_email, run_phone=run_phone) as s:
+                targeted = targeted_extract(
+                    instructor, path, words=words,
+                    run_email=run_email, run_phone=run_phone,
+                )
+                s.set_output({
+                    "email": (targeted or {}).get("email", ""),
+                    "phone_number": (targeted or {}).get("phone_number", ""),
+                    "email_meta": (targeted or {}).get("_email_meta", {}),
+                    "phone_meta": (targeted or {}).get("_phone_meta", {}),
+                })
         else:
             targeted = None
         per_call_timings["targeted_s"] = round(time.perf_counter() - t0, 2)
@@ -379,6 +455,36 @@ def run() -> Path:
         # Periodic checkpoint so a crash doesn't lose everything
         _write_report(output_path, report)
 
+    # Stamp per-transcriber success counts into the report.
+    report["transcriber_stats"] = transcriber_stats
+
+    # Surface partial transcriber failures loudly. A silent Scribe drop on
+    # most records used to turn the dual-STT cell into single-Voxtral and
+    # was only visible by inspecting the report by hand. This summary
+    # makes the partial-failure case impossible to miss.
+    print()
+    print("=" * 60)
+    print("Transcriber summary")
+    print("=" * 60)
+    n_recs = len(report["recordings"])
+    any_partial = False
+    for name, stats in transcriber_stats.items():
+        ok = stats["ok"]
+        failed = stats["failed"]
+        print(f"  {name:50s} ok={ok:3d}  failed={failed:3d}")
+        # Flag if a transcriber dropped on more than 10% of records.
+        if failed > 0 and failed > 0.1 * (ok + failed):
+            any_partial = True
+    if any_partial:
+        print()
+        print("WARNING: at least one transcriber failed on >10% of records.")
+        print("         Dual-STT runs that lose Scribe partway will degrade")
+        print("         to single-Voxtral and lose the Net 4 cross-STT signal")
+        print("         that's needed for borderline cases like call_25.")
+        print("         Common cause: ElevenLabs rate-limit or quota.")
+        print("         The pipeline already retries 5x per call; sustained")
+        print("         failure means the API is the bottleneck.")
+
     # Final evaluation against ground truth
     if Path(GROUND_TRUTH_PATH).exists():
         print()
@@ -389,6 +495,7 @@ def run() -> Path:
         print(f"\nresults written to {output_path} (no {GROUND_TRUTH_PATH} found, skipping evaluation)")
 
     print(f"\nReport written to: {output_path}")
+    observability_shutdown()
     return output_path
 
 

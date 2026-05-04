@@ -138,7 +138,7 @@ def add_footer(slide, page_num, total):
 # ---------------------------------------------------------------------------
 def build():
     p = new_pres()
-    total_slides = 19  # used for footer
+    total_slides = 21  # used for footer
 
     # --- Slide 1: Title ---
     s = add_blank(p); add_bg(s)
@@ -324,26 +324,28 @@ def build():
 
     # --- Slide 12: CLI override harness ---
     s = add_blank(p); add_bg(s)
-    add_header(s, "ablation tooling", "CLI harness exposing every config knob")
-    add_bullets(s, Inches(0.6), Inches(1.8), Inches(12), Inches(2.5),
+    add_header(s, "tooling", "phonebot CLI: one entry point, every config knob")
+    add_bullets(s, Inches(0.6), Inches(1.7), Inches(12), Inches(2.6),
                 [
-                    "study/cli.py mutates src.config before main.py is imported",
-                    "Every relevant constant in src/config.py becomes a flag",
-                    "Tagged reports go to study/results/ for aggregation",
-                ], size=18)
-    code_box = s.shapes.add_textbox(Inches(0.6), Inches(3.5),
-                                     Inches(12), Inches(2.8))
+                    "phonebot run                  - batch over data/recordings/",
+                    "phonebot extract <wav>        - one recording -> JSON",
+                    "phonebot evaluate <report>    - re-evaluate against ground truth",
+                    "phonebot ablate <flags>       - ablation run, every config knob exposed",
+                    "phonebot doctor               - GPU / API / Langfuse status",
+                ], size=16)
+    code_box = s.shapes.add_textbox(Inches(0.6), Inches(4.3),
+                                     Inches(12), Inches(2.6))
     tf = code_box.text_frame
     tf.word_wrap = True
     p1 = tf.paragraphs[0]
     r = p1.add_run()
-    r.text = ("python -m study.cli \\\n"
+    r.text = ("phonebot ablate \\\n"
               "    --transcription elevenlabs:scribe_v2 \\\n"
               "    --instruct \"\" --timestamp \"\" \\\n"
               "    --no-targeted --no-auto-resume \\\n"
               "    --tag scribe_only_no_audiollm")
     r.font.name = "Consolas"
-    r.font.size = Pt(16)
+    r.font.size = Pt(15)
     r.font.color.rgb = TEXT_DARK
     add_footer(s, 12, total_slides)
 
@@ -352,7 +354,7 @@ def build():
     add_header(s, "results", "Headline accuracy across configurations")
     rows = [
         ["Configuration", "n runs", "Best", "Notes"],
-        ["Voxtral + Scribe  |  full pipeline",       "3", "29", "best in 2 of 3 runs"],
+        ["Voxtral + Scribe  |  full pipeline",       "3", "29", "headline (Voxtral + Scribe + audio LLM + targeted)"],
         ["Voxtral  |  +targeted, no Whisper",         "1", "28", "no Whisper Layer 1c"],
         ["Voxtral  |  +targeted, +Whisper",           "2", "27", "full single-STT"],
         ["Voxtral  |  no targeted (NEW)",             "1", "26", "isolates targeted layer"],
@@ -468,7 +470,65 @@ def build():
                 ], size=18)
     add_footer(s, 18, total_slides)
 
-    # --- Slide 19: Error analysis + conclusion ---
+    # --- Slide 19: Extensibility - adding a new entity ---
+    s = add_blank(p); add_bg(s)
+    add_header(s, "extensibility",
+               "Adding a new entity is three small changes")
+    add_textbox(s, Inches(0.6), Inches(1.65), Inches(12), Inches(0.4),
+                "Every layer is driven by one list:  KEYS = [...]  in src/config.py.",
+                size=14, color=TEXT_LIGHT)
+    add_textbox(s, Inches(0.6), Inches(2.15), Inches(12), Inches(0.5),
+                "To add company_name (or address, appointment_date, case_topic, ...):",
+                size=15, bold=True, color=TEXT_DARK)
+    add_bullets(s, Inches(0.6), Inches(2.85), Inches(12), Inches(2.5),
+                [
+                    "src/config.py: append the key to KEYS and add a "
+                    "<KEY>_RULES string describing how to extract it",
+                    "src/prompts.py: splice the new rule into EXTRACT_SYSTEM "
+                    "(and any other prompt that should know about it)",
+                    "src/schema.py: add the field to the CallerInfo Pydantic "
+                    "model (with an optional normaliser)",
+                ], size=17)
+    add_textbox(s, Inches(0.6), Inches(5.05), Inches(12), Inches(0.4),
+                "Everything else picks it up automatically:",
+                size=15, bold=True, color=TEXT_DARK)
+    add_bullets(s, Inches(0.6), Inches(5.55), Inches(12), Inches(1.6),
+                [
+                    "Layer 3 majority_vote already iterates KEYS  ->  "
+                    "self-consistency for free",
+                    "Reconciler safety nets (Net 2 unanimous, Net 3 strict-majority) "
+                    "operate on every key in KEYS  ->  no code change",
+                    "Schema validator + evaluator share validators.py  ->  "
+                    "prediction and ground truth normalised the same way",
+                    "Langfuse traces auto-include the new field in every "
+                    "layer's output payload",
+                ], size=15)
+    add_footer(s, 19, total_slides)
+
+    # --- Slide 20: Future improvements ---
+    s = add_blank(p); add_bg(s)
+    add_header(s, "future improvements",
+               "Where this goes next, in production")
+    add_bullets(s, Inches(0.6), Inches(1.7), Inches(12), Inches(5.2),
+                [
+                    "Real-time streaming: extract fields incrementally as the "
+                    "caller speaks, not after the call ends",
+                    "TTS-driven clarification: when confidence is low, ask the "
+                    "caller (\"M-U-E-L-L-E-R or M-U with umlaut?\") instead of guessing",
+                    "Adaptive memory + dynamic keyterms: confirmed tokens get "
+                    "stored and biased into the next turn's prompts",
+                    "Multilingual: swap the language code; localise the "
+                    "spelling-marker word lists (Punkt -> piste / prik / ...)",
+                    "Concurrent users (20+): vLLM continuous batching for the "
+                    "SpeechLM, ElevenLabs pool with per-tenant rate limiting",
+                    "Smaller, faster models: Voxtral-Mini -> smaller SpeechLM, "
+                    "gpt-5.4-mini -> open model on vLLM, Whisper -> distil-whisper",
+                    "Long conversations: 30-60s chunked windows + incremental "
+                    "extraction; targeted re-listen already shows the pattern",
+                ], size=15)
+    add_footer(s, 20, total_slides)
+
+    # --- Slide 21: Error analysis + conclusion ---
     s = add_blank(p); add_bg(s)
     add_header(s, "error analysis & conclusion", "The one residual error mode")
     add_bullets(s, Inches(0.6), Inches(1.7), Inches(12), Inches(2.5),
@@ -490,7 +550,7 @@ def build():
                     "Code, paper, ablation tooling, and reports all reproducible "
                     "from the study/ folder",
                 ], size=17)
-    add_footer(s, 19, total_slides)
+    add_footer(s, 21, total_slides)
 
     p.save(str(OUT))
     print(f"wrote {OUT}")

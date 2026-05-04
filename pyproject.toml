@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phonebot"
+version = "0.1.0"
+description = "Caller-info extraction pipeline from German phone-call recordings"
+readme = "SOLUTION.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Melih Unsal" },
+]
+dependencies = [
+    # Core LLM stack (always required). Pinned to 0.3.x because Langfuse
+    # v2's CallbackHandler does not work with langchain 1.x (it silently
+    # no-ops, so chain invocations succeed but no traces are emitted).
+    "langchain-core>=0.3,<1.0",
+    "langchain-openai>=0.3,<1.0",
+    "langchain>=0.3,<1.0",
+    "pydantic>=2.6",
+    "phonenumbers>=9.0",
+    "email-validator>=2.0",
+    "python-dotenv>=1.0",
+    "tqdm>=4.65",
+    # Audio I/O for the targeted-crop layer (no torch dep)
+    "soundfile>=0.12",
+    # ElevenLabs Scribe (always available, even without GPU)
+    "elevenlabs>=2.0",
+]
+
+[project.optional-dependencies]
+# `pip install phonebot[gpu]` installs the GPU stack: HF transformers
+# (Voxtral) + Whisper. The base install runs without these; the pipeline
+# degrades to the transcript-LLM path (Scribe + OpenAI) when they are
+# missing.
+#
+# torch is intentionally NOT pinned here. On the bundled Docker image
+# torch comes from the pytorch/pytorch base; on the host you should
+# install torch separately for your CUDA version (see pytorch.org/get-started).
+gpu = [
+    "transformers>=4.55",
+    "accelerate>=0.30",
+    "mistral-common>=1.11",
+    "librosa",
+]
+# `pip install phonebot[vllm]` adds the vLLM Voxtral backend. Opt-in
+# only: vLLM's Voxtral support requires a torch+CUDA combo it has been
+# tested against (broadly, torch 2.4-2.7 with CUDA 12), and recent vLLM
+# releases have hit segfaults on bleeding-edge torch (2.11+cu130). If
+# you have a working stack, install with `pip install -e '.[gpu,vllm]'`
+# and switch TRANSCRIPTION_MODELS in src/config.py to use voxtral-vllm:
+gpu_vllm = [
+    "vllm>=0.6",
+]
+# `pip install phonebot[observability]` adds Langfuse for LLM/audio tracing.
+# Pinned to v2 because the bundled docker-compose also runs Langfuse v2
+# (v3 requires ClickHouse + Redis + MinIO). The v3 Python SDK doesn't
+# round-trip with a v2 server.
+observability = [
+    "langfuse>=2.0,<3",
+]
+# `pip install phonebot[study]` adds the analysis + plotting stack used by
+# study/analyze.py and study/build_pptx.py.
+study = [
+    "matplotlib>=3.6",
+    "numpy>=1.24",
+    "python-pptx>=1.0",
+]
+all = [
+    "phonebot[gpu,observability,study]",
+]
+all_with_vllm = [
+    "phonebot[gpu,gpu_vllm,observability,study]",
+]
+
+[project.scripts]
+phonebot = "src.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "study*"]
+exclude = ["data*", "results*", "experiments*", "study.results*", "study.figures*", "study.data*"]

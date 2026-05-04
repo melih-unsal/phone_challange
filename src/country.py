@@ -5,6 +5,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
 from src.config import LLM_BASE_URL, LLM_MODEL_NAME
+from src.observability import langchain_config
 from src.prompts import COUNTRY_HUMAN, COUNTRY_SYSTEM
 
 
@@ -18,12 +19,19 @@ def build_country_chain():
         max_tokens=400,
         base_url=LLM_BASE_URL,
     )
-    return prompt | llm | JsonOutputParser()
+    # Tag the LangChain run so it shows up in Langfuse as "layer2.country"
+    # instead of the generic "RunnableSequence".
+    return (prompt | llm | JsonOutputParser()).with_config(
+        run_name="layer2.country"
+    )
 
 
 def detect_country(chain, transcription: str) -> dict:
     try:
-        info = chain.invoke({"transcription": transcription})
+        info = chain.invoke(
+            {"transcription": transcription},
+            config=langchain_config(),
+        )
     except Exception:
         info = {}
     return {

@@ -194,6 +194,8 @@ class ElevenLabsTranscriber:
         self.client = ElevenLabs(api_key=api_key)
 
     def transcribe(self, audio_path: str, language: str = "de") -> Transcription:
+        import time
+
         from src.config import ELEVENLABS_KEYTERMS
 
         kwargs: dict = {"model_id": self.model_id}
@@ -203,8 +205,34 @@ class ElevenLabsTranscriber:
         if ELEVENLABS_KEYTERMS:
             kwargs["keyterms"] = list(ELEVENLABS_KEYTERMS)
 
-        with open(audio_path, "rb") as f:
-            response = self.client.speech_to_text.convert(file=f, **kwargs)
+        # Retry transient errors (rate-limit 429, network blips) with
+        # exponential backoff. Without this, a single 429 on one record
+        # silently dropped Scribe for that call - which on a 30-call
+        # batch turned the dual-STT cell into single-Voxtral and cost a
+        # full-record match. Five retries with 1, 2, 4, 8, 16s sleeps
+        # cover the worst per-minute rate-limit windows.
+        last_err = None
+        for attempt in range(6):
+            try:
+                with open(audio_path, "rb") as f:
+                    response = self.client.speech_to_text.convert(file=f, **kwargs)
+                last_err = None
+                break
+            except Exception as e:
+                last_err = e
+                msg = str(e).lower()
+                # Don't retry hard auth errors; they will not heal.
+                if "401" in msg or "403" in msg or "invalid api key" in msg:
+                    raise
+                if attempt == 5:
+                    raise
+                sleep_s = 2 ** attempt
+                print(
+                    f"  ElevenLabs transcribe failed (attempt {attempt + 1}/6) on "
+                    f"{os.path.basename(audio_path)}: {e!r}; retrying in {sleep_s}s",
+                    flush=True,
+                )
+                time.sleep(sleep_s)
 
         text = (getattr(response, "text", "") or "").strip()
 
@@ -313,6 +341,104 @@ class WhisperBackend:
 
 
 # ---------------------------------------------------------------------------
+# vLLM backend (transcription + instruction-following)
+# ---------------------------------------------------------------------------
+class VoxtralVLLMBackend:
+    """Voxtral served by vLLM (offline inference mode).
+
+    vLLM has been observed to be substantially more stable than the HF
+    transformers eager-attention path for Voxtral, which intermittently
+    SIGSEGVs in `sdpa_attention_forward` during generation. Using vLLM
+    eliminates that class of failure.
+
+    The backend uses vLLM's chat API with audio_url content blocks for
+    both transcription and instruction-following, so a single LLM
+    instance covers both roles.
+    """
+
+    def __init__(self, repo_id: str, max_model_len: int = 8192):
+        try:
+            from vllm import LLM, SamplingParams
+        except ImportError as e:
+            raise RuntimeError(
+                "vllm is not installed. Install it with `pip install vllm` "
+                "or use the HF backend `voxtral:...` instead."
+            ) from e
+
+        self.name = f"voxtral-vllm:{repo_id}"
+        self.repo_id = repo_id
+        self._SamplingParams = SamplingParams
+        # Mistral-format Voxtral models need these flags.
+        self.llm = LLM(
+            model=repo_id,
+            tokenizer_mode="mistral",
+            config_format="mistral",
+            load_format="mistral",
+            max_model_len=max_model_len,
+            enforce_eager=True,
+        )
+
+    def _audio_url(self, audio_path: str) -> str:
+        # vLLM's chat API accepts file:// URLs for local audio.
+        from pathlib import Path
+        return Path(audio_path).resolve().as_uri()
+
+    def transcribe(self, audio_path: str, language: str = "de") -> Transcription:
+        messages = [{
+            "role": "user",
+            "content": [
+                {"type": "audio_url",
+                 "audio_url": {"url": self._audio_url(audio_path)}},
+                {"type": "text",
+                 "text": f"Transcribe the audio in {language}. "
+                         f"Return only the verbatim transcription, no commentary."},
+            ],
+        }]
+        sp = self._SamplingParams(temperature=0.0, max_tokens=500)
+        outputs = self.llm.chat(messages, sampling_params=sp)
+        text = outputs[0].outputs[0].text.strip() if outputs else ""
+        return Transcription(text=text, backend=self.name, words=None)
+
+    def instruct(
+        self,
+        audio_path: str,
+        instruction: str,
+        max_new_tokens: int = 500,
+        temperature: float = 0.01,
+        top_p: float = 0.9,
+        do_sample: bool = True,
+    ) -> str:
+        messages = [{
+            "role": "user",
+            "content": [
+                {"type": "audio_url",
+                 "audio_url": {"url": self._audio_url(audio_path)}},
+                {"type": "text", "text": instruction},
+            ],
+        }]
+        sp = self._SamplingParams(
+            temperature=temperature if do_sample else 0.0,
+            top_p=top_p,
+            max_tokens=max_new_tokens,
+        )
+        outputs = self.llm.chat(messages, sampling_params=sp)
+        return outputs[0].outputs[0].text if outputs else ""
+
+
+# ---------------------------------------------------------------------------
+# GPU availability helper
+# ---------------------------------------------------------------------------
+def _cuda_available() -> bool:
+    """True iff a CUDA GPU is reachable. Treats torch import failures as 'no GPU'
+    so the pipeline still runs in environments where torch isn't installed."""
+    try:
+        import torch
+        return bool(torch.cuda.is_available()) and torch.cuda.device_count() > 0
+    except Exception:
+        return False
+
+
+# ---------------------------------------------------------------------------
 # Factories
 # ---------------------------------------------------------------------------
 _BACKEND_CACHE: dict[str, object] = {}
@@ -322,7 +448,7 @@ def _parse_spec(spec: str) -> tuple[str, str]:
     if ":" not in spec:
         raise ValueError(
             f"model spec {spec!r} must be '<backend>:<model_id>' (e.g. "
-            "'voxtral:mistralai/Voxtral-Mini-3B-2507')"
+            "'voxtral-vllm:mistralai/Voxtral-Mini-3B-2507')"
         )
     backend, model = spec.split(":", 1)
     return backend.strip().lower(), model.strip()
@@ -332,7 +458,17 @@ def _get_or_build(spec: str):
     if spec in _BACKEND_CACHE:
         return _BACKEND_CACHE[spec]
     backend, model = _parse_spec(spec)
-    if backend == "voxtral":
+    if backend in ("voxtral-vllm", "vllm"):
+        if not _cuda_available():
+            raise RuntimeError(
+                f"backend {spec!r} requires a CUDA GPU; none is available."
+            )
+        instance = VoxtralVLLMBackend(repo_id=model)
+    elif backend == "voxtral":
+        if not _cuda_available():
+            raise RuntimeError(
+                f"backend {spec!r} requires a CUDA GPU; none is available."
+            )
         from src.config import VOXTRAL_ATTN_IMPL, VOXTRAL_DEVICE
         instance = VoxtralBackend(
             repo_id=model, device=VOXTRAL_DEVICE, attn_implementation=VOXTRAL_ATTN_IMPL
@@ -341,6 +477,10 @@ def _get_or_build(spec: str):
         from src.config import ELEVENLABS_API_KEY_ENV
         instance = ElevenLabsTranscriber(model_id=model, api_key_env=ELEVENLABS_API_KEY_ENV)
     elif backend == "whisper":
+        if not _cuda_available():
+            raise RuntimeError(
+                f"backend {spec!r} requires a CUDA GPU; none is available."
+            )
         from src.config import WHISPER_DEVICE
         instance = WhisperBackend(repo_id=model, device=WHISPER_DEVICE)
     else:

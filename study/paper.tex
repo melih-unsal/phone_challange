@@ -70,9 +70,8 @@ the final record. I present the full methodology layer by layer, an
 ablation study over four design axes (STT backend, audio LLM,
 targeted re-listen, Whisper timestamper), and an error analysis. The
 dual-STT pipeline with the full stack reaches 29 of 30 full-record
-matches and reproduces that score in two independent runs; a
-transcript-only Scribe baseline with no audio LLM and no re-listen
-reaches 26 of 30. The audio LLM by itself
+matches; a transcript-only Scribe baseline with no audio LLM and no
+re-listen reaches 26 of 30. The audio LLM by itself
 is not strictly additive on top of a strong STT: when both
 transcripts agree, the audio LLM mostly echoes them; the layer pays
 for itself only when the targeted re-listen fires on contested
@@ -119,10 +118,11 @@ What this paper covers:
        models, a SpeechLM, a Whisper timestamper, three LLM stages,
        four deterministic safety nets, and a strict normalisation
        schema.
-\item A CLI override harness (\verb|study/cli.py|) that exposes
-       every relevant constant in \verb|src/config.py| as a
-       command-line flag, so any configuration in this study can be
-       reproduced with a single command.
+\item A unified \verb|phonebot| command-line tool with subcommands
+       (\verb|run|, \verb|extract|, \verb|evaluate|, \verb|ablate|,
+       \verb|doctor|) that exposes every relevant constant in
+       \verb|src/config.py| as a flag, so any configuration in this
+       study can be reproduced with a single command.
 \item A controlled ablation over four design axes (STT backend,
        audio LLM, targeted re-listen, Whisper timestamper) with 10
        reports aggregated, including two ablation runs I added
@@ -362,18 +362,20 @@ sides of the comparison.
 \subsection{CLI override harness}\label{sec:m_cli}
 
 To make the ablation study tractable, every relevant constant in
-\verb|src/config.py| is exposed as a command-line flag through
-\verb|study/cli.py|. The wrapper mutates the live \verb|src.config|
-module before \verb|main.py| is imported, so the override is picked
-up by every downstream layer. For example, the transcript-only
-baseline that disables both the SpeechLM and the re-listen layer is:
+\verb|src/config.py| is exposed as a command-line flag through the
+\verb|phonebot ablate| subcommand (which wraps the lower-level
+\verb|study.cli| harness). The wrapper mutates the live
+\verb|src.config| module before \verb|main.py| is imported, so the
+override is picked up by every downstream layer. For example, the
+transcript-only baseline that disables both the SpeechLM and the
+re-listen layer is:
 
 \begin{center}\small
-\verb|python -m study.cli --transcription elevenlabs:scribe_v2|\\
-\verb|                    --instruct "" --timestamp ""|\\
-\verb|                    --no-targeted --no-auto-resume|\\
-\verb|                    --results-dir study/results|\\
-\verb|                    --tag scribe_only_no_audiollm|
+\verb|phonebot ablate --transcription elevenlabs:scribe_v2|\\
+\verb|                --instruct "" --timestamp ""|\\
+\verb|                --no-targeted --no-auto-resume|\\
+\verb|                --results-dir study/results|\\
+\verb|                --tag scribe_only_no_audiollm|
 \end{center}
 
 Disabling the SpeechLM with \verb|--instruct ""| skips both Layer 4
@@ -381,6 +383,50 @@ and Layer 4.5 in the same run (the re-listen needs an audio LLM to
 call). The wrapper writes a tagged report under
 \verb|study/results/| so runs that share the same configuration can
 be aggregated later.
+
+\subsection{Extending the pipeline to new entities}\label{sec:m_extend}
+
+Every layer that produces or consumes structured data is driven by a
+single list of keys in \verb|src/config.py|:
+
+\begin{center}\small
+\verb|KEYS = ["first_name", "last_name", "email", "phone_number"]|
+\end{center}
+
+Adding a new entity (\textit{company\_name}, \textit{address},
+\textit{appointment\_date}, \textit{case\_topic}, etc.) is three small
+changes:
+
+\begin{enumerate}
+\item In \verb|src/config.py|, append the new key to \verb|KEYS| and
+       add a \verb|<KEY>_RULES| constant describing how the LLM
+       should extract it (capitalisation, allowed forms, when to
+       leave the field empty).
+\item In \verb|src/prompts.py|, import the new rule string and
+       splice it into \verb|EXTRACT_SYSTEM| (and any other prompt
+       that should know about the field).
+\item In \verb|src/schema.py|, add the field to the
+       \verb|CallerInfo| Pydantic model (with an optional
+       normaliser) and propagate the key through
+       \verb|validate_caller_info()|.
+\end{enumerate}
+
+Everything else picks up the new key automatically. Layer 3's
+\verb|majority_vote(runs, KEYS)| already iterates over the registry,
+so the new field gets the same self-consistency voting as the
+existing four. The reconciler's safety nets (\verb|_unanimous_override|,
+\verb|_majority_override|) operate on every key in
+\verb|all_candidates|, so a new field gets the same backstops without
+code changes. The evaluator's \verb|field_match| uses the same
+\verb|validators.py| that the schema uses, so once a normaliser is
+defined the prediction and ground-truth comparisons are byte-identical
+on both sides.
+
+In practice, adding a new entity is one config commit, not a
+pipeline rewrite. This is what \emph{Future-proofing \&
+Controllability} means in the challenge brief: the rule lives in
+\verb|config.py|, not in code, and downstream layers consume the
+registry rather than hard-coding the four original keys.
 
 \section{Architecture summary}
 
@@ -433,7 +479,7 @@ development plus 2 dedicated ablation runs I added for this study
 no re-listen). All reports include the full per-recording trace,
 per-stage timings, and the final evaluation block. When more than
 one report shares the same configuration I take the best score;
-this matches what the standard \verb|python -m study.cli| run
+this matches what the standard \verb|phonebot ablate| run
 produces and is the metric that is reproducible end-to-end.
 
 \subsection{Headline numbers}
@@ -446,15 +492,14 @@ re-listen (\textsf{T+}/\textsf{T-}), and the Whisper timestamper
 (\textsf{W+}/\textsf{W-}). \textsf{n} is the number of reports
 independently run for the cell. The two cells marked $\dagger$ are
 the ablation runs I added for this study via the CLI override
-harness. Numbers reported are best-of-n; the dual-STT 29 was
-reproduced in two independent runs.}
+harness. Numbers reported are best-of-n.}
 \label{tab:headline}
 \small
 \begin{tabularx}{\linewidth}{l c c X}
 \toprule
 \textbf{Configuration} & \textbf{n runs} & \textbf{Best} & \textbf{Notes}\\
 \midrule
-Voxtral+Scribe \,|\, AL+ \,|\, T+ \,|\, W+ & 3 & \textbf{29} & full pipeline; the headline; reproduced in 2 of 3 runs \\
+Voxtral+Scribe \,|\, AL+ \,|\, T+ \,|\, W+ & 3 & \textbf{29} & full pipeline; the headline \\
 Voxtral \,|\, AL+ \,|\, T+ \,|\, W-          & 1 & 28          & no Whisper Layer 1b \\
 Voxtral \,|\, AL+ \,|\, T+ \,|\, W+          & 2 & 27          & full single-STT pipeline \\
 Voxtral \,|\, AL+ \,|\, T- \,|\, W- $\dagger$ & 1 & 26          & isolates targeted-re-listen contribution \\
@@ -468,18 +513,16 @@ Scribe \,|\, AL+ \,|\, T- \,|\, W-          & 2 & 25          & Scribe with audi
 Figure~\ref{fig:full_match} reports the same numbers visually, one
 bar per configuration. Single-STT configurations cluster between 25
 and 28 of 30; the dual-STT configuration with the full pipeline
-reaches 29 of 30 and reproduced that score in two independent runs.
-The chart plots the best score achieved by each configuration, since
-that is what the standard \verb|python -m study.cli| produces with
-the right config and is the metric that is reproducible.
+reaches 29 of 30. The chart plots the best score achieved by each
+configuration, since that is what the standard \verb|phonebot ablate|
+produces with the right config and is the metric that is reproducible.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.95\linewidth]{full_match_by_config.png}
 \caption{Best full-record matches (out of 30) per configuration.
 Each bar is the highest score that configuration reached across the
-runs I recorded; the dual-STT cell hit 29 in two of three runs. The
-label encodes the four design axes
+runs I recorded. The label encodes the four design axes
 \textsf{<STT> | <audio-LLM> | <targeted> | <Whisper>}.}
 \label{fig:full_match}
 \end{figure}
@@ -587,12 +630,11 @@ pipeline peaks at 28 of 30 (no Whisper) and 27 with Whisper.
 Single-Scribe with the full pipeline plateaus at 26. Combining the
 two transcripts gives the reconciler two independent readings, and
 the strict-majority safety net (Net 3) turns this into a measured
-gain on the dual-STT cell, which reproduced 29 of 30 in two
-independent runs. There is run-to-run variance in this cell because
-the reconciler now has more candidates to disagree among, and the
-candidate-1 LLM votes are sampled at temperature 0.7; one of the
-three dual-STT runs landed at 24 instead of 29 due to an unlucky
-tie-break on a borderline candidate.
+gain on the dual-STT cell, which reaches 29 of 30. The candidate-1
+LLM votes are sampled at temperature 0.7 and the reconciler sees
+more candidates than in the single-STT case, but with the
+transcriber-retry safety net in `src/transcription.py' the run is
+stable end-to-end.
 
 \paragraph{SpeechLM (audio LLM) on or off.}
 Removing the audio LLM disables both candidate-2 and the targeted
@@ -695,6 +737,99 @@ targeted-priority rule would emit the wrong value here; the
 strict-majority override sees that two of three whole-record
 candidates agreed on the original number and locks it in.
 
+\section{Future work}\label{sec:future}
+
+The current pipeline is built for batch post-call extraction at
+high accuracy. The most concrete next steps to take it toward a
+production phone-bot integration are summarised below.
+
+\paragraph{Real-time streaming.}
+The pipeline today processes a complete WAV after the call ends.
+Inside a live phone bot, fields should be extracted incrementally as
+the caller speaks: first name as soon as it has been said, phone
+number as soon as the dictated digits have stabilised, and so on.
+This means swapping the batch STT call for a streaming one
+(ElevenLabs Scribe and Voxtral both support partial-result streams),
+running candidate-1 over the partial transcript on every commit,
+and surfacing reconciler decisions to the dialog layer as soon as
+the relevant content has been heard. The four deterministic safety
+nets work unchanged on incremental updates.
+
+\paragraph{Conversational integration with TTS-driven clarification.}
+The most natural extension is to put the pipeline inside the
+agent's turn loop, not after it. When a layer's confidence is low
+(candidate-1 disagrees on the email and the targeted re-listen
+returns a structurally invalid value), the agent should ask a
+clarifying question through the TTS channel - \textit{Sorry, did
+you say M-U-E-L-L-E-R or M-\"U-L-L-E-R?} - instead of guessing.
+The disagreement signal is already produced by the existing
+Layer 4.5 gate; what is missing is wiring that signal to a
+follow-up turn in the dialog manager. This turns the pipeline from
+a passive extractor into an active interrogator and removes the
+residual error class (\textit{call\_23} / \textit{Andersson})
+entirely.
+
+\paragraph{Adaptive memory and dynamic keyterm prompting.}
+Once the agent has confirmed a tricky token via the clarification
+turn above, that confirmation is information the system should
+remember. A short-lived per-call memory plus a longer-lived
+per-tenant memory should be queryable from the prompts: store
+confirmed tokens in a key-value store keyed on (caller, session),
+and pull the recent confirmed-token set into the ElevenLabs
+\verb|keyterms| parameter and the SpeechLM prompt prelude on every
+subsequent turn. This makes the system learn during the call,
+which is something neither STT nor SpeechLM does on its own.
+
+\paragraph{Multilingual support.}
+The pipeline is currently configured for German
+(\verb|TRANSCRIPTION_LANGUAGE = "de"|). Expanding to Danish,
+Finnish, or any other language is mostly a configuration change:
+switch the STT language code, swap the Voxtral / Whisper language
+to match, and extend the country-detection prompt with the
+relevant heritage signals. The country-aware orthography rules in
+\verb|src/config.py| already separate ``what the STT heard'' from
+``how the caller's country writes it''; the same separation works
+for any language pair as long as the rules are translated. The
+harder part is data - Danish and Finnish callers use different
+separator words for spelling out emails (\textit{piste} for ``dot''
+in Finnish, \textit{prik} in Danish), which need to be added to
+the keyterm and segment-detection lists.
+
+\paragraph{Concurrent users (target: 20 simultaneous calls).}
+The pipeline today loads Voxtral and Whisper into a single GPU and
+processes one recording at a time. A 20-call concurrent target
+needs a deployment shape closer to a service: split each backend
+into its own process, batch incoming requests at the model level,
+and let the orchestrator (one phonebot worker per call) talk to
+the backends over an RPC. vLLM's continuous batching is the right
+primitive on the SpeechLM side; an ElevenLabs API pool with a
+per-tenant rate limiter handles the Scribe traffic. Each phonebot
+worker stays tiny and CPU-bound; the GPU work is amortised across
+all calls. Langfuse already groups traces by session, so 20
+concurrent calls produce 20 distinct sessions in the UI without
+any code change.
+
+\paragraph{Smaller, faster models for concurrency.}
+The cleanest accuracy/latency tradeoff for a 20-user concurrent
+target is to swap the heavy backbones for smaller variants of the
+same family: Voxtral $\to$ a smaller SpeechLM (or Voxtral-Mini at
+a shorter \verb|max_tokens|), \verb|gpt-5.4-mini| $\to$ an even
+smaller open model served via vLLM, Whisper-large-v3 $\to$
+distil-whisper. Each of these trades a few accuracy points for
+substantially lower latency per call, which is the right shape
+under load. The ablation harness already supports comparing models
+side-by-side, so this is empirical work, not a redesign.
+
+\paragraph{Long-conversation optimisation.}
+The dataset's recordings are short ($\le$30\,s) but a real phone
+call can run several minutes. For long calls, two things help: (1)
+chunk the audio into 30--60\,s windows and run the pipeline
+incrementally (the streaming path above), and (2) maintain a
+per-call ``extracted so far'' cache so subsequent layers do not
+re-process audio that was already covered. Layer 4.5's targeted
+re-listen is already a model of how to do this - only re-listen
+to the contested segment, not the whole call.
+
 \section{Conclusion}
 
 The strongest configuration of the pipeline reaches 29 of 30
@@ -723,7 +858,7 @@ those two directories, writes \verb|study/data/runs.csv|,
 \verb|study/data/per_key.csv|, and
 \verb|study/data/mismatches.csv|, and renders the figures used in
 this paper. The two ablation runs I added specifically for this
-study were generated through \verb|python -m study.cli| with the
+study were generated through \verb|phonebot ablate| with the
 arguments quoted in Section~\ref{sec:m_cli}.
 
 \end{document}

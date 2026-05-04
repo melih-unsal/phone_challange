@@ -1,0 +1,34 @@
+Metadata-Version: 2.4
+Name: phonebot
+Version: 0.1.0
+Summary: Caller-info extraction pipeline from German phone-call recordings
+Author: Melih Unsal
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: langchain-core<1.0,>=0.3
+Requires-Dist: langchain-openai<1.0,>=0.3
+Requires-Dist: langchain<1.0,>=0.3
+Requires-Dist: pydantic>=2.6
+Requires-Dist: phonenumbers>=9.0
+Requires-Dist: email-validator>=2.0
+Requires-Dist: python-dotenv>=1.0
+Requires-Dist: tqdm>=4.65
+Requires-Dist: soundfile>=0.12
+Requires-Dist: elevenlabs>=2.0
+Provides-Extra: gpu
+Requires-Dist: transformers>=4.55; extra == "gpu"
+Requires-Dist: accelerate>=0.30; extra == "gpu"
+Requires-Dist: mistral-common>=1.11; extra == "gpu"
+Requires-Dist: librosa; extra == "gpu"
+Provides-Extra: gpu-vllm
+Requires-Dist: vllm>=0.6; extra == "gpu-vllm"
+Provides-Extra: observability
+Requires-Dist: langfuse<3,>=2.0; extra == "observability"
+Provides-Extra: study
+Requires-Dist: matplotlib>=3.6; extra == "study"
+Requires-Dist: numpy>=1.24; extra == "study"
+Requires-Dist: python-pptx>=1.0; extra == "study"
+Provides-Extra: all
+Requires-Dist: phonebot[gpu,observability,study]; extra == "all"
+Provides-Extra: all-with-vllm
+Requires-Dist: phonebot[gpu,gpu_vllm,observability,study]; extra == "all-with-vllm"

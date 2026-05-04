@@ -39,6 +39,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
 from src.config import KEYS, LLM_BASE_URL, LLM_MODEL_NAME
+from src.observability import langchain_config
 from src.prompts import RECONCILE_HUMAN, RECONCILE_SYSTEM
 from src.validators import is_valid_email_shape, is_valid_phone
 
@@ -53,7 +54,11 @@ def build_reconcile_chain():
         max_tokens=800,
         base_url=LLM_BASE_URL,
     )
-    return prompt | llm | JsonOutputParser()
+    # Tag the LangChain run so it shows up in Langfuse as
+    # "layer5.reconcile" instead of the generic "RunnableSequence".
+    return (prompt | llm | JsonOutputParser()).with_config(
+        run_name="layer5.reconcile"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -272,14 +277,17 @@ def reconcile(
     all_whole_record = [c.get("value", {}) for c in candidates_1 if c] + [candidate_2]
 
     try:
-        result = chain.invoke({
-            "country": country_info.get("country", ""),
-            "language_code": country_info.get("language_code", ""),
-            "transcripts": _transcripts_to_str(transcriptions),
-            "candidates_1": _candidates_1_to_str(candidates_1),
-            "candidate_2": cand2_str,
-            "targeted": _targeted_to_str(targeted),
-        })
+        result = chain.invoke(
+            {
+                "country": country_info.get("country", ""),
+                "language_code": country_info.get("language_code", ""),
+                "transcripts": _transcripts_to_str(transcriptions),
+                "candidates_1": _candidates_1_to_str(candidates_1),
+                "candidate_2": cand2_str,
+                "targeted": _targeted_to_str(targeted),
+            },
+            config=langchain_config(),
+        )
     except Exception:
         # Fallback: take the first candidate_1 verbatim, no reasoning
         first = candidates_1[0]["value"] if candidates_1 else {}

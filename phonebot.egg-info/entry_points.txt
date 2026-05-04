@@ -1,0 +1,2 @@
+[console_scripts]
+phonebot = src.cli:main

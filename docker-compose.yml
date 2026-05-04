@@ -1,0 +1,137 @@
+# Phonebot stack. Recommended workflow:
+#
+#     cp .env.example .env       # add OPENAI_API_KEY + ELEVENLABS_API_KEY
+#     docker compose --profile gpu up -d --build      # GPU host
+#     docker compose --profile cpu up -d --build      # CPU-only host
+#
+# Then use the `./phonebot` wrapper at the repo root for every CLI command:
+#
+#     ./phonebot doctor
+#     ./phonebot run
+#     ./phonebot extract data/recordings/call_01.wav --json
+#     ./phonebot evaluate results/report_2026-05-03_180227.json
+#
+# The wrapper is a tiny shell script that calls `docker compose exec` against
+# whichever phonebot service is up.
+#
+# The pipeline services idle (sleep infinity) once `up -d` brings them
+# online so they're always ready for `exec`. Langfuse + Postgres come along
+# automatically and serve the observability UI on http://localhost:3000.
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # Pipeline container with GPU access. Requires nvidia-container-toolkit.
+  # Idles after start; the `./phonebot` wrapper execs phonebot inside it.
+  # ---------------------------------------------------------------------------
+  phonebot:
+    profiles: ["gpu", "all"]
+    build:
+      context: .
+      target: gpu
+    image: phonebot:gpu
+    env_file:
+      - .env
+    environment:
+      - LANGFUSE_HOST=http://langfuse:3000
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+      - ./study/results:/app/study/results
+      - hf_cache:/app/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    depends_on:
+      - langfuse
+    entrypoint: ["sleep", "infinity"]
+    tty: true
+    stdin_open: true
+
+  # ---------------------------------------------------------------------------
+  # Pipeline container that runs anywhere (no GPU). Layer 4 / 4.5 are
+  # disabled automatically; the pipeline runs the Scribe + OpenAI path.
+  # ---------------------------------------------------------------------------
+  phonebot-cpu:
+    profiles: ["cpu", "all"]
+    build:
+      context: .
+      target: base
+    image: phonebot:cpu
+    env_file:
+      - .env
+    environment:
+      - LANGFUSE_HOST=http://langfuse:3000
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+      - ./study/results:/app/study/results
+    depends_on:
+      - langfuse
+    entrypoint: ["sleep", "infinity"]
+    tty: true
+    stdin_open: true
+
+  # ---------------------------------------------------------------------------
+  # Langfuse self-hosted (open-source LLM observability + prompt mgmt).
+  # First-time use: open http://localhost:3000, create an account, create a
+  # project, copy the public/secret keys into .env as LANGFUSE_PUBLIC_KEY /
+  # LANGFUSE_SECRET_KEY, then re-run the pipeline.
+  # ---------------------------------------------------------------------------
+  langfuse:
+    profiles: ["gpu", "cpu", "obs", "all"]
+    # Pinned to Langfuse v2: it only needs Postgres. The `latest` tag now
+    # points at v3, which adds hard dependencies on ClickHouse, Redis, and
+    # MinIO and refuses to start without them. v2 has every feature this
+    # repo uses (sessions, tags, prompt management, traces, comparison),
+    # so v2 is the right choice for a demo / team-showcase setup.
+    image: langfuse/langfuse:2
+    restart: unless-stopped
+    depends_on:
+      langfuse-db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=${LANGFUSE_NEXTAUTH_SECRET:-change-me-in-production}
+      - SALT=${LANGFUSE_SALT:-change-me-in-production}
+      - TELEMETRY_ENABLED=false
+      # Auto-provision a default org / project / user on first start so the
+      # public+secret keys are usable from the very first `docker compose up`.
+      # All of these are read from .env (with sensible fallbacks) and become
+      # the credentials you log in with at http://localhost:3000.
+      - LANGFUSE_INIT_ORG_ID=${LANGFUSE_INIT_ORG_ID:-phonebot}
+      - LANGFUSE_INIT_ORG_NAME=${LANGFUSE_INIT_ORG_NAME:-Phonebot}
+      - LANGFUSE_INIT_PROJECT_ID=${LANGFUSE_INIT_PROJECT_ID:-phonebot}
+      - LANGFUSE_INIT_PROJECT_NAME=${LANGFUSE_INIT_PROJECT_NAME:-Phonebot}
+      - LANGFUSE_INIT_PROJECT_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-pk-lf-phonebot-dev-public}
+      - LANGFUSE_INIT_PROJECT_SECRET_KEY=${LANGFUSE_SECRET_KEY:-sk-lf-phonebot-dev-secret}
+      - LANGFUSE_INIT_USER_EMAIL=${LANGFUSE_INIT_USER_EMAIL:-admin@phonebot.local}
+      - LANGFUSE_INIT_USER_NAME=${LANGFUSE_INIT_USER_NAME:-Phonebot Admin}
+      - LANGFUSE_INIT_USER_PASSWORD=${LANGFUSE_INIT_USER_PASSWORD:-changeme1234}
+
+  langfuse-db:
+    profiles: ["gpu", "cpu", "obs", "all"]
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=langfuse
+      - POSTGRES_PASSWORD=langfuse
+      - POSTGRES_DB=langfuse
+    volumes:
+      - langfuse_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langfuse -d langfuse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  langfuse_db:
+  hf_cache:

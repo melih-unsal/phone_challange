@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# ./phonebot - convenience wrapper around `docker compose exec`.
+#
+# After `docker compose --profile gpu up -d` (or `--profile cpu`), every
+# phonebot subcommand becomes available through this wrapper as if the
+# CLI were installed locally:
+#
+#     ./phonebot doctor
+#     ./phonebot run
+#     ./phonebot extract data/recordings/call_01.wav --json
+#     ./phonebot evaluate results/report_*.json
+#     ./phonebot ablate --transcription elevenlabs:scribe_v2 --no-targeted
+#
+# If no phonebot service is running, the wrapper auto-starts the
+# appropriate profile (gpu when nvidia-smi is reachable, otherwise cpu).
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+# Pick whichever phonebot service is currently up.
+SERVICE=""
+if [ -n "$(docker compose ps -q phonebot 2>/dev/null || true)" ]; then
+    SERVICE="phonebot"
+elif [ -n "$(docker compose ps -q phonebot-cpu 2>/dev/null || true)" ]; then
+    SERVICE="phonebot-cpu"
+fi
+
+# Auto-start if nothing is running.
+if [ -z "$SERVICE" ]; then
+    if command -v nvidia-smi >/dev/null 2>&1 && nvidia-smi -L >/dev/null 2>&1; then
+        echo "phonebot: no service running; starting GPU profile..." >&2
+        docker compose --profile gpu up -d
+        SERVICE="phonebot"
+    else
+        echo "phonebot: no GPU detected; starting CPU profile..." >&2
+        docker compose --profile cpu up -d
+        SERVICE="phonebot-cpu"
+    fi
+fi
+
+# Forward every argument to the in-container `phonebot` console script.
+# Use -T to disable the pseudo-TTY allocation when the caller's stdout is
+# not a terminal (CI / pipes), and keep TTY when interactive.
+if [ -t 1 ]; then
+    exec docker compose exec "$SERVICE" phonebot "$@"
+else
+    exec docker compose exec -T "$SERVICE" phonebot "$@"
+fi

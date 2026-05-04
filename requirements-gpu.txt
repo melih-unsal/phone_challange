@@ -1,0 +1,25 @@
+# GPU-side dependencies. The bundled Docker GPU image installs torch
+# from PyTorch's CUDA index in an earlier RUN step, so we don't list
+# torch here.
+#
+# Layered on top of requirements.txt; install with
+#     pip install -r requirements.txt -r requirements-gpu.txt
+
+# Voxtral via HF transformers + Whisper. Voxtral support landed in
+# transformers 4.55. The previous SIGSEGV during model inspection was
+# specific to vLLM's expectation of a 4.x version; HF transformers
+# itself is fine on either 4.x or 5.x.
+transformers>=4.55
+accelerate>=0.30
+
+# Voxtral tokenizer / processor support
+mistral-common>=1.11
+
+# Whisper word-level timestamping needs librosa for resampling
+librosa
+
+# pillow comes in transitively via mistral-common / matplotlib /
+# transformers. On the python:3.11-slim base used by the GPU image we
+# install the full libjpeg / libwebp / libtiff system libs in the
+# Dockerfile, so pillow 11.x or 12.x wheels install cleanly. No cap
+# needed - pip will pick whatever the deps require.

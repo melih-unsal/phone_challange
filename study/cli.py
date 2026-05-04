@@ -212,6 +212,10 @@ def main() -> None:
     _apply_overrides(args)
     _print_resolved_config()
     _patch_report_path(args.tag)
+    # Forward --tag to main.py via env var so the Langfuse session is
+    # tagged `ablation=<tag>` and the team can filter in the UI.
+    if args.tag:
+        os.environ["PHONEBOT_RUN_TAG"] = args.tag
     import main as _main
     _main.run()
 

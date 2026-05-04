@@ -22,15 +22,30 @@ LLM_MODEL_NAME = "gpt-5.4-mini"
 LLM_BASE_URL = "https://us.api.openai.com/v1"
 
 # Audio-model specs are model-agnostic: "<backend>:<model_id>".
-#   backend = "voxtral"     -> local HuggingFace VoxtralForConditionalGeneration
-#   backend = "elevenlabs"  -> ElevenLabs Speech-to-Text API (transcription only)
-#   backend = "whisper"     -> local HuggingFace Whisper (timestamps only)
+#   backend = "voxtral"      -> Voxtral via HF transformers (DEFAULT).
+#                               Has rare SIGSEGV in sdpa_attention_forward;
+#                               mitigated by VOXTRAL_ATTN_IMPL="eager" below
+#                               and recoverable via main.py's AUTO_RESUME.
+#                               This is the path the 29/30 headline result
+#                               was produced on, across 8 dev runs.
+#   backend = "voxtral-vllm" -> Voxtral served by vLLM. More stable in
+#                               theory and on torch 2.4 + CUDA 12 stacks;
+#                               vLLM 0.20.x has a regression that SIGSEGVs
+#                               on Voxtral model registry inspection on
+#                               torch 2.11 + CUDA 13. Use this when your
+#                               vLLM/torch combo is known to work.
+#   backend = "elevenlabs"   -> ElevenLabs Speech-to-Text API (transcription only)
+#   backend = "whisper"      -> local HuggingFace Whisper (timestamps only)
 #
 # TRANSCRIPTION_MODELS is a LIST. Each entry produces its own transcript and
 # its own candidate_1 (Layer 3 extracts independently from each transcript).
 # More diverse transcripts -> more independent readings for the reconciler
 # to triangulate from. ASR errors are usually correlated within a single
 # model and uncorrelated across models, so adding a second STT is high-value.
+#
+# On a machine without a CUDA GPU, Voxtral and Whisper backends will fail
+# to build at startup; main.py logs a warning and continues with whatever
+# backends did build (typically just ElevenLabs Scribe).
 TRANSCRIPTION_MODELS = [
     "voxtral:mistralai/Voxtral-Mini-3B-2507",
     "elevenlabs:scribe_v2",
