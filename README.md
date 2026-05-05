@@ -65,11 +65,10 @@ box).
 10. [Voxtral backend choice (HF transformers, vLLM optional)](#voxtral-backend-choice-hf-transformers-vllm-optional)
 11. [Troubleshooting](#troubleshooting)
 12. [Reproducing the figures](#reproducing-the-figures)
-13. [Building the paper](#building-the-paper)
-14. [Configuration knobs](#configuration-knobs)
-15. [Adding a new entity to the pipeline](#adding-a-new-entity-to-the-pipeline)
-16. [Future improvements](#future-improvements)
-17. [Files of interest](#files-of-interest)
+13. [Configuration knobs](#configuration-knobs)
+14. [Adding a new entity to the pipeline](#adding-a-new-entity-to-the-pipeline)
+15. [Future improvements](#future-improvements)
+16. [Files of interest](#files-of-interest)
 
 ---
 
@@ -505,7 +504,7 @@ existing runs.
 ### Setup with Langfuse Cloud (recommended, ~5 minutes)
 
 `pip install -e '.[gpu,observability]'` installed the **Langfuse
-Python SDK**, but the SDK alone has nowhere to send traces — you also
+Python SDK**, but the SDK alone has nowhere to send traces - you also
 need a **Langfuse server**. The fastest way is the free hosted
 instance at [`cloud.langfuse.com`](https://cloud.langfuse.com):
 
@@ -514,7 +513,7 @@ instance at [`cloud.langfuse.com`](https://cloud.langfuse.com):
 
 2. In the project, go to **Settings → API Keys → Create new API
    keys**. Copy the public key (`pk-lf-…`) and the secret key
-   (`sk-lf-…`). The secret is shown only once — copy it now.
+   (`sk-lf-…`). The secret is shown only once - copy it now.
 
 3. **Add the keys to your `.env`** at the repo root:
 
@@ -532,7 +531,7 @@ instance at [`cloud.langfuse.com`](https://cloud.langfuse.com):
 
    This should now print
    `Langfuse: enabled  host: https://cloud.langfuse.com`.
-   If it still says `disabled`, the env vars haven't been loaded —
+   If it still says `disabled`, the env vars haven't been loaded -
    make sure `.env` is at the repo root (or `export` the vars in
    your shell).
 
@@ -632,7 +631,7 @@ In the Langfuse UI, **Filter by tag** (top-right of the Sessions
 list) → pick e.g. `ablation=scribe_only_no_audiollm` to see only
 that ablation. Pick two ablations side-by-side and the **Compare**
 button shows you per-call diffs, token-cost diffs, and latency
-diffs across the runs — exactly the view you want for the team
+diffs across the runs - exactly the view you want for the team
 walkthrough.
 
 ### Prompt management
@@ -642,7 +641,7 @@ prompt versioning: create / edit / version prompts in the UI, then
 fetch them from Python at runtime. The current pipeline still keeps
 prompts in [`src/prompts.py`](src/prompts.py) (composed from rules
 in [`src/config.py`](src/config.py)), but moving any individual
-prompt to Langfuse is a small change — example pattern:
+prompt to Langfuse is a small change - example pattern:
 
 ```python
 from langfuse import get_client
@@ -760,37 +759,6 @@ new data automatically - there is no manual table maintenance.
 
 ---
 
-## Building the paper
-
-The paper is plain LaTeX with a TikZ pipeline diagram embedded as
-Figure 1. To rebuild the PDF after editing `study/paper.tex` or
-regenerating figures:
-
-```bash
-cd study
-pdflatex -interaction=nonstopmode paper.tex
-pdflatex -interaction=nonstopmode paper.tex   # second pass for cross-refs
-```
-
-The required LaTeX packages are part of TeX Live's `texlive-latex-extra`
-and `texlive-pictures` (booktabs, tabularx, hyperref, microtype,
-tikz, etc.). On Debian/Ubuntu:
-
-```bash
-sudo apt install texlive-latex-extra texlive-pictures texlive-science
-```
-
-To rebuild the slide deck:
-
-```bash
-python study/build_pptx.py
-```
-
-This writes `study/presentation.pptx`. The deck is 19 slides at
-16:9 widescreen and embeds the same figures as the paper.
-
----
-
 ## Configuration knobs
 
 All knobs live in [`src/config.py`](src/config.py). The four most
@@ -835,13 +803,13 @@ KEYS = ["first_name", "last_name", "email", "phone_number"]
 ```
 
 Every layer that produces or consumes structured data is driven by
-this list — the prompts, the self-consistency vote, the reconciler,
+this list - the prompts, the self-consistency vote, the reconciler,
 and the schema. Adding a new entity (say `company_name`, `address`,
 `appointment_date`, `case_topic`) is **three small changes**.
 
 ### Worked example: adding `company_name`
 
-#### Step 1 — register the key + write its rule
+#### Step 1 - register the key + write its rule
 
 In [`src/config.py`](src/config.py):
 
@@ -861,7 +829,7 @@ COMPANY_NAME_RULES = """COMPANY_NAME
 - "" if no company name is mentioned in the recording."""
 ```
 
-#### Step 2 — wire the rule into the extraction prompt
+#### Step 2 - wire the rule into the extraction prompt
 
 In [`src/prompts.py`](src/prompts.py), import the new rule string and
 add it to the `EXTRACT_SYSTEM` template (and any other prompt that
@@ -884,10 +852,10 @@ EXTRACT_SYSTEM = f"""...
 """
 ```
 
-That's it for the LLM side — `extract_candidate_1` already calls
+That's it for the LLM side - `extract_candidate_1` already calls
 `majority_vote(runs, KEYS)` so the new key is included automatically.
 
-#### Step 3 — extend the schema
+#### Step 3 - extend the schema
 
 In [`src/schema.py`](src/schema.py), add the field to the Pydantic
 model and (optionally) a normaliser:
@@ -963,7 +931,7 @@ toward a production phone-bot integration.
 
 The pipeline today processes a complete WAV after the call ends.
 Inside a live phone bot, fields should be extracted incrementally as
-the caller speaks — first name appears as soon as the caller says
+the caller speaks - first name appears as soon as the caller says
 their name, phone number as soon as it has been dictated, and so on.
 This means swapping the batch-style STT call for a streaming one
 (ElevenLabs Scribe and Voxtral both support partial-result streams),
@@ -978,8 +946,8 @@ The most natural extension is to put the pipeline inside the agent's
 turn loop, not after it. When a layer's confidence is low (for
 example, candidate-1 disagrees on the email and the targeted re-listen
 returns a structurally invalid value), the agent should ask a
-clarifying question through the TTS channel — *"Sorry, did you say
-M-U-E-L-L-E-R or M-Ü-L-L-E-R?"* — instead of guessing. The
+clarifying question through the TTS channel - *"Sorry, did you say
+M-U-E-L-L-E-R or M-Ü-L-L-E-R?"* - instead of guessing. The
 disagreement signal is already produced by the existing Layer 4.5
 gate; what's missing is wiring that signal to a follow-up turn in
 the dialog manager. This turns the pipeline from a passive extractor
@@ -1011,7 +979,7 @@ relevant heritage signals. The country-aware orthography rules in
 `src/config.py` already separate "what the STT heard" from "how the
 caller's country writes it"; the same separation works for any
 language pair as long as the rules are translated. The harder part
-is data — Danish and Finnish callers tend to use different separator
+is data - Danish and Finnish callers tend to use different separator
 words for spelling out emails (`piste` for "dot" in Finnish, `prik`
 in Danish), which need to be added to the keyterm and segment-detection
 lists.
@@ -1051,7 +1019,7 @@ audio into 30-60 s windows and run the pipeline incrementally (the
 streaming path above), and (2) maintain a per-call "extracted so
 far" cache so subsequent layers don't re-process audio that was
 already covered. Layer 4.5's targeted re-listen is already a model
-of how to do this — only re-listen to the contested segment, not
+of how to do this - only re-listen to the contested segment, not
 the whole call.
 
 ---

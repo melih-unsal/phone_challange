@@ -210,7 +210,7 @@ def build():
     # simplified the Whisper bullet, added a benchmark link footer.
     s = add_blank(p); add_bg(s)
     add_header(s, "layer 1", "Two STT models in parallel = uncorrelated errors")
-    add_bullets(s, Inches(0.6), Inches(1.8), Inches(12), Inches(1.45),
+    add_bullets(s, Inches(0.6), Inches(1.8), Inches(6.65), Inches(1.45),
                 [
                     "Voxtral-Mini-3B-2507 (local, bf16): strong on letters, no timestamps",
                     "ElevenLabs Scribe v2 (API): word timestamps + keyterms biasing "
@@ -218,6 +218,10 @@ def build():
                     "Errors correlate within one model, uncorrelate across models",
                     "Whisper-large-v3-turbo generates the timestamps lazily (Layer 1c)",
                 ], size=18)
+    layer_img = FIG / "pipeline_layer1.png"
+    if layer_img.exists():
+        s.shapes.add_picture(str(layer_img), Inches(8.00), Inches(1.52),
+                             width=Inches(4.50), height=Inches(4.23))
     bench = s.shapes.add_textbox(Inches(6.0), Inches(7.0),
                                   Inches(6.41), Inches(0.30))
     bench.text_frame.word_wrap = True
@@ -235,7 +239,7 @@ def build():
     # --- Slide 6: Layer 2 country ---
     s = add_blank(p); add_bg(s)
     add_header(s, "layer 2", "Country detection drives orthography")
-    add_bullets(s, Inches(0.6), Inches(1.8), Inches(12), Inches(4),
+    add_bullets(s, Inches(0.6), Inches(1.8), Inches(6.65), Inches(4),
                 [
                     "Single LLM call decides the caller's linguistic-origin country once",
                     "Signals (priority order): email TLD/domain, name pattern, phone code",
@@ -243,12 +247,16 @@ def build():
                     "Output is a single country string used by every later layer",
                     "Removes a class of failure where 5 LLM votes pick 3 different countries",
                 ], size=18)
+    layer_img = FIG / "pipeline_layer2.png"
+    if layer_img.exists():
+        s.shapes.add_picture(str(layer_img), Inches(8.00), Inches(1.52),
+                             width=Inches(4.50), height=Inches(4.23))
     add_footer(s, 6, total_slides)
 
     # --- Slide 7: Layer 3 candidate-1 ---
     s = add_blank(p); add_bg(s)
     add_header(s, "layer 3", "Candidate-1: self-consistent transcript-LLM")
-    add_bullets(s, Inches(0.6), Inches(1.8), Inches(12), Inches(4),
+    add_bullets(s, Inches(0.6), Inches(1.8), Inches(6.65), Inches(4),
                 [
                     "For each transcript, run gpt-5.4-mini at temperature 0.7, five times",
                     "Per-key majority vote -> one candidate per transcript",
@@ -257,12 +265,16 @@ def build():
                     "Self-consistency averages out single-shot LLM noise",
                     "Number of candidate-1s = number of STT models",
                 ], size=18)
+    layer_img = FIG / "pipeline_layer3.png"
+    if layer_img.exists():
+        s.shapes.add_picture(str(layer_img), Inches(8.00), Inches(1.52),
+                             width=Inches(4.50), height=Inches(4.23))
     add_footer(s, 7, total_slides)
 
     # --- Slide 8: Layer 4 candidate-2 SpeechLM ---
     s = add_blank(p); add_bg(s)
     add_header(s, "layer 4", "Candidate-2: SpeechLM directly on the audio")
-    add_bullets(s, Inches(0.6), Inches(1.8), Inches(12), Inches(4),
+    add_bullets(s, Inches(0.6), Inches(1.8), Inches(6.65), Inches(4),
                 [
                     "Voxtral consumes the WAV plus a single text instruction",
                     "Three runs at temperature 0.01 (near-greedy), majority-voted",
@@ -271,12 +283,16 @@ def build():
                     "(audio carries no orthographic signal)",
                     "Different error profile from candidate-1 - this is the point",
                 ], size=18)
+    layer_img = FIG / "pipeline_layer4.png"
+    if layer_img.exists():
+        s.shapes.add_picture(str(layer_img), Inches(8.00), Inches(1.52),
+                             width=Inches(4.50), height=Inches(4.23))
     add_footer(s, 8, total_slides)
 
     # --- Slide 9: Layer 4.5 targeted re-listen ---
     s = add_blank(p); add_bg(s)
     add_header(s, "layer 4.5", "Targeted re-listen: rewind the parts you are unsure about")
-    add_bullets(s, Inches(0.6), Inches(1.8), Inches(12), Inches(4.5),
+    add_bullets(s, Inches(0.6), Inches(1.8), Inches(6.65), Inches(4.5),
                 [
                     "Gate: opens only if whole-record candidates disagree on email or phone",
                     "Word timestamps come from Scribe or from Whisper (Layer 1c)",
@@ -287,12 +303,16 @@ def build():
                     "majority-voted",
                     "Most records skip the layer entirely - it is selective by design",
                 ], size=18)
+    layer_img = FIG / "pipeline_layer4_5.png"
+    if layer_img.exists():
+        s.shapes.add_picture(str(layer_img), Inches(8.00), Inches(1.52),
+                             width=Inches(4.50), height=Inches(4.23))
     add_footer(s, 9, total_slides)
 
     # --- Slide 10: Layer 5 reconciler + safety nets ---
     s = add_blank(p); add_bg(s)
     add_header(s, "layer 5", "Reconciler + 4 deterministic safety nets")
-    add_bullets(s, Inches(0.6), Inches(1.7), Inches(12), Inches(5),
+    add_bullets(s, Inches(0.6), Inches(1.7), Inches(6.65), Inches(5),
                 [
                     "LLM reconciler (gpt-5.4-mini, T=0) sees: transcripts, country, "
                     "every candidate-1, candidate-2, targeted re-listen",
@@ -306,12 +326,16 @@ def build():
                     "(fixes Lefevre/Lefebvre/Le Fevre)",
                     "Each net catches a class of obvious cases the LLM might miss",
                 ], size=17)
+    layer_img = FIG / "pipeline_layer5.png"
+    if layer_img.exists():
+        s.shapes.add_picture(str(layer_img), Inches(8.00), Inches(1.52),
+                             width=Inches(4.50), height=Inches(4.23))
     add_footer(s, 10, total_slides)
 
     # --- Slide 11: Layer 6 schema ---
     s = add_blank(p); add_bg(s)
     add_header(s, "layer 6", "Schema validation and normalisation")
-    add_bullets(s, Inches(0.6), Inches(1.8), Inches(12), Inches(4),
+    add_bullets(s, Inches(0.6), Inches(1.8), Inches(6.65), Inches(4),
                 [
                     "Pydantic CallerInfo model is the single normalisation point",
                     "Names: NFC normalised",
@@ -320,6 +344,10 @@ def build():
                     "Same validators.py used by the evaluator -> formatting can never "
                     "lose points",
                 ], size=18)
+    layer_img = FIG / "pipeline_layer6.png"
+    if layer_img.exists():
+        s.shapes.add_picture(str(layer_img), Inches(8.00), Inches(1.52),
+                             width=Inches(4.50), height=Inches(4.23))
     add_footer(s, 11, total_slides)
 
     # --- Slide 12: CLI override harness ---
